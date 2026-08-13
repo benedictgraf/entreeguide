@@ -1,0 +1,14 @@
+{
+  "name": "SNEAK PEAKS ENTREE Feldbuch",
+  "short_name": "ENTREE",
+  "description": "Offline-Feldbuch für die SNEAK PEAKS 2026 ENTREE Route: Etappen, Checkpoints, Resupply, Schlafoptionen.",
+  "start_url": "./index.html",
+  "scope": "./",
+  "display": "standalone",
+  "orientation": "portrait",
+  "background_color": "#0B0D14",
+  "theme_color": "#0B0D14",
+  "icons": [
+    { "src": "icon.svg", "sizes": "any", "type": "image/svg+xml", "purpose": "any" }
+  ]
+}

@@ -1,0 +1,1835 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover, maximum-scale=1, user-scalable=no">
+<meta name="robots" content="noindex, nofollow">
+<title>ENTREE Feldbuch · SNEAK PEAKS</title>
+<meta name="theme-color" content="#0B0D14">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="ENTREE Feldbuch">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Crect width='100' height='100' rx='22' fill='%230B0D14'/%3E%3Cpath d='M18 72 L40 34 L53 55 L69 24 L88 72 Z' fill='%23CFFF4D'/%3E%3Ccircle cx='71' cy='28' r='7' fill='%23FF3E96'/%3E%3C/svg%3E">
+<link rel="apple-touch-icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Crect width='100' height='100' fill='%230B0D14'/%3E%3Cpath d='M14 76 L40 32 L54 55 L70 22 L92 76 Z' fill='%23CFFF4D'/%3E%3Ccircle cx='72' cy='26' r='8' fill='%23FF3E96'/%3E%3C/svg%3E">
+<link rel="manifest" href="manifest.json">
+<style>
+:root{
+  --ink:#0B0D14; --slate:#161923; --slate2:#1F2430; --line:#2A2F3D;
+  --fog:#EDEBE3; --mist:#9498A8;
+  --acid:#CFFF4D; --acid-ink:#12210A;
+  --flare:#FF3E96;
+  --warn:#FF8A4C; --warn-ink:#2B1608;
+  --bad:#FF5C5C;
+  --info:#6FD3FF;
+  --r-lg:18px; --r-md:14px; --r-sm:10px;
+  --pad:16px;
+  --font-display:ui-rounded, "SF Pro Rounded", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  font-size:16px;
+}
+*{box-sizing:border-box; -webkit-tap-highlight-color:transparent;}
+html,body{height:100%;}
+body{
+  margin:0; background:var(--ink); color:var(--fog);
+  font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+  -webkit-font-smoothing:antialiased;
+  background-image:
+    radial-gradient(1px 1px at 12% 22%, rgba(255,255,255,.35) 1px, transparent 0),
+    radial-gradient(1px 1px at 68% 62%, rgba(255,255,255,.22) 1px, transparent 0),
+    radial-gradient(1.5px 1.5px at 38% 78%, rgba(255,255,255,.18) 1px, transparent 0),
+    radial-gradient(1px 1px at 84% 14%, rgba(255,255,255,.28) 1px, transparent 0),
+    radial-gradient(1px 1px at 52% 40%, rgba(255,255,255,.14) 1px, transparent 0),
+    radial-gradient(1px 1px at 25% 55%, rgba(255,255,255,.2) 1px, transparent 0);
+  background-repeat:repeat;
+  background-size:190px 190px,240px 240px,170px 170px,210px 210px,150px 150px,260px 260px;
+}
+.mono{font-family:ui-monospace,"SF Mono","Cascadia Mono","Roboto Mono",Consolas,monospace; font-variant-numeric:tabular-nums;}
+h1,h2,h3{margin:0;}
+a{color:var(--acid);}
+button{font:inherit; color:inherit;}
+
+#app{display:flex; flex-direction:column; min-height:100dvh;}
+
+/* TOPBAR */
+#topbar{position:sticky; top:0; z-index:20; background:rgba(11,13,20,.9); backdrop-filter:blur(10px); border-bottom:1px solid var(--line);}
+header{display:flex; align-items:center; justify-content:space-between; padding:calc(env(safe-area-inset-top) + 12px) var(--pad) 10px;}
+.brand{display:flex; align-items:baseline; gap:8px;}
+.brand b{font-weight:800; letter-spacing:.04em; font-size:15px; text-transform:uppercase;}
+.brand .tag{font-size:11px; font-weight:800; letter-spacing:.08em; text-transform:uppercase; background:var(--acid); color:var(--acid-ink); padding:3px 8px; border-radius:999px;}
+#quickbar{display:flex; gap:8px; padding:0 var(--pad) 12px; overflow-x:auto; scrollbar-width:none;}
+#quickbar::-webkit-scrollbar{display:none;}
+.qbtn{flex:0 0 auto; display:flex; align-items:center; gap:6px; padding:8px 13px; background:var(--slate); border:1px solid var(--line); border-radius:999px; font-size:12.5px; font-weight:700;}
+.qbtn:active{background:var(--slate2);}
+
+/* MAIN */
+main{flex:1; overflow-y:auto; padding:16px var(--pad) 110px; -webkit-overflow-scrolling:touch;}
+.view{display:none; animation:fade .22s ease;}
+.view.active{display:block;}
+@keyframes fade{from{opacity:0; transform:translateY(6px);} to{opacity:1; transform:translateY(0);}}
+
+.eyebrow{display:flex; align-items:center; justify-content:space-between; font-size:11.5px; font-weight:800; letter-spacing:.10em; text-transform:uppercase; color:var(--mist); margin:22px 0 10px;}
+.eyebrow:first-child{margin-top:0;}
+.eyebrow .flare{color:var(--flare);}
+
+/* ROUTE OVERVIEW STRIP (Tagesauswahl) */
+.progress{position:relative; height:8px; border-radius:999px; background:var(--line); overflow:visible; margin-bottom:10px;}
+.progress-fill{position:absolute; left:0; top:0; bottom:0; background:var(--acid); border-radius:999px; transition:width .25s ease;}
+.tick{position:absolute; top:-3px; width:3px; height:14px; border-radius:2px; background:var(--ink); box-shadow:0 0 0 2px var(--ink);}
+.tick.ok{background:var(--acid);}
+.tick.warn{background:var(--warn);}
+.tick.no{background:var(--bad);}
+.progress-caption{display:flex; justify-content:space-between; font-size:12px; color:var(--mist); margin-bottom:14px;}
+.daypills{display:flex; gap:6px; margin-bottom:16px;}
+.daypill{flex:1 1 0; min-width:0; padding:9px 4px 8px; text-align:center; background:var(--slate); border:1px solid var(--line); border-radius:var(--r-sm); transition:background .15s,border-color .15s,color .15s;}
+.daypill b{display:block; font-size:14px; font-weight:800;}
+.daypill span{display:block; font-size:10.5px; color:var(--mist); margin-top:1px;}
+.daypill.active{background:var(--acid); border-color:var(--acid); color:var(--acid-ink);}
+.daypill.active span{color:var(--acid-ink); opacity:.7;}
+
+/* KOMPAKTE TAGES-META (statt große Stat-Kachel) */
+.daymeta{position:relative; padding:2px 2px 14px; border-bottom:1px solid var(--line); margin-bottom:14px; overflow:hidden;}
+.daymeta-route{font-family:var(--font-display); font-size:19px; font-weight:800; letter-spacing:-.01em; position:relative; z-index:1; padding-right:64px;}
+.daymeta-route .arrow{color:var(--flare); margin:0 5px;}
+.daymeta-stats{font-size:12.5px; color:var(--mist); margin-top:3px; position:relative; z-index:1;}
+.daymeta-char{font-size:12px; color:var(--mist); margin-top:5px; line-height:1.5; position:relative; z-index:1;}
+.daymeta-ghost{position:absolute; right:-4px; top:-14px; font-family:var(--font-display); font-size:74px; font-weight:900; letter-spacing:-.04em; color:var(--acid); opacity:.13; pointer-events:none; z-index:0; line-height:1;}
+
+/* KARTE */
+.mapwrap{position:relative; width:100%; border-radius:var(--r-lg); overflow:hidden; margin-bottom:10px; border:1px solid var(--line); background:var(--slate); touch-action:none;}
+.routemap{width:100%; height:100%; display:block;}
+.map-fullpath{fill:none; stroke:var(--mist); stroke-width:2.4; stroke-linecap:round; stroke-linejoin:round; opacity:.38;}
+.map-activepath-halo{fill:none; stroke:var(--flare); stroke-width:11; stroke-linecap:round; stroke-linejoin:round; opacity:.22;}
+.map-activepath{fill:none; stroke:var(--flare); stroke-width:4.2; stroke-linecap:round; stroke-linejoin:round;}
+.map-dot-visual{stroke:var(--ink); stroke-width:1.4;}
+.map-dot-visual.ok{fill:var(--acid);}
+.map-dot-visual.warn{fill:var(--warn);}
+.map-dot-visual.no{fill:var(--bad);}
+.map-dot-visual.info{fill:var(--info);}
+.map-hit{fill:transparent; cursor:pointer;}
+.map-compass{position:absolute; top:10px; right:12px; font-size:10.5px; font-weight:800; color:var(--mist); background:rgba(11,13,20,.55); padding:3px 8px; border-radius:999px; letter-spacing:.04em;}
+.map-note{position:absolute; left:12px; bottom:10px; font-size:10px; font-weight:700; color:var(--mist); background:rgba(11,13,20,.55); padding:3px 8px; border-radius:999px;}
+.legend{display:flex; flex-wrap:wrap; gap:9px; font-size:10.5px; color:var(--mist); margin:0 0 18px;}
+.legend span{display:inline-flex; align-items:center; gap:4px;}
+.legend i{width:8px; height:8px; border-radius:50%; display:inline-block; flex-shrink:0;}
+
+.elevcard{background:var(--slate); border:1px solid var(--line); border-radius:var(--r-lg); padding:10px 6px; margin-bottom:6px; overflow:hidden;}
+.elev-note{font-size:10.5px; color:var(--mist); margin:0 0 18px; line-height:1.5;}
+
+.story-mapwrap{width:100%; max-width:260px; aspect-ratio:1/1.25; margin-bottom:18px;}
+.story-mapwrap svg{width:100%; height:100%; display:block;}
+.story-elevwrap{width:100%; max-width:320px; margin-bottom:16px;}
+
+.map-controls{position:absolute; right:10px; bottom:10px; display:flex; flex-direction:column; gap:7px; z-index:2;}
+.mapctl{width:36px; height:36px; border-radius:50%; background:rgba(22,25,35,.88); border:1px solid var(--line); color:var(--fog); font-size:17px; font-weight:800; display:flex; align-items:center; justify-content:center; backdrop-filter:blur(4px); line-height:1;}
+.mapctl:active{background:var(--slate2);}
+.mapctl#gpsBtn{font-size:15px;}
+.mapctl#gpsBtn.active{background:var(--flare); color:#2B0A1C; border-color:var(--flare);}
+.mapctl#mapReset{display:none; font-size:14px;}
+.gps-pulse{fill:var(--flare); opacity:.45; transform-box:fill-box; transform-origin:center; animation:gpsPulse 1.8s ease-out infinite;}
+.gps-dot{fill:#fff; stroke:var(--flare); stroke-width:2.2;}
+@keyframes gpsPulse{0%{transform:scale(.4); opacity:.55;} 100%{transform:scale(2.4); opacity:0;}}
+#gpsReadout{display:none; background:var(--slate2); border-radius:var(--r-md); padding:11px 13px; margin-bottom:14px;}
+#gpsReadout.show{display:block;}
+.gps-row{display:flex; justify-content:space-between; align-items:center; gap:10px; font-size:12.5px; padding:4px 0;}
+.gps-row span{color:var(--mist);}
+.gps-row b{font-size:13px; text-align:right;}
+.gps-note{font-size:10px; color:var(--mist); margin-top:7px; line-height:1.5; border-top:1px solid var(--line); padding-top:7px;}
+
+/* CARDS */
+.card{background:var(--slate); border:1px solid var(--line); border-radius:var(--r-lg); padding:16px; margin-bottom:12px;}
+.sleep-card{border-radius:var(--r-lg); padding:16px; margin-bottom:12px; border:1px solid; position:relative;}
+.sleep-card.ok{background:linear-gradient(155deg,rgba(207,255,77,.14),rgba(207,255,77,.03)); border-color:rgba(207,255,77,.35);}
+.sleep-card.warn{background:linear-gradient(155deg,rgba(255,138,76,.16),rgba(255,138,76,.03)); border-color:rgba(255,138,76,.4);}
+.sleep-head{display:flex; align-items:center; gap:8px; font-size:12px; font-weight:800; letter-spacing:.08em; text-transform:uppercase; color:var(--mist); margin-bottom:8px;}
+.sleep-place{font-family:var(--font-display); font-size:19px; font-weight:800; margin-bottom:4px;}
+.sleep-note{font-size:12.5px; color:var(--mist); margin-bottom:10px;}
+.sleep-detail{font-size:13.5px; line-height:1.55;}
+.badge{display:inline-flex; align-items:center; gap:5px; font-size:11px; font-weight:800; letter-spacing:.04em; text-transform:uppercase; padding:4px 10px; border-radius:999px; white-space:nowrap;}
+.badge.ok{background:rgba(207,255,77,.18); color:var(--acid);}
+.badge.warn{background:rgba(255,138,76,.2); color:var(--warn);}
+.badge.no{background:rgba(255,92,92,.18); color:var(--bad);}
+.badge.neutral{background:var(--slate2); color:var(--mist);}
+
+/* WETTER */
+.weather-card{background:var(--slate); border:1px solid var(--line); border-radius:var(--r-lg); padding:16px; margin-bottom:12px;}
+.wx-head{display:flex; align-items:flex-start; justify-content:space-between; margin-bottom:12px;}
+.wx-now{display:flex; align-items:center; gap:8px;}
+.wx-icon{font-size:28px; line-height:1;}
+.wx-now b{font-size:25px; font-weight:800;}
+.wx-desc{font-size:12.5px; color:var(--mist); margin-top:3px;}
+.wx-refresh{width:34px; height:34px; border-radius:50%; background:var(--slate2); border:1px solid var(--line); font-size:15px; flex-shrink:0;}
+.wx-refresh:active{opacity:.6;}
+.wx-days{display:flex; gap:6px; margin-bottom:10px;}
+.wx-day{flex:1; background:var(--slate2); border-radius:var(--r-sm); padding:8px 4px; text-align:center; display:flex; flex-direction:column; gap:3px;}
+.wx-day .lb{font-size:10.5px; color:var(--mist);}
+.wx-day .ic{font-size:16px;}
+.wx-day .tp{font-size:11.5px; color:var(--fog);}
+.wx-day .pr{font-size:10.5px; color:var(--info);}
+.wx-meta{font-size:11px; color:var(--mist);}
+.wx-note{font-size:10.5px; color:var(--mist); margin-top:8px; line-height:1.5; border-top:1px solid var(--line); padding-top:8px;}
+.wx-loading, .wx-error{font-size:13px; color:var(--mist); text-align:center; padding:18px 4px; line-height:1.5;}
+
+/* LIST ROWS (Checkpoints/Resupply Tabs) */
+.rowlist{background:var(--slate); border:1px solid var(--line); border-radius:var(--r-lg); overflow:hidden; margin-bottom:12px;}
+.row{display:flex; align-items:center; gap:12px; padding:13px 14px; border-bottom:1px solid var(--line);}
+.row:last-child{border-bottom:none;}
+.row .km{font-size:12.5px; color:var(--mist); min-width:40px;}
+.row .name{flex:1; font-size:14.5px; font-weight:600;}
+.row .sub{font-size:12px; color:var(--mist); margin-top:1px; font-weight:400;}
+.chev{color:var(--mist); font-size:13px; transition:transform .2s; flex-shrink:0;}
+.tap.open .chev{transform:rotate(90deg); color:var(--acid);}
+.row-detail{display:none; padding:0 14px 16px; font-size:13.5px; line-height:1.6; color:var(--fog);}
+.row-detail.open{display:block;}
+.row-detail dl{margin:10px 0 0; display:grid; grid-template-columns:auto 1fr; gap:6px 10px; font-size:13px;}
+.row-detail dt{color:var(--mist);}
+.row-detail dd{margin:0;}
+.tap{background:none; border:none; width:100%; text-align:left; padding:0; display:flex; align-items:center; gap:12px; padding:13px 14px; cursor:pointer;}
+
+/* SPECIALS */
+.callout{border-left:3px solid var(--warn); background:var(--slate); border-radius:0 var(--r-md) var(--r-md) 0; padding:12px 14px; margin-bottom:10px;}
+.callout.special-hi{border-left-color:var(--acid);}
+.callout .ctitle{font-weight:700; font-size:14px; margin-bottom:3px;}
+.callout .ckm{font-size:11.5px; color:var(--warn); font-weight:700; margin-bottom:6px;}
+.callout.special-hi .ckm{color:var(--acid);}
+.callout p{margin:0; font-size:13px; color:var(--mist); line-height:1.5;}
+
+.empty{font-size:13px; color:var(--mist); padding:14px; text-align:center; background:var(--slate); border-radius:var(--r-md); border:1px dashed var(--line);}
+
+/* ACCORDIONS (Mehr) */
+.acc{background:var(--slate); border:1px solid var(--line); border-radius:var(--r-lg); margin-bottom:10px; overflow:hidden;}
+.acc-head{display:flex; align-items:center; justify-content:space-between; padding:15px 16px; width:100%; background:none; border:none; text-align:left; cursor:pointer;}
+.acc-head b{font-size:14.5px; font-weight:700;}
+.acc-head .ico{font-size:16px; margin-right:10px;}
+.acc-body{display:none; padding:0 16px 16px; font-size:13.5px; line-height:1.6;}
+.acc.open .acc-body{display:block;}
+.acc.open .chev{transform:rotate(90deg);}
+.acc-body ul{margin:0; padding-left:18px;}
+.acc-body li{margin-bottom:6px;}
+.acc-body .subtitle{font-weight:700; margin:12px 0 4px; font-size:13px;}
+.acc-body .subtitle:first-child{margin-top:0;}
+
+.gear-item{display:flex; align-items:center; gap:10px; padding:9px 0; border-bottom:1px solid var(--line); font-size:13.5px;}
+.gear-item:last-child{border-bottom:none;}
+.gear-box{width:20px; height:20px; border-radius:6px; border:1.5px solid var(--mist); flex-shrink:0; display:flex; align-items:center; justify-content:center; font-size:12px;}
+.gear-item.checked .gear-box{background:var(--acid); border-color:var(--acid); color:var(--acid-ink);}
+.gear-item.checked span{color:var(--mist); text-decoration:line-through;}
+.gear-count{font-size:12px; color:var(--mist); margin-bottom:8px;}
+
+.schedule-row{display:flex; gap:12px; padding:10px 0; border-bottom:1px solid var(--line);}
+.schedule-row:last-child{border-bottom:none;}
+.schedule-date{min-width:76px; font-size:12px; color:var(--acid); font-weight:700;}
+.schedule-time{font-family:ui-monospace,monospace; font-size:12.5px; color:var(--mist); min-width:44px;}
+.schedule-what{font-size:13.5px; flex:1;}
+
+/* TAB BAR */
+nav#tabbar{position:fixed; left:0; right:0; bottom:0; z-index:20; display:flex; background:rgba(15,17,25,.92); backdrop-filter:blur(14px); border-top:1px solid var(--line); padding:6px 4px calc(env(safe-area-inset-bottom) + 6px);}
+.tabbtn{flex:1; display:flex; flex-direction:column; align-items:center; gap:2px; background:none; border:none; padding:7px 2px; border-radius:12px; color:var(--mist);}
+.tabbtn .ic{font-size:19px; line-height:1;}
+.tabbtn .lb{font-size:10px; font-weight:700; letter-spacing:.02em;}
+.tabbtn.active{color:var(--flare);}
+.tabbtn:active{background:var(--slate2);}
+
+/* SHEET / MODAL */
+#backdrop{position:fixed; inset:0; background:rgba(0,0,0,.55); opacity:0; pointer-events:none; transition:opacity .2s; z-index:29;}
+#backdrop.show{opacity:1; pointer-events:auto;}
+#sheet{position:fixed; left:0; right:0; bottom:0; z-index:30; max-height:82dvh; overflow-y:auto; background:var(--slate); border-radius:22px 22px 0 0; border:1px solid var(--line); border-bottom:none; padding:10px 20px calc(env(safe-area-inset-bottom) + 22px); transform:translateY(105%); transition:transform .25s cubic-bezier(.2,.8,.2,1);}
+#sheet.show{transform:translateY(0);}
+.sheet-handle{width:36px; height:4px; background:var(--line); border-radius:99px; margin:6px auto 14px;}
+.sheet-title{font-size:19px; font-weight:800; margin-bottom:4px;}
+.sheet-sub{font-size:12.5px; color:var(--mist); font-weight:700; letter-spacing:.03em; text-transform:uppercase; margin-bottom:14px;}
+.closeSheet{margin-top:6px; width:100%; padding:13px; background:var(--slate2); border:1px solid var(--line); border-radius:var(--r-md); font-weight:700; font-size:14px;}
+
+.offline-note{font-size:11.5px; color:var(--mist); text-align:center; padding:18px 10px 4px; line-height:1.6;}
+
+#toast{position:fixed; left:50%; bottom:92px; transform:translate(-50%,12px); background:var(--slate2); border:1px solid var(--line); color:var(--fog); font-size:13px; font-weight:600; padding:10px 18px; border-radius:999px; opacity:0; pointer-events:none; transition:opacity .25s, transform .25s; z-index:35; white-space:nowrap;}
+#toast.show{opacity:1; transform:translate(-50%,0);}
+
+/* STORY-TRIGGER (Heute-Tab) */
+.story-btnrow{display:flex; gap:8px; margin-bottom:16px;}
+.story-trigger{display:flex; align-items:center; justify-content:center; gap:8px; flex:1; padding:12px 8px; background:linear-gradient(135deg, rgba(255,62,150,.16), rgba(207,255,77,.09)); border:1px solid var(--line); border-radius:var(--r-md); font-size:13px; font-weight:700; color:var(--fog);}
+.story-trigger:active{opacity:.7;}
+
+/* VIDEO-EXPORT OVERLAY */
+#videoExport{position:fixed; inset:0; z-index:60; background:rgba(11,13,20,.96); display:none; flex-direction:column; align-items:center; justify-content:center; padding:24px; gap:16px;}
+#videoExport.show{display:flex;}
+#exportCanvas{width:auto; max-height:62dvh; max-width:88vw; border-radius:14px; border:1px solid var(--line); background:#0B0D14;}
+.export-status{font-size:14px; font-weight:700; color:var(--fog); text-align:center;}
+.export-sub{font-size:11.5px; color:var(--mist); text-align:center; max-width:300px; line-height:1.5;}
+.export-actions{display:flex; gap:10px;}
+.export-btn{padding:13px 22px; border-radius:var(--r-md); border:1px solid var(--line); background:var(--slate2); font-size:14px; font-weight:800; color:var(--fog); text-decoration:none; display:inline-flex; align-items:center; gap:7px;}
+.export-btn.primary{background:var(--acid); color:var(--acid-ink); border-color:var(--acid);}
+.export-btn:active{opacity:.75;}
+
+/* STORY-MODUS (Vollbild-Overlay) */
+#storyMode{position:fixed; inset:0; z-index:50; background:var(--ink); display:none; flex-direction:column; overflow:hidden; touch-action:none; overscroll-behavior:none;}
+#storyMode.show{display:flex;}
+#storyMode .bgstars{position:absolute; inset:0;
+  background-image:
+    radial-gradient(1.5px 1.5px at 15% 20%, rgba(255,255,255,.4) 1px, transparent 0),
+    radial-gradient(1.5px 1.5px at 75% 65%, rgba(255,255,255,.3) 1px, transparent 0),
+    radial-gradient(2px 2px at 40% 82%, rgba(255,255,255,.25) 1px, transparent 0),
+    radial-gradient(1.5px 1.5px at 88% 15%, rgba(255,255,255,.35) 1px, transparent 0),
+    radial-gradient(1.5px 1.5px at 55% 45%, rgba(255,255,255,.2) 1px, transparent 0);
+  background-repeat:repeat; background-size:220px 220px,260px 260px,190px 190px,240px 240px,170px 170px;
+}
+.story-progress{display:flex; gap:4px; padding:calc(env(safe-area-inset-top) + 10px) 12px 0; position:relative; z-index:6;}
+.story-seg{flex:1; height:3px; background:rgba(255,255,255,.25); border-radius:99px; overflow:hidden;}
+.story-seg .fill{height:100%; width:0%; background:#fff; border-radius:99px; display:block;}
+.story-close{position:absolute; top:calc(env(safe-area-inset-top) + 14px); right:14px; z-index:7; width:34px; height:34px; border-radius:50%; background:rgba(255,255,255,.14); border:none; color:#fff; font-size:16px; display:flex; align-items:center; justify-content:center;}
+.story-tapzone{position:absolute; top:64px; bottom:0; width:32%; z-index:3; background:none; border:none; -webkit-appearance:none; appearance:none; padding:0; margin:0; border-radius:0;}
+.story-tapzone.left{left:0;}
+.story-tapzone.right{left:32%; right:0; width:68%;}
+
+.story-slides{position:relative; flex:1; z-index:2;}
+.story-slide{position:absolute; inset:0; display:none; flex-direction:column; align-items:center; justify-content:center; padding:70px 32px; text-align:center;}
+.story-slide.active{display:flex; animation:storySlideIn .4s ease;}
+@keyframes storySlideIn{from{opacity:0; transform:scale(.96);} to{opacity:1; transform:scale(1);}}
+
+.story-eyebrow{font-size:13px; font-weight:800; letter-spacing:.18em; text-transform:uppercase; color:var(--flare); margin-bottom:18px;}
+.story-daynum{font-family:var(--font-display); font-size:84px; font-weight:900; letter-spacing:-.03em; line-height:.9; color:var(--fog);}
+.story-daynum b{color:var(--acid);}
+.story-route{font-family:var(--font-display); font-size:24px; font-weight:800; margin-top:20px; line-height:1.3; max-width:320px;}
+.story-route .arrow{color:var(--flare); margin:0 8px;}
+.story-sub{font-size:14px; color:var(--mist); margin-top:10px;}
+
+.story-stats{display:flex; flex-direction:column; gap:20px; width:100%; max-width:300px;}
+.story-stat-row{display:flex; justify-content:space-between; align-items:baseline; border-bottom:1px solid rgba(255,255,255,.14); padding-bottom:14px;}
+.story-stat-row .lb{font-size:13px; color:var(--mist); font-weight:700; text-transform:uppercase; letter-spacing:.06em;}
+.story-stat-row .val{font-size:32px; font-weight:900; font-family:ui-monospace,monospace;}
+.story-stat-row .val.up{color:var(--acid);}
+.story-stat-row .val.down{color:var(--info);}
+
+.story-badge-big{font-size:14px; font-weight:800; text-transform:uppercase; letter-spacing:.08em; padding:8px 18px; border-radius:999px; margin-bottom:22px;}
+.story-badge-big.ok{background:rgba(207,255,77,.18); color:var(--acid); border:1px solid rgba(207,255,77,.4);}
+.story-badge-big.warn{background:rgba(255,138,76,.2); color:var(--warn); border:1px solid rgba(255,138,76,.4);}
+
+.story-place{font-family:var(--font-display); font-size:36px; font-weight:900; line-height:1.15;}
+.story-detail{font-size:15px; color:var(--mist); margin-top:14px; max-width:300px; line-height:1.6;}
+
+.story-wx-icon{font-size:76px; line-height:1;}
+.story-wx-temp{font-size:54px; font-weight:900; font-family:ui-monospace,monospace; margin-top:8px;}
+.story-wx-desc{font-size:16px; color:var(--mist); margin-top:8px;}
+
+.story-special-tag{font-size:13px; font-weight:800; letter-spacing:.1em; text-transform:uppercase; color:var(--acid); margin-bottom:16px;}
+.story-special-tag.warn{color:var(--warn);}
+.story-special-title{font-family:var(--font-display); font-size:29px; font-weight:900; line-height:1.2; margin-bottom:16px; max-width:300px;}
+.story-special-text{font-size:15px; color:var(--mist); line-height:1.6; max-width:300px;}
+
+#storyMode::after{content:""; position:absolute; left:-25%; right:-25%; bottom:-32%; height:62%; background:radial-gradient(ellipse at center, rgba(255,62,150,.16), transparent 65%); pointer-events:none; z-index:1;}
+
+.story-watermark{position:absolute; bottom:calc(env(safe-area-inset-bottom) + 18px); left:0; right:0; display:flex; align-items:center; justify-content:center; gap:6px; font-size:11px; font-weight:800; letter-spacing:.08em; text-transform:uppercase; color:var(--mist); z-index:2;}
+.story-watermark b{color:var(--fog);}
+
+:focus-visible{outline:2px solid var(--flare); outline-offset:2px;}
+@media (prefers-reduced-motion:reduce){ *{animation-duration:.001ms !important; transition-duration:.001ms !important;} }
+</style>
+</head>
+<body>
+<div id="app">
+
+  <div id="topbar">
+    <header><div class="brand"><b>Sneak Peaks</b><span class="tag">Entree</span></div></header>
+    <div id="quickbar">
+      <button class="qbtn" id="qbEmergency">⛑️ <span>Notfall</span></button>
+      <button class="qbtn" id="qbGroup">💬 <span>Gruppe</span></button>
+      <button class="qbtn" id="qbKomoot">🗺️ <span>Komoot-Route</span></button>
+    </div>
+  </div>
+
+  <main id="content">
+
+    <section class="view active" id="view-heute">
+      <div class="progress" id="progressBar"></div>
+      <div class="progress-caption"><span id="progCapLeft">Tag 1 von 5</span><span id="progCapRight">0 / 495 km</span></div>
+      <div class="daypills" id="dayPills"></div>
+      <div id="heuteBody"></div>
+    </section>
+
+    <section class="view" id="view-cp">
+      <p class="eyebrow">6 Checkpoints + Ziel · der Reihe nach</p>
+      <div class="rowlist" id="cpList"></div>
+    </section>
+
+    <section class="view" id="view-resupply">
+      <p class="eyebrow">Alle Stationen · der Reihe nach</p>
+      <div id="resupplyBody"></div>
+    </section>
+
+    <section class="view" id="view-schlafen">
+      <p class="eyebrow">5 Nächte im Überblick</p>
+      <div id="schlafenBody"></div>
+    </section>
+
+    <section class="view" id="view-mehr">
+      <p class="eyebrow">Zeitplan &amp; Vorbereitung</p>
+      <div id="mehrBody"></div>
+      <p class="offline-note">Diese Seite ist als installierbare Web-App gebaut: einmal mit Empfang öffnen und zum Homescreen hinzufügen — danach läuft sie komplett offline. Nur die Wettervorhersage braucht jeweils kurz Empfang zum Aktualisieren.</p>
+    </section>
+
+  </main>
+
+  <nav id="tabbar">
+    <button class="tabbtn active" data-tab="heute"><span class="ic">🚵</span><span class="lb">Heute</span></button>
+    <button class="tabbtn" data-tab="cp"><span class="ic">📍</span><span class="lb">Checkpoints</span></button>
+    <button class="tabbtn" data-tab="resupply"><span class="ic">🥖</span><span class="lb">Resupply</span></button>
+    <button class="tabbtn" data-tab="schlafen"><span class="ic">⛺</span><span class="lb">Schlafen</span></button>
+    <button class="tabbtn" data-tab="mehr"><span class="ic">☰</span><span class="lb">Mehr</span></button>
+  </nav>
+</div>
+
+<div id="backdrop"></div>
+<div id="sheet" aria-hidden="true">
+  <div class="sheet-handle"></div>
+  <div class="sheet-title" id="sheetTitle"></div>
+  <div class="sheet-sub" id="sheetSub"></div>
+  <div id="sheetBody"></div>
+  <button class="closeSheet" id="closeSheetBtn">Schließen</button>
+</div>
+<div id="toast"></div>
+
+<div id="videoExport" aria-hidden="true">
+  <canvas id="exportCanvas" width="1080" height="1920"></canvas>
+  <div class="export-status" id="exportStatus">Rendere Video …</div>
+  <div class="export-sub" id="exportSub">Das Intro wird direkt auf deinem Gerät gerendert — kein Upload, kein Internet nötig.</div>
+  <div class="export-actions" id="exportActions">
+    <button class="export-btn" id="exportCancel">Abbrechen</button>
+  </div>
+</div>
+
+<div id="storyMode" aria-hidden="true">
+  <div class="bgstars"></div>
+  <div class="story-progress" id="storyProgress"></div>
+  <button class="story-close" id="storyClose">✕</button>
+  <div class="story-slides" id="storySlideWrap"></div>
+  <button class="story-tapzone left" id="storyPrevZone" aria-label="Vorherige Karte"></button>
+  <button class="story-tapzone right" id="storyNextZone" aria-label="Nächste Karte"></button>
+</div>
+
+<script>
+/* ======================= KONFIG ======================= */
+// TODO: echten Link zur Kommunikations-/Gruppen-Chat eintragen (WhatsApp/Signal/OUTTA-Event)
+const COMM_GROUP_URL = "";
+const KOMOOT_URL = "https://komoot.com/de-de/collection/4519315/-party-pace-patrol-sneak-peaks_entree_5-days-with-lotti";
+
+/* ======================= DATEN ======================= */
+const DAYS = [
+ {n:1, from:"Ahoi Minigolf", to:"Rifugio Conseria", subtitle:"CP1 · 1.835 m", km:88.9, time:"6:18 Std.", up:3180, down:1630, kmFrom:0, kmTo:89,
+  character:"Überwiegend befestigte Wege — konditionell hart, technisch aber unkompliziert.",
+  sleep:{status:"ok", place:"Rifugio Conseria", note:"CP1 · 1.835 m", detail:"Zelten in der Nähe kostenlos. Alternativ Halbpension 62 € oder Übernachtung 30 €."},
+  way:[1,2],
+  specials:[{type:"highlight", title:"Manghen Pass", text:"Weitgehend autofrei, raue und isolierte Alpenatmosphäre — seit Jahren Teil vieler Giro-d'Italia-Geschichten."}]},
+ {n:2, from:"Rifugio Conseria", to:"Rifugio Scarpa", subtitle:"CP2 · 1.735 m", km:92.5, time:"6:24 Std.", up:3290, down:3420, kmFrom:89, kmTo:182,
+  character:"Auf einigen Passagen ist Schieben wahrscheinlich.",
+  sleep:{status:"ok", place:"Rifugio Scarpa", note:"CP2 · 1.735 m", detail:"Zelten in der Nähe kostenlos. Alternativ Halbpension 70 € oder Übernachtung 32 €."},
+  way:[3,4,5],
+  specials:[
+    {type:"warn", title:"Magna Pass", km:"91–98", text:"Nicht steil, aber blockiert mit Felsbrocken, kein Handyempfang."},
+    {type:"warn", title:"Dead End zu Rifugio Scarpa", km:"176–186", text:"Sackgassen-Stichstrecke, Ø13 %, Spitzen bis 25 %. Teils Absteigen nötig — rechts halten, auf Abfahrer achten."}
+  ]},
+ {n:3, from:"Rifugio Scarpa", to:"Glittnersee", subtitle:"kein Handbook-Checkpoint", km:126, time:"9:17 Std.", up:4830, down:4400, kmFrom:182, kmTo:307,
+  character:"Längster & höhenmeterreichster Tag der Route.",
+  sleep:{status:"warn", place:"Glittnersee", note:"Bergsee, ca. 2.150 m — nicht im Handbook", detail:"Kein Rifugio, keine Verpflegung vor Ort. Nur Wildcamping/Notbiwak (offiziell nicht erlaubt, aber toleriert) — dafür ist die Notfalldecke/der Biwaksack Pflichtausrüstung. Fallback: Rifugio Campoforte liegt ca. 10 km weiter, gleich zu Beginn von Tag 4."},
+  way:[6,7,8,9,10,11,12],
+  specials:[
+    {type:"highlight", title:"Ambrizzola Pass", text:"„Unser persönliches Highlight“ — jedes Jahr Teil der Strecke. Danach der wunderschöne Lago Federa."},
+    {type:"warn", title:"Forcella Ambrizzola Trail", km:"237–240", text:"Überquerung auf 2.277 m, ca. 3 km Hike-a-Bike — dafür Panoramablick über die Ampezzo-Dolomiten."}
+  ]},
+ {n:4, from:"Glittnersee", to:"Weitenbergalm", subtitle:"CP5 · 1.956 m", km:52.0, time:"3:28 Std.", up:1580, down:1770, kmFrom:307, kmTo:358,
+  character:"Kürzester Tag — so etwas wie ein Erholungstag nach Tag 3.",
+  sleep:{status:"ok", place:"Weitenbergalm", note:"CP5 · 1.956 m", detail:"Einzige Option: keine Zimmer/Schlafsäle vorhanden — Zelten ist hier Standard, kostenlos."},
+  way:[13,14,15,16],
+  specials:[{type:"highlight", title:"Weitenbergalm", text:"„Ein echtes verstecktes Kleinod“ abseits des Tourismus."}]},
+ {n:5, from:"Weitenbergalm", to:"Ahoi Minigolf", subtitle:"Ziel · 289 m", km:137, time:"9:46 Std.", up:4460, down:6130, kmFrom:358, kmTo:495,
+  character:"Längster Tag in km, meiste Abfahrtsmeter.",
+  sleep:{status:"ok", place:"Ahoi Minigolf", note:"Ziel · 289 m", detail:"Zelten kostenlos, Duschen & Toiletten vorhanden. Nach dem Zieleinlauf darfst du bis Montag bleiben."},
+  way:[17,18,19,20,21],
+  specials:[
+    {type:"highlight", title:"Jaufenpass", text:"Glatter, verkehrsfreier Asphalt — einer der wenigen Anstiege, die man nicht hart antreten muss."},
+    {type:"warn", title:"Pfunderer Joch", km:"360–365", text:"Zickzack steil direkt nach Weitenbergalm, flacht kurz ab, wird dann wieder steiler."},
+    {type:"warn", title:"Sarntaler Alpen — Schlussanstieg", text:"Schwerster Anstieg der gesamten Route: 2.300 Hm auf 25 km."},
+    {type:"warn", title:"Forcella Osvaldo", km:"458–462", text:"Sehr steil, 800 Hm auf < 4 km — volle Hike-a-Bike-Herausforderung, mental wie körperlich."},
+    {type:"highlight", title:"Zielabfahrt", text:"Letzte 42 km sind reine Abfahrt (−2.000 Hm) zurück nach Bozen."}
+  ]},
+];
+
+const CP = {
+ cp1:{id:"cp1", label:"Rifugio Conseria", role:"Ende Tag 1", km:89, alt:1835,
+   web:"rifugioconseria.it", mail:"info@rifugioconseria.it", tel:"+393495507733", telShow:"+39 349 5507733",
+   hours:"7–22 Uhr · außerhalb: Stempel liegt an der Tür", food:"Italienisch, Signature-Dish Polenta · Primo 8–10 € · Secondo 10–15 €",
+   camp:{status:"ok", text:"Zelten in der Nähe kostenlos"}, stay:"Halbpension 62 € · Übernachtung 30 €",
+   wifi:true, water:"ja", power:true},
+ cp2:{id:"cp2", label:"Rifugio Scarpa", role:"Ende Tag 2", km:182, alt:1735,
+   web:"rifugioscarpa.com", mail:"info@rifugioscarpa.com", tel:"+393313152963", telShow:"+39 331 315 2963",
+   hours:"7–22 Uhr", food:"Italienisch · Primo 12–14 € · Secondo 13–16 €",
+   camp:{status:"ok", text:"Zelten in der Nähe kostenlos"}, stay:"Halbpension 70 € · Übernachtung 32 €",
+   wifi:true, water:"ja, nicht trinkbar", power:true},
+ cp3:{id:"cp3", label:"Rifugio Città di Fiume", role:"Durchfahrt Tag 3", km:233, alt:1911,
+   web:"rifugiocittadifiume.it", mail:"info@rifugiocittadifiume.it", tel:"+393200377432", telShow:"+39 320 0377432",
+   hours:"7–21:30 Uhr · Küche zw. den Mahlzeiten geschlossen", food:"Italienisch · Primo 9–15 € · Secondo 14–19 €",
+   camp:{status:"warn", text:"Nicht direkt am Haus (private Kuhweide) — davor/danach möglich"}, stay:"Halbpension 75 € · Übernachtung 40 € — kann ausgebucht sein!",
+   wifi:true, water:"ja, nicht trinkbar", power:true},
+ cp4:{id:"cp4", label:"Rifugio Pederü", role:"Durchfahrt Tag 3", km:277, alt:1584,
+   web:"pederue.it", mail:"info@pederue.it", tel:"+390474834316", telShow:"+39 0474 834316",
+   hours:"8–20 Uhr", food:"Italienisch · Primo 10–12 € · Secondo 14–25 €",
+   camp:{status:"no", text:"Nicht erlaubt (Fanes-Region/Nationalpark)"}, stay:"Schlafsaal 61 €",
+   wifi:"nur für Gäste", water:"ja", power:true},
+ cp5:{id:"cp5", label:"Weitenbergalm", role:"Ende Tag 4", km:358, alt:1956,
+   web:"weitenberg-alm.com", mail:"fmmeister@t-online.de", tel:"+491726922200", telShow:"+49 172 6922200",
+   hours:"6–22 Uhr", food:"Italienisch · nur Secondo 10–16 €",
+   camp:{status:"ok", text:"Einzige Option — keine Zimmer/Schlafsäle, Zelten kostenlos"}, stay:"—",
+   wifi:false, water:"ja", power:true},
+ cp6:{id:"cp6", label:"Malga Kirchsteiger", role:"Durchfahrt Tag 5", km:458, alt:1945,
+   web:"kirchsteigeralm.com", mail:"info@kirchsteigeralm.com", tel:"+393497749284", telShow:"+39 349 774 9284",
+   hours:"8–18 Uhr · Küche nur 11–16 Uhr", food:"Italienisch · Primo 8–12 € · Secondo 10–20 €",
+   camp:{status:"ok", text:"Zelten in der Nähe kostenlos"}, stay:"B&B 60 € inkl. Frühstücksbuffet",
+   wifi:true, water:"ja", power:true},
+ finish:{id:"finish", label:"Ahoi Minigolf", role:"Ziel · Ende Tag 5", km:495, alt:289,
+   web:"ahoi.bz", mail:"info@ahoi.bz", tel:"+390471342597", telShow:"+39 0471 342597",
+   hours:"durchgehend geöffnet", food:"Italienisch · Primo 8–12 € · Secondo 9–16 €",
+   camp:{status:"ok", text:"Zelten kostenlos, Duschen & Toiletten vorhanden"}, stay:"—",
+   wifi:false, water:"ja", power:true},
+};
+const CP_ORDER = ["cp1","cp2","cp3","cp4","cp5","cp6","finish"];
+
+const WAY = {
+ 1:{km:46, name:"Molina di Fiemme", kind:"town", offer:"Supermarkt · Restaurants · Apotheke · Brunnen"},
+ 2:{km:89, name:"Rifugio Conseria", kind:"cp", cp:"cp1", offer:"Stempel · Essen · Getränke · Wasser"},
+ 3:{km:122, name:"Canal San Bovo", kind:"town", offer:"Supermarkt · Restaurants · Apotheke · Brunnen"},
+ 4:{km:134, name:"Mezzano", kind:"town", offer:"Supermarkt · Restaurants · Apotheke · Brunnen"},
+ 5:{km:182, name:"Rifugio Scarpa", kind:"cp", cp:"cp2", offer:"Stempel · Essen · Getränke · Wasser"},
+ 6:{km:196, name:"Agordo", kind:"town", offer:"Supermarkt · Restaurants · Apotheke · Brunnen"},
+ 7:{km:223, name:"Mareson", kind:"town", offer:"Supermarkt · Restaurants · Apotheke · Brunnen"},
+ 8:{km:233, name:"Rifugio Città di Fiume", kind:"cp", cp:"cp3", offer:"Stempel · Essen · Getränke · Wasser · Übernachtung"},
+ 9:{km:241, name:"Rifugio Croda da Lago", kind:"rifugio", offer:"Essen · Getränke · Wasser"},
+ 10:{km:252, name:"Cortina d'Ampezzo", kind:"town", offer:"Supermarkt · Restaurants · Apotheke · Brunnen (off-route)"},
+ 11:{km:276, name:"Rifugio Pederü", kind:"cp", cp:"cp4", offer:"Stempel · Essen · Getränke · Wasser"},
+ 12:{km:307, name:"Glittnersee", kind:"camp", offer:"Tagesziel Tag 3 (Komoot) — kein Handbook-Eintrag, siehe Schlafen"},
+ 13:{km:317, name:"Rifugio Campoforte", kind:"rifugio", offer:"Essen · Getränke · Wasser"},
+ 14:{km:334, name:"Mühlbach", kind:"town", offer:"Supermarkt · Restaurants · Apotheke · Brunnen"},
+ 15:{km:340, name:"Niedervintl", kind:"town", offer:"Supermarkt · Restaurants · Apotheke · Brunnen"},
+ 16:{km:358, name:"Weitenbergalm", kind:"cp", cp:"cp5", offer:"Stempel · Essen · Getränke · Wasser · kostenloses Camping"},
+ 17:{km:385, name:"Sterzing", kind:"town", offer:"Supermarkt · Restaurants · Apotheke · Brunnen"},
+ 18:{km:447, name:"Gompm Alm", kind:"rifugio", offer:"Essen · Getränke · Wasser"},
+ 19:{km:456, name:"Streitweider Alm", kind:"rifugio", offer:"Essen · Getränke · Wasser"},
+ 20:{km:461, name:"Malga Kirchsteiger", kind:"cp", cp:"cp6", offer:"Stempel · Essen · Getränke · Wasser · Übernachtung · kostenloses Camping"},
+ 21:{km:495, name:"Ahoi Minigolf", kind:"finish", offer:"Ziel — „Big hugs at the finish line“"},
+};
+
+// Ungefähre Koordinaten (Handbook nennt keine GPS-Daten, nur Ortsnamen — per Web-Recherche
+// angenähert, für Rifugio Scarpa, Weitenbergalm, Città di Fiume/Croda da Lago genauer verifiziert,
+// für kleinere Almen grober geschätzt). Für exakte Navigation gilt weiter die Komoot-Route.
+const COORDS = {
+ start:{lat:46.4983, lon:11.3548},
+ 1:{lat:46.283, lon:11.487},
+ 2:{lat:46.16, lon:11.58},
+ 3:{lat:46.128, lon:11.746},
+ 4:{lat:46.146, lon:11.789},
+ 5:{lat:46.21, lon:11.92},
+ 6:{lat:46.2762, lon:12.0347},
+ 7:{lat:46.372, lon:12.132},
+ 8:{lat:46.44, lon:12.13},
+ 9:{lat:46.47, lon:12.10},
+ 10:{lat:46.5405, lon:12.1357},
+ 11:{lat:46.615, lon:12.03},
+ 12:{lat:46.70, lon:11.78},
+ 13:{lat:46.77, lon:11.78},
+ 14:{lat:46.7989, lon:11.7469},
+ 15:{lat:46.817, lon:11.733},
+ 16:{lat:46.9295, lon:11.6453},
+ 17:{lat:46.8952, lon:11.4322},
+ 18:{lat:46.86, lon:11.28},
+ 19:{lat:46.83, lon:11.26},
+ 20:{lat:46.68, lon:11.28},
+ 21:{lat:46.4983, lon:11.3548},
+};
+
+const EXIT = {
+ e1:{km:89, name:"Rifugio Conseria", text:"Nach Trento, dort regelmäßiger Zug."},
+ e2:{km:142, name:"Mezzano", text:"Kein ÖPNV — Route zurück nach Bolzano."},
+ e3:{km:196, name:"Agordo", text:"Kein ÖPNV — Route zurück nach Bolzano."},
+ e4:{km:279, name:"Rifugio Pederü", text:"Nach Bruneck Bahnhof, dort regelmäßiger Zug."},
+ e5:{km:337, name:"Mühlbach", text:"Kein ÖPNV — Route zurück nach Bolzano."},
+ e6:{km:387, name:"Sterzing", text:"ÖPNV nutzen oder Route zurück nach Bolzano."},
+ e7:{km:426, name:"St. Leonhard in Passeier", text:"Kein ÖPNV — Route zurück nach Bolzano."},
+};
+
+const SCHEDULE = [
+ {date:"Sa 29.8.", time:"14–17", what:"Akkreditierung & Gepäckabgabe ENTREE"},
+ {date:"Sa 29.8.", time:"17:30", what:"Briefing ENTREE"},
+ {date:"Sa 29.8.", time:"18:00", what:"Abendessen & Get-together (Camping inklusive)"},
+ {date:"So 30.8.", time:"7–9", what:"Frühstück & Gepäckabgabe"},
+ {date:"So 30.8.", time:"09:00", what:"START ENTREE"},
+ {date:"Fr 4.9.", time:"18:00", what:"Rider Dinner & Willkommen PPP (Pizza inklusive)"},
+ {date:"Sa 5.9.", time:"10:00", what:"Hill Climbing Challenge (1,5 km / 330 Hm)"},
+];
+
+const GEAR_MUST = ["2× Frontlicht & 2× Rücklicht","Notfall-/Rettungsdecke oder Biwaksack","Helm","Reflektierende Jacke","Mind. 2 l Wasserkapazität","Ein Paar Ersatz-Bremsbeläge","USB-C-Kabel für den Tracker"];
+const GEAR_REC = ["Erste-Hilfe-Set","Handschuhe","Daunenjacke","Wasserreinigungstabletten"];
+
+const WEATHER_LOC = {
+ 1:{lat:46.17, lon:11.58, label:"Lagorai / Rifugio Conseria (ca.)"},
+ 2:{lat:46.21, lon:11.92, label:"Agordino / Rifugio Scarpa (ca.)"},
+ 3:{lat:46.70, lon:11.78, label:"Eisacktal / Glittnersee (ca.)"},
+ 4:{lat:46.90, lon:11.68, label:"Pfunderer Tal / Weitenbergalm (ca.)"},
+ 5:{lat:46.50, lon:11.35, label:"Sarntal / Bozen (ca.)"},
+};
+const WMO = {
+ 0:["☀️","Klar"],1:["🌤️","Meist klar"],2:["⛅","Wolkig"],3:["☁️","Bedeckt"],
+ 45:["🌫️","Nebel"],48:["🌫️","Reifnebel"],
+ 51:["🌦️","Niesel leicht"],53:["🌦️","Niesel"],55:["🌧️","Niesel stark"],
+ 56:["🌧️","Gefr. Niesel"],57:["🌧️","Gefr. Niesel stark"],
+ 61:["🌧️","Regen leicht"],63:["🌧️","Regen"],65:["🌧️","Regen stark"],
+ 66:["🌧️","Gefr. Regen"],67:["🌧️","Gefr. Regen stark"],
+ 71:["🌨️","Schnee leicht"],73:["🌨️","Schnee"],75:["❄️","Schnee stark"],77:["❄️","Schneekörner"],
+ 80:["🌦️","Schauer leicht"],81:["🌧️","Schauer"],82:["⛈️","Schauer stark"],
+ 85:["🌨️","Schneeschauer"],86:["❄️","Schneeschauer stark"],
+ 95:["⛈️","Gewitter"],96:["⛈️","Gewitter/Hagel"],99:["⛈️","Gewitter/Hagel stark"],
+};
+function wmo(code){ return WMO[code] || ["❓","–"]; }
+
+/* ======================= HELPERS ======================= */
+const $ = s => document.querySelector(s);
+const $$ = s => Array.from(document.querySelectorAll(s));
+function campBadge(camp){
+  const label = camp.status==="ok"?"Camping möglich":camp.status==="warn"?"Eingeschränkt":"Nicht erlaubt";
+  const icon = camp.status==="ok"?"✓":camp.status==="warn"?"△":"✕";
+  return `<span class="badge ${camp.status}">${icon} ${label}</span>`;
+}
+function stopIcon(kind){ return {town:"🏘️", rifugio:"🍽️", cp:"📍", finish:"🏁", camp:"⛺"}[kind]||"·"; }
+function stopColorClass(w){
+  if(w.kind==="cp") return CP[w.cp].camp.status;
+  if(w.kind==="camp") return "warn";
+  if(w.kind==="finish") return "ok";
+  return "info";
+}
+function toast(msg){
+  const t = $("#toast");
+  t.textContent = msg; t.classList.add("show");
+  clearTimeout(t._timer);
+  t._timer = setTimeout(()=>t.classList.remove("show"), 2600);
+}
+function cpDetailDl(cp){
+  return `<dl>
+    <dt>Essen</dt><dd>${cp.food}</dd>
+    <dt>Öffnung</dt><dd>${cp.hours}</dd>
+    <dt>Camping</dt><dd>${cp.camp.text}</dd>
+    <dt>Übernachtung</dt><dd>${cp.stay}</dd>
+    <dt>WLAN</dt><dd>${cp.wifi===true?"Ja":cp.wifi===false?"Nein":cp.wifi}</dd>
+    <dt>Wasser</dt><dd>${cp.water}</dd>
+    <dt>Strom</dt><dd>${cp.power?"Ja":"Nein"}</dd>
+    <dt>Kontakt</dt><dd><a href="tel:${cp.tel}">${cp.telShow}</a> · <a href="https://${cp.web}" target="_blank" rel="noopener">${cp.web}</a></dd>
+  </dl>`;
+}
+function cpRowHtml(cp){
+  return `<div class="row-wrap">
+    <button class="tap" data-cp="${cp.id}">
+      <span class="km mono">${cp.km}</span>
+      <div class="name">${cp.label}<div class="sub">${cp.role} · ${cp.alt} m</div></div>
+      ${campBadge(cp.camp)}
+      <span class="chev">›</span>
+    </button>
+    <div class="row-detail">${cpDetailDl(cp)}</div>
+  </div>`;
+}
+function wayRowHtml(w){
+  return `<div class="row"><span class="km mono">${w.km}</span><span style="font-size:15px">${stopIcon(w.kind)}</span><div class="name">${w.name}<div class="sub">${w.offer}</div></div></div>`;
+}
+
+// Schematisches Höhenprofil pro Tag: [Streckenanteil 0-1, Höhe in m].
+// Fixpunkte sind echt (Checkpoint-Höhen exakt aus dem Handbook, Ambrizzola Pass 2.277m,
+// Pfunderer Joch 2.551m laut Handbook). Passhöhen dazwischen (Manghen, San Lugano, Brocon,
+// Duran, Staulanza, Jaufenpass, St. Leonhard) sind aus allgemeiner Ortskenntnis angenähert,
+// nicht aus dem Handbook oder einem GPS-Track. Zwischen den Punkten wird linear interpoliert.
+const ELEV = {
+  1:[[0,289],[0.26,289],[0.55,750],[0.60,1097],[0.62,950],[0.85,2047],[0.90,1700],[1,1835]],
+  2:[[0,1835],[0.15,1300],[0.35,1616],[0.55,900],[0.75,1100],[0.94,1085],[1,1735]],
+  3:[[0,1735],[0.10,900],[0.20,1601],[0.28,1773],[0.35,1911],[0.55,2277],[0.62,1450],[0.75,1584],[0.90,1900],[1,2150]],
+  4:[[0,2150],[0.30,1500],[0.55,1750],[0.80,1550],[1,1956]],
+  5:[[0,1956],[0.04,2551],[0.20,948],[0.35,2094],[0.50,660],[0.70,1945],[0.73,1945],[1,289]],
+};
+function elevGeometry(dayNum, W, H, pad){
+  const pts = ELEV[dayNum];
+  const elevs = pts.map(p=>p[1]);
+  const eMin = Math.min(...elevs), eMax = Math.max(...elevs);
+  const eSpan = (eMax-eMin) || 100;
+  const X = f => pad + f*(W-2*pad);
+  const Y = e => pad + (eMax-e)/eSpan*(H-2*pad);
+  return {pts, eMin, eMax, X, Y};
+}
+function elevationSvg(dayNum, opts){
+  opts = opts || {};
+  const W = 400, H = opts.h || 150, pad = 16;
+  const {pts, eMin, eMax, X, Y} = elevGeometry(dayNum, W, H, pad);
+  const linePts = pts.map(p=>`${X(p[0]).toFixed(1)},${Y(p[1]).toFixed(1)}`);
+  const lineD = "M " + linePts.join(" L ");
+  const areaD = `M ${X(0).toFixed(1)},${(H-pad).toFixed(1)} L ` + linePts.join(" L ") + ` L ${X(1).toFixed(1)},${(H-pad).toFixed(1)} Z`;
+  const idsfx = opts.suffix || ("d"+dayNum);
+  let markers = "";
+  if(opts.markers){
+    const d = DAYS[dayNum-1];
+    const span = d.kmTo-d.kmFrom;
+    d.way.forEach(wid=>{
+      const w = WAY[wid];
+      if(w.kind!=="cp") return;
+      const frac = (w.km-d.kmFrom)/span;
+      const x = X(frac), y = Y(CP[w.cp].alt);
+      markers += `<circle class="map-hit" cx="${x.toFixed(1)}" cy="${y.toFixed(1)}" r="13" data-wid="${wid}"></circle><circle class="map-dot-visual ${stopColorClass(w)}" cx="${x.toFixed(1)}" cy="${y.toFixed(1)}" r="5" data-wid="${wid}"></circle>`;
+    });
+  }
+  return `<svg viewBox="0 0 ${W} ${H}" ${opts.markers?`id="elevSvg${idsfx}"`:""} preserveAspectRatio="none" style="width:100%;height:${H}px;display:block;">
+    <defs><linearGradient id="elevGrad${idsfx}" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#FF3E96" stop-opacity="0.5"/>
+      <stop offset="100%" stop-color="#FF3E96" stop-opacity="0.03"/>
+    </linearGradient></defs>
+    <path d="${areaD}" fill="url(#elevGrad${idsfx})" stroke="none"/>
+    <path d="${lineD}" class="elevline" fill="none" stroke="#FF3E96" stroke-width="2.6" stroke-linejoin="round" stroke-linecap="round"/>
+    ${markers}
+    <text x="${pad}" y="${pad+9}" fill="#9498A8" font-size="11" font-family="ui-monospace,monospace">${Math.round(eMax)} m</text>
+    <text x="${pad}" y="${H-pad-4}" fill="#9498A8" font-size="11" font-family="ui-monospace,monospace">${Math.round(eMin)} m</text>
+  </svg>`;
+}
+
+/* ======================= KARTE ======================= */
+const ROUTE_SEQ = ["start", ...DAYS.flatMap(d=>d.way)];
+let lastGeom = null;
+let mapState = {scale:1, tx:0, ty:0};
+
+function buildMapGeometry(){
+  const lats = ROUTE_SEQ.map(id=>COORDS[id].lat);
+  const lons = ROUTE_SEQ.map(id=>COORDS[id].lon);
+  const latMin=Math.min(...lats), latMax=Math.max(...lats);
+  const lonMin=Math.min(...lons), lonMax=Math.max(...lons);
+  const midLat=(latMin+latMax)/2;
+  const cosF=Math.cos(midLat*Math.PI/180);
+  const VBW=400;
+  const latSpan=(latMax-latMin)||0.02;
+  const lonSpanC=((lonMax-lonMin)*cosF)||0.02;
+  const VBH=Math.round(VBW*(latSpan/lonSpanC));
+  const PAD=32;
+  function proj(lat,lon){
+    const x = PAD + (lon-lonMin)*cosF/lonSpanC*(VBW-2*PAD);
+    const y = PAD + (latMax-lat)/latSpan*(VBH-2*PAD);
+    return {x,y};
+  }
+  return {VBW, VBH, PAD, proj};
+}
+function pathD(ids, proj){
+  return "M " + ids.map(id=>{const p=proj(COORDS[id].lat,COORDS[id].lon); return p.x.toFixed(1)+","+p.y.toFixed(1);}).join(" L ");
+}
+function mapHtml(dayNum){
+  const geom = buildMapGeometry();
+  lastGeom = geom;
+  mapState = {scale:1, tx:0, ty:0};
+  const {VBW, VBH, proj} = geom;
+  const d = DAYS[dayNum-1];
+  const prevLast = dayNum===1 ? "start" : DAYS[dayNum-2].way[DAYS[dayNum-2].way.length-1];
+  const activeSeq = [prevLast, ...d.way];
+  const activeIds = new Set(activeSeq.map(String));
+
+  const full = pathD(ROUTE_SEQ, proj);
+  const active = pathD(activeSeq, proj);
+
+  const dots = ROUTE_SEQ.map(id=>{
+    const c = COORDS[id];
+    const p = proj(c.lat, c.lon);
+    const isActive = activeIds.has(String(id));
+    let cls;
+    if(id==="start") cls="ok";
+    else cls = stopColorClass(WAY[id]);
+    const r = isActive ? (id==="start"?9:8) : (id==="start"?6:4.5);
+    const op = isActive ? 1 : .4;
+    return `<circle class="map-hit" cx="${p.x.toFixed(1)}" cy="${p.y.toFixed(1)}" r="15" data-wid="${id}"></circle>
+      <circle class="map-dot-visual ${cls}" cx="${p.x.toFixed(1)}" cy="${p.y.toFixed(1)}" r="${r}" style="opacity:${op}" data-wid="${id}"></circle>`;
+  }).join("");
+
+  return `<div class="mapwrap" style="aspect-ratio:${VBW}/${VBH}">
+    <svg viewBox="0 0 ${VBW} ${VBH}" class="routemap" id="routeMapSvg" preserveAspectRatio="xMidYMid meet">
+      <defs><linearGradient id="mapbg" x1="0" y1="0" x2="1" y2="1">
+        <stop offset="0%" stop-color="#141824"/><stop offset="100%" stop-color="#1B2130"/>
+      </linearGradient></defs>
+      <rect x="0" y="0" width="${VBW}" height="${VBH}" rx="16" fill="url(#mapbg)"/>
+      <g id="mapZoomGroup">
+        <path d="${full}" class="map-fullpath"/>
+        <path d="${active}" class="map-activepath-halo"/>
+        <path d="${active}" class="map-activepath"/>
+        ${dots}
+      </g>
+    </svg>
+    <div class="map-compass">N ↑</div>
+    <div class="map-note">schematisch</div>
+    <div class="map-controls">
+      <button class="mapctl" id="zoomIn" aria-label="Vergrößern">+</button>
+      <button class="mapctl" id="zoomOut" aria-label="Verkleinern">−</button>
+      <button class="mapctl" id="mapReset" aria-label="Ganze Route zeigen">⤢</button>
+      <button class="mapctl" id="gpsBtn" aria-label="Eigene Position">📍</button>
+    </div>
+  </div>
+  <div id="gpsReadout"></div>
+  <div class="legend">
+    <span><i style="background:var(--fog)"></i>Start/Ziel</span>
+    <span><i style="background:var(--acid)"></i>Camping ok</span>
+    <span><i style="background:var(--warn)"></i>eingeschränkt</span>
+    <span><i style="background:var(--bad)"></i>nicht erlaubt</span>
+    <span><i style="background:var(--info)"></i>Resupply</span>
+    <span>· antippen für Details</span>
+  </div>`;
+}
+
+/* ---- Zoom/Pan ---- */
+function clampNum(v,min,max){ return Math.max(min, Math.min(max, v)); }
+function clampPan(){
+  if(!lastGeom) return;
+  const {VBW,VBH} = lastGeom;
+  const minTx = VBW*(1-mapState.scale), maxTx = 0;
+  const minTy = VBH*(1-mapState.scale), maxTy = 0;
+  mapState.tx = clampNum(mapState.tx, minTx, maxTx);
+  mapState.ty = clampNum(mapState.ty, minTy, maxTy);
+}
+function applyMapTransform(){
+  const g = document.getElementById("mapZoomGroup");
+  if(g) g.setAttribute("transform", `translate(${mapState.tx},${mapState.ty}) scale(${mapState.scale})`);
+  const resetBtn = document.getElementById("mapReset");
+  if(resetBtn) resetBtn.style.display = mapState.scale>1.02 ? "flex" : "none";
+}
+function setZoomAt(newScale, px, py){
+  newScale = clampNum(newScale, 1, 5);
+  const ratio = newScale/mapState.scale;
+  mapState.tx = px*(1-ratio) + mapState.tx*ratio;
+  mapState.ty = py*(1-ratio) + mapState.ty*ratio;
+  mapState.scale = newScale;
+  clampPan();
+  applyMapTransform();
+}
+function zoomBy(factor, px, py){ setZoomAt(mapState.scale*factor, px, py); }
+function resetZoom(){ mapState = {scale:1, tx:0, ty:0}; applyMapTransform(); }
+function toSvgPointSafe(svg, clientX, clientY){
+  try{
+    const ctm = svg.getScreenCTM();
+    if(!ctm) return {x:clientX, y:clientY};
+    const pt = svg.createSVGPoint();
+    pt.x = clientX; pt.y = clientY;
+    const loc = pt.matrixTransform(ctm.inverse());
+    return {x:loc.x, y:loc.y};
+  }catch(e){ return {x:clientX, y:clientY}; }
+}
+function bindMapGestures(svg){
+  const pointers = new Map();
+  let dragLast = null;
+  let pinchStartDist = 0, pinchStartScale = 1;
+
+  svg.addEventListener("pointerdown", e=>{
+    pointers.set(e.pointerId, {x:e.clientX, y:e.clientY});
+    if(pointers.size===1){
+      dragLast = toSvgPointSafe(svg, e.clientX, e.clientY);
+    } else if(pointers.size===2){
+      const pts=[...pointers.values()];
+      pinchStartDist = Math.hypot(pts[0].x-pts[1].x, pts[0].y-pts[1].y) || 1;
+      pinchStartScale = mapState.scale;
+      dragLast = null;
+    }
+    try{ svg.setPointerCapture(e.pointerId); }catch(e2){}
+  });
+  svg.addEventListener("pointermove", e=>{
+    if(!pointers.has(e.pointerId)) return;
+    pointers.set(e.pointerId, {x:e.clientX, y:e.clientY});
+    if(pointers.size===2){
+      const pts=[...pointers.values()];
+      const d = Math.hypot(pts[0].x-pts[1].x, pts[0].y-pts[1].y) || 1;
+      const midX=(pts[0].x+pts[1].x)/2, midY=(pts[0].y+pts[1].y)/2;
+      const mid = toSvgPointSafe(svg, midX, midY);
+      setZoomAt(pinchStartScale*(d/pinchStartDist), mid.x, mid.y);
+    } else if(pointers.size===1 && dragLast && mapState.scale>1.01){
+      const cur = toSvgPointSafe(svg, e.clientX, e.clientY);
+      mapState.tx += (cur.x - dragLast.x);
+      mapState.ty += (cur.y - dragLast.y);
+      dragLast = cur;
+      clampPan(); applyMapTransform();
+    }
+  });
+  function endPointer(e){
+    pointers.delete(e.pointerId);
+    if(pointers.size<2) pinchStartDist=0;
+    if(pointers.size===0) dragLast=null;
+    else if(pointers.size===1){
+      const [p] = [...pointers.values()];
+      dragLast = toSvgPointSafe(svg, p.x, p.y);
+    }
+  }
+  svg.addEventListener("pointerup", endPointer);
+  svg.addEventListener("pointercancel", endPointer);
+  svg.addEventListener("pointerleave", endPointer);
+}
+
+/* ---- GPS ---- */
+let gpsWatchId = null;
+let lastPos = null;
+function haversineKm(lat1,lon1,lat2,lon2){
+  const R=6371, toRad=d=>d*Math.PI/180;
+  const dLat=toRad(lat2-lat1), dLon=toRad(lon2-lon1);
+  const a = Math.sin(dLat/2)**2 + Math.cos(toRad(lat1))*Math.cos(toRad(lat2))*Math.sin(dLon/2)**2;
+  return R*2*Math.atan2(Math.sqrt(a), Math.sqrt(1-a));
+}
+function startGPS(){
+  if(!("geolocation" in navigator)){ toast("GPS auf diesem Gerät nicht verfügbar"); return; }
+  gpsWatchId = navigator.geolocation.watchPosition(
+    pos=>{
+      lastPos = {lat:pos.coords.latitude, lon:pos.coords.longitude, acc:pos.coords.accuracy};
+      updateGpsUI(true);
+    },
+    err=>{
+      const msg = err.code===1 ? "Standortzugriff abgelehnt" : err.code===2 ? "Position nicht verfügbar" : "Zeitüberschreitung beim GPS-Fix";
+      toast(msg);
+      if(err.code===1) stopGPS();
+    },
+    {enableHighAccuracy:true, maximumAge:8000, timeout:20000}
+  );
+  updateGpsButtonState(true);
+}
+function stopGPS(){
+  if(gpsWatchId!==null && "geolocation" in navigator){ navigator.geolocation.clearWatch(gpsWatchId); }
+  gpsWatchId = null;
+  lastPos = null;
+  updateGpsButtonState(false);
+  updateGpsUI(false);
+}
+function toggleGPS(){ gpsWatchId!==null ? stopGPS() : startGPS(); }
+function updateGpsButtonState(active){
+  const btn = document.getElementById("gpsBtn");
+  if(btn) btn.classList.toggle("active", active);
+}
+function nameOfId(id){ return id==="start" ? "Ahoi Minigolf" : (WAY[id] ? WAY[id].name : "?"); }
+function updateGpsUI(show){
+  const g = document.getElementById("mapZoomGroup");
+  let marker = document.getElementById("gpsMarker");
+  if(!show || !lastPos || !g){
+    if(marker) marker.remove();
+    renderGpsReadout();
+    return;
+  }
+  const {proj, VBW, VBH} = lastGeom;
+  const raw = proj(lastPos.lat, lastPos.lon);
+  const p = {x:clampNum(raw.x, 6, VBW-6), y:clampNum(raw.y, 6, VBH-6)};
+  if(!marker){
+    marker = document.createElementNS("http://www.w3.org/2000/svg","g");
+    marker.id = "gpsMarker";
+    marker.innerHTML = `<circle class="gps-pulse" r="9"></circle><circle class="gps-dot" r="5"></circle>`;
+    g.appendChild(marker);
+  }
+  marker.setAttribute("transform", `translate(${p.x},${p.y})`);
+  renderGpsReadout();
+}
+function renderGpsReadout(){
+  const el = document.getElementById("gpsReadout");
+  if(!el) return;
+  if(!lastPos){ el.classList.remove("show"); el.innerHTML=""; return; }
+  el.classList.add("show");
+  const d = DAYS[activeDay-1];
+  const prevLast = activeDay===1 ? "start" : DAYS[activeDay-2].way[DAYS[activeDay-2].way.length-1];
+  const seq = [prevLast, ...d.way];
+  let nearest=null, nearestDist=Infinity;
+  seq.forEach(id=>{
+    const c = COORDS[id];
+    const dist = haversineKm(lastPos.lat, lastPos.lon, c.lat, c.lon);
+    if(dist<nearestDist){ nearestDist=dist; nearest=id; }
+  });
+  const endId = seq[seq.length-1];
+  const endDist = haversineKm(lastPos.lat, lastPos.lon, COORDS[endId].lat, COORDS[endId].lon);
+  el.innerHTML = `
+    <div class="gps-row"><span>📍 Nächster Punkt in der Nähe</span><b class="mono">${nameOfId(nearest)} · ${nearestDist.toFixed(1)} km</b></div>
+    <div class="gps-row"><span>🏁 Bis ${nameOfId(endId)}</span><b class="mono">${endDist.toFixed(1)} km</b></div>
+    <div class="gps-note">Luftlinie, nicht Streckenkilometer — auf Serpentinen kann die tatsächliche Restdistanz deutlich länger sein. GPS-Genauigkeit: ±${Math.round(lastPos.acc||0)} m</div>
+  `;
+}
+function distanceNote(id){
+  if(!lastPos) return "";
+  const c = COORDS[id];
+  const dist = haversineKm(lastPos.lat, lastPos.lon, c.lat, c.lon);
+  return `<p style="font-size:12.5px;color:var(--mist);margin-top:10px;border-top:1px solid var(--line);padding-top:10px;">📍 ≈ ${dist.toFixed(1)} km Luftlinie von deiner aktuellen Position.</p>`;
+}
+
+/* ======================= SHEET (generisch: Notfall + Karten-Punkte) ======================= */
+function showSheet(title, sub, bodyHtml){
+  $("#sheetTitle").textContent = title;
+  $("#sheetSub").textContent = sub;
+  $("#sheetBody").innerHTML = bodyHtml;
+  $("#backdrop").classList.add("show");
+  $("#sheet").classList.add("show");
+  $("#sheet").setAttribute("aria-hidden","false");
+}
+function closeSheet(){
+  $("#backdrop").classList.remove("show");
+  $("#sheet").classList.remove("show");
+  $("#sheet").setAttribute("aria-hidden","true");
+}
+function openEmergencySheet(){
+  const body = `
+    <div class="subtitle" style="font-weight:700;margin-bottom:6px;">Pflichtausrüstung dabei?</div>
+    <ul style="margin:0 0 14px;padding-left:18px;font-size:13.5px;line-height:1.6;">${GEAR_MUST.map(g=>`<li>${g}</li>`).join("")}</ul>
+    <div class="subtitle" style="font-weight:700;margin-bottom:6px;">Bei Abbruch</div>
+    <ul style="margin:0 0 14px;padding-left:18px;font-size:13.5px;line-height:1.6;">
+      <li>Nie abends/nachts abbrechen — Unterschlupf suchen, bei Sonnenaufgang entscheiden.</li>
+      <li>Sofort per E-Mail/WhatsApp melden, sonst gilt man als vermisst.</li>
+    </ul>
+    <div class="subtitle" style="font-weight:700;margin-bottom:6px;">Kontakt</div>
+    <p style="font-size:13.5px;margin:0 0 4px;"><a href="mailto:info@orbit360.cc">info@orbit360.cc</a></p>
+  `;
+  showSheet("⛑️ Notfall & Sicherheit", "Do not risk anything", body);
+}
+function openPointSheet(wid){
+  if(wid==="start"){
+    showSheet("🚩 Ahoi Minigolf", "Start (Tag 1) & Ziel (Tag 5) · Bozen",
+      `<p style="font-size:13.5px;line-height:1.6;">Zelten kostenlos, Duschen &amp; Toiletten vorhanden. Nach dem Zieleinlauf darfst du bis Montag bleiben.</p>` + distanceNote(wid));
+    return;
+  }
+  const w = WAY[wid];
+  if(w.kind==="cp"){
+    const cp = CP[w.cp];
+    showSheet("📍 " + w.name, `km ${w.km} · ${cp.role}`, cpDetailDl(cp) + distanceNote(wid));
+  } else {
+    showSheet(stopIcon(w.kind) + " " + w.name, `km ${w.km}`, `<p style="font-size:13.5px;line-height:1.6;">${w.offer}</p>` + distanceNote(wid));
+  }
+}
+
+/* ======================= SPECIALS ======================= */
+function specialsHtml(day){
+  if(!day.specials.length) return `<div class="empty">Keine besonderen Hinweise für diesen Tag.</div>`;
+  return day.specials.map(s=>{
+    const icon = s.type==="highlight" ? "✨" : "⚠️";
+    const cls = s.type==="highlight" ? "special-hi" : "";
+    return `<div class="callout ${cls}">
+      <div class="ctitle">${icon} ${s.title}</div>
+      ${s.km?`<div class="ckm">km ${s.km}</div>`:""}
+      <p>${s.text}</p>
+    </div>`;
+  }).join("");
+}
+
+/* ======================= WETTER ======================= */
+let weatherCache = {};
+async function fetchWeather(dayNum){
+  const loc = WEATHER_LOC[dayNum];
+  const url = `https://api.open-meteo.com/v1/forecast?latitude=${loc.lat}&longitude=${loc.lon}&current=temperature_2m,precipitation,weather_code,wind_speed_10m&daily=weather_code,temperature_2m_max,temperature_2m_min,precipitation_sum,precipitation_probability_max,wind_speed_10m_max&timezone=auto&forecast_days=3`;
+  const res = await fetch(url);
+  if(!res.ok) throw new Error("HTTP "+res.status);
+  const data = await res.json();
+  weatherCache[dayNum] = {data, ts: Date.now()};
+  return weatherCache[dayNum];
+}
+function weatherCardHtml(dayNum, state){
+  const loc = WEATHER_LOC[dayNum];
+  const c = weatherCache[dayNum];
+  if(!c && state==="error"){
+    return `<div class="weather-card"><div class="wx-error">📡 Keine Verbindung — Wetterdaten nicht verfügbar.<br>Wird automatisch nachgeladen, sobald du wieder Empfang hast.</div></div>`;
+  }
+  if(!c){
+    return `<div class="weather-card"><div class="wx-loading">Lade Wettervorhersage…</div></div>`;
+  }
+  const cur = c.data.current;
+  const daily = c.data.daily;
+  const [curIcon, curLabel] = wmo(cur.weather_code);
+  const stamp = new Date(c.ts).toLocaleTimeString('de-DE',{hour:'2-digit',minute:'2-digit'});
+  const stale = state==="error" ? `<div class="wx-error" style="margin-top:8px; padding:8px 4px;">Offline — zeige letzten bekannten Stand.</div>` : "";
+  const days = daily.time.map((t,i)=>{
+    const [ic] = wmo(daily.weather_code[i]);
+    const dLabel = i===0?"Heute":i===1?"Morgen":new Date(t).toLocaleDateString('de-DE',{weekday:'short'});
+    return `<div class="wx-day"><span class="lb">${dLabel}</span><span class="ic">${ic}</span><span class="tp mono">${Math.round(daily.temperature_2m_max[i])}°/${Math.round(daily.temperature_2m_min[i])}°</span><span class="pr mono">💧${daily.precipitation_probability_max[i]}%</span></div>`;
+  }).join("");
+  return `<div class="weather-card">
+    <div class="wx-head">
+      <div>
+        <div class="wx-now"><span class="wx-icon">${curIcon}</span><b class="mono">${Math.round(cur.temperature_2m)}°C</b></div>
+        <div class="wx-desc">${curLabel} · Wind ${Math.round(cur.wind_speed_10m)} km/h</div>
+      </div>
+      <button class="wx-refresh" id="wxRefresh">🔄</button>
+    </div>
+    <div class="wx-days">${days}</div>
+    <div class="wx-meta">Stand ${stamp} Uhr · ${loc.label}</div>
+    ${stale}
+    <div class="wx-note">Ungefähre Region, keine exakte GPS-Position der Route. Bei kritischen Passagen zusätzlich lokale Quellen prüfen (z. B. Bergwetter Südtirol, Meteotrentino).</div>
+  </div>`;
+}
+function renderWeatherInPlace(dayNum, state){
+  const el = document.getElementById("weatherSlot");
+  if(!el || activeDay!==dayNum) return;
+  el.innerHTML = weatherCardHtml(dayNum, state);
+  const btn = document.getElementById("wxRefresh");
+  if(btn) btn.onclick = ()=>loadWeatherFor(dayNum, true);
+}
+async function loadWeatherFor(dayNum, force){
+  const cached = weatherCache[dayNum];
+  const fresh = cached && (Date.now()-cached.ts < 20*60*1000);
+  if(fresh && !force){ renderWeatherInPlace(dayNum); return; }
+  if(typeof navigator!=="undefined" && "onLine" in navigator && !navigator.onLine){
+    renderWeatherInPlace(dayNum, cached?undefined:"error");
+    return;
+  }
+  if(!cached) renderWeatherInPlace(dayNum, undefined);
+  try{
+    await fetchWeather(dayNum);
+    renderWeatherInPlace(dayNum);
+    if(force) toast("Wetter aktualisiert");
+  }catch(e){
+    renderWeatherInPlace(dayNum, "error");
+  }
+}
+window.addEventListener("online", ()=>{ loadWeatherFor(activeDay, true); });
+setInterval(()=>{
+  const activeTab = document.querySelector(".tabbtn.active");
+  if(activeTab && activeTab.dataset.tab==="heute") loadWeatherFor(activeDay);
+}, 30*60*1000);
+
+/* ======================= STORY-MODUS ======================= */
+function storyMapSvg(dayNum){
+  const geom = buildMapGeometry();
+  const {VBW,VBH,proj} = geom;
+  const d = DAYS[dayNum-1];
+  const prevLast = dayNum===1 ? "start" : DAYS[dayNum-2].way[DAYS[dayNum-2].way.length-1];
+  const activeSeq = [prevLast, ...d.way];
+  const full = pathD(ROUTE_SEQ, proj);
+  const active = pathD(activeSeq, proj);
+  const dots = activeSeq.map(id=>{
+    const c = COORDS[id]; const p = proj(c.lat,c.lon);
+    const cls = id==="start" ? "ok" : stopColorClass(WAY[id]);
+    return `<circle class="map-dot-visual ${cls}" cx="${p.x.toFixed(1)}" cy="${p.y.toFixed(1)}" r="7"></circle>`;
+  }).join("");
+  return `<svg viewBox="0 0 ${VBW} ${VBH}"><rect width="${VBW}" height="${VBH}" rx="16" fill="#141824"/><path d="${full}" class="map-fullpath"/><path d="${active}" class="map-activepath-halo"/><path d="${active}" class="map-activepath"/>${dots}</svg>`;
+}
+function buildStorySlides(dayNum){
+  const d = DAYS[dayNum-1];
+  const slides = [];
+
+  slides.push({dur:3, kind:"title", html:`
+    <div class="story-eyebrow">Sneak Peaks · Entree</div>
+    <div class="story-daynum">TAG <b>${d.n}</b><span style="color:var(--fog)">/5</span></div>
+    <div class="story-route">${d.from}<span class="arrow">→</span>${d.to}</div>
+  `});
+
+  slides.push({dur:3.2, kind:"stats", html:`
+    <div class="story-stats">
+      <div class="story-stat-row"><span class="lb">Distanz</span><span class="val mono"><span class="cnt" data-val="${d.km}" data-dec="${d.km%1?1:0}">0</span> km</span></div>
+      <div class="story-stat-row"><span class="lb">Anstieg</span><span class="val up mono">+<span class="cnt" data-val="${d.up}">0</span> m</span></div>
+      <div class="story-stat-row"><span class="lb">Abfahrt</span><span class="val down mono">−<span class="cnt" data-val="${d.down}">0</span> m</span></div>
+    </div>
+  `});
+
+  slides.push({dur:3.4, kind:"map", html:`
+    <div class="story-eyebrow">Die Route</div>
+    <div class="story-mapwrap">${storyMapSvg(dayNum)}</div>
+  `});
+
+  slides.push({dur:3.4, kind:"elev", html:`
+    <div class="story-eyebrow">Höhenprofil</div>
+    <div class="story-elevwrap">${elevationSvg(dayNum, {h:210, suffix:"story"+dayNum})}</div>
+    <div class="story-sub mono">↑ ${Math.round(Math.max(...ELEV[dayNum].map(p=>p[1])))} m</div>
+  `});
+
+  slides.push({dur:3, kind:"sleep", html:`
+    <div class="story-eyebrow">Ziel heute Nacht</div>
+    <div class="story-badge-big ${d.sleep.status==='ok'?'ok':'warn'}">${d.sleep.status==='ok'?'⛺ Camping':'⚠️ Wildcamp'}</div>
+    <div class="story-place">${d.sleep.place}</div>
+  `});
+
+  return slides;
+}
+function prepStoryAnimations(){
+  const reduced = window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+  const slide = document.querySelector(".story-slide.active");
+  if(!slide) return;
+  // Draw-on für Routen- und Höhenprofil-Pfade
+  slide.querySelectorAll("path.map-activepath, path.map-activepath-halo, path.elevline").forEach(p=>{
+    let L = 800;
+    try{ L = p.getTotalLength(); }catch(e){}
+    if(reduced){ p.style.strokeDasharray="none"; return; }
+    p.style.strokeDasharray = L;
+    p.style.strokeDashoffset = L;
+    p.getBoundingClientRect();
+    p.style.transition = "stroke-dashoffset 1.6s cubic-bezier(.4,0,.2,1)";
+    requestAnimationFrame(()=>{ p.style.strokeDashoffset = "0"; });
+  });
+  // Zahlen-Count-up
+  const cnts = slide.querySelectorAll(".cnt[data-val]");
+  cnts.forEach(el=>{
+    const target = parseFloat(el.dataset.val);
+    const dec = parseInt(el.dataset.dec||"0",10);
+    if(reduced){ el.textContent = target.toLocaleString('de-DE',{minimumFractionDigits:dec,maximumFractionDigits:dec}); return; }
+    const t0 = performance.now(), dur = 1300;
+    function tick(now){
+      const t = Math.min(1,(now-t0)/dur);
+      const ease = 1-Math.pow(1-t,3);
+      el.textContent = (target*ease).toLocaleString('de-DE',{minimumFractionDigits:dec,maximumFractionDigits:dec});
+      if(t<1 && document.contains(el)) requestAnimationFrame(tick);
+    }
+    requestAnimationFrame(tick);
+  });
+}
+
+let storySlides = [], storyIdx = 0, storyTimer = null, storyRemaining = 0, storyStartTs = 0;
+
+function openStoryMode(){
+  storySlides = buildStorySlides(activeDay);
+  if(!storySlides.length) return;
+  storyIdx = 0;
+  document.documentElement.style.overflow = "hidden";
+  document.body.style.overflow = "hidden";
+  document.getElementById("storyMode").classList.add("show");
+  document.getElementById("storyMode").setAttribute("aria-hidden","false");
+  renderStory();
+}
+function closeStoryMode(){
+  clearTimeout(storyTimer);
+  document.documentElement.style.overflow = "";
+  document.body.style.overflow = "";
+  document.getElementById("storyMode").classList.remove("show");
+  document.getElementById("storyMode").setAttribute("aria-hidden","true");
+}
+function renderStory(){
+  const wrap = document.getElementById("storySlideWrap");
+  const prog = document.getElementById("storyProgress");
+  wrap.innerHTML = storySlides.map((s,i)=>`<div class="story-slide${i===storyIdx?' active':''}">${s.html}<div class="story-watermark"><b>SNEAK PEAKS</b> · ENTREE</div></div>`).join("");
+  prog.innerHTML = storySlides.map((s,i)=>{
+    const cls = i<storyIdx ? "done" : "";
+    const w = i<storyIdx ? "100%" : "0%";
+    return `<div class="story-seg ${cls}"><div class="fill" style="width:${w}"></div></div>`;
+  }).join("");
+  prepStoryAnimations();
+  startStorySlideTimer();
+}
+function startStorySlideTimer(){
+  clearTimeout(storyTimer);
+  const dur = (storySlides[storyIdx].dur || 4) * 1000;
+  storyRemaining = dur;
+  storyStartTs = Date.now();
+  const segs = document.querySelectorAll("#storyProgress .story-seg");
+  const fill = segs[storyIdx] ? segs[storyIdx].querySelector(".fill") : null;
+  if(fill){
+    fill.style.transition = "none";
+    fill.style.width = "0%";
+    requestAnimationFrame(()=>{
+      fill.style.transition = `width ${dur}ms linear`;
+      fill.style.width = "100%";
+    });
+  }
+  storyTimer = setTimeout(storyNext, dur);
+}
+function pauseStoryTimer(){
+  clearTimeout(storyTimer);
+  storyRemaining -= (Date.now()-storyStartTs);
+  const segs = document.querySelectorAll("#storyProgress .story-seg");
+  const fill = segs[storyIdx] ? segs[storyIdx].querySelector(".fill") : null;
+  if(fill){
+    const cur = getComputedStyle(fill).width;
+    fill.style.transition = "none";
+    fill.style.width = cur;
+  }
+}
+function resumeStoryTimer(){
+  if(storyRemaining<=50){ storyNext(); return; }
+  storyStartTs = Date.now();
+  const segs = document.querySelectorAll("#storyProgress .story-seg");
+  const fill = segs[storyIdx] ? segs[storyIdx].querySelector(".fill") : null;
+  if(fill){
+    requestAnimationFrame(()=>{
+      fill.style.transition = `width ${storyRemaining}ms linear`;
+      fill.style.width = "100%";
+    });
+  }
+  storyTimer = setTimeout(storyNext, storyRemaining);
+}
+function storyNext(){
+  if(storyIdx < storySlides.length-1){ storyIdx++; renderStory(); }
+  else { closeStoryMode(); }
+}
+function storyPrev(){
+  if(storyIdx>0){ storyIdx--; renderStory(); }
+  else { startStorySlideTimer(); }
+}
+
+/* ======================= VIDEO-EXPORT (Canvas + MediaRecorder) ======================= */
+const VIDEO_CFG = {slideMs:3000, fps:30, w:1080, h:1920};
+window.VIDEO_CFG = VIDEO_CFG;
+let exportAbort = false, exportRunning = false;
+
+const EXPORT_STARS = (()=>{ // deterministische Sterne
+  let s = 42; const rand = ()=>{ s = (s*16807)%2147483647; return s/2147483647; };
+  return Array.from({length:90},()=>({x:rand(),y:rand(),r:rand()*2+0.6,a:rand()*0.35+0.1}));
+})();
+function easeOut(t){ return 1-Math.pow(1-t,3); }
+function drawExportBg(ctx,W,H){
+  ctx.fillStyle = "#0B0D14"; ctx.fillRect(0,0,W,H);
+  EXPORT_STARS.forEach(st=>{
+    ctx.globalAlpha = st.a;
+    ctx.fillStyle = "#fff";
+    ctx.beginPath(); ctx.arc(st.x*W, st.y*H, st.r, 0, Math.PI*2); ctx.fill();
+  });
+  ctx.globalAlpha = 1;
+  const g = ctx.createRadialGradient(W/2, H*1.05, 0, W/2, H*1.05, H*0.55);
+  g.addColorStop(0, "rgba(255,62,150,0.20)"); g.addColorStop(1, "rgba(255,62,150,0)");
+  ctx.fillStyle = g; ctx.fillRect(0, H*0.5, W, H*0.5);
+}
+function drawWatermark(ctx,W,H){
+  ctx.font = "800 26px -apple-system, sans-serif";
+  ctx.textAlign = "center";
+  ctx.fillStyle = "rgba(148,152,168,.9)";
+  ctx.fillText("S N E A K   P E A K S   ·   E N T R E E", W/2, H-64);
+}
+function drawEyebrow(ctx,W,y,text){
+  ctx.font = "800 34px -apple-system, sans-serif";
+  ctx.textAlign = "center";
+  ctx.fillStyle = "#FF3E96";
+  ctx.fillText(text.toUpperCase().split("").join("\u200a\u200a"), W/2, y);
+}
+const FD = "ui-rounded, -apple-system, sans-serif";
+function drawSlideCanvas(ctx, kind, t, d, dayNum){
+  const {w:W, h:H} = VIDEO_CFG;
+  drawExportBg(ctx,W,H);
+  const a1 = easeOut(Math.min(1, t/0.35));
+  if(kind==="title"){
+    ctx.globalAlpha = a1;
+    drawEyebrow(ctx,W,H*0.36,"Sneak Peaks · Entree");
+    ctx.globalAlpha = easeOut(Math.min(1, Math.max(0,(t-0.08)/0.4)));
+    const scale = 0.9 + 0.1*easeOut(Math.min(1, t/0.5));
+    ctx.save(); ctx.translate(W/2, H*0.47); ctx.scale(scale,scale);
+    ctx.font = "900 190px "+FD; ctx.textAlign = "center";
+    ctx.fillStyle = "#EDEBE3"; ctx.fillText("TAG", -175, 0);
+    ctx.fillStyle = "#CFFF4D"; ctx.fillText(String(d.n), 105, 0);
+    ctx.fillStyle = "#EDEBE3"; ctx.font = "900 120px "+FD; ctx.fillText("/5", 265, 0);
+    ctx.restore();
+    ctx.globalAlpha = easeOut(Math.min(1, Math.max(0,(t-0.2)/0.4)));
+    ctx.font = "800 58px "+FD; ctx.textAlign = "center"; ctx.fillStyle = "#EDEBE3";
+    ctx.fillText(d.from, W/2, H*0.56);
+    ctx.fillStyle = "#FF3E96"; ctx.fillText("↓", W/2, H*0.60);
+    ctx.fillStyle = "#EDEBE3"; ctx.fillText(d.to, W/2, H*0.64);
+    ctx.globalAlpha = 1;
+  }
+  if(kind==="stats"){
+    const rows = [
+      ["DISTANZ", d.km.toLocaleString('de-DE') + " km", "#EDEBE3"],
+      ["ANSTIEG", "+" + Math.round(d.up*easeOut(Math.min(1,t/0.55))).toLocaleString('de-DE') + " m", "#CFFF4D"],
+      ["ABFAHRT", "−" + Math.round(d.down*easeOut(Math.min(1,t/0.55))).toLocaleString('de-DE') + " m", "#6FD3FF"],
+    ];
+    let y = H*0.40;
+    rows.forEach((r,i)=>{
+      const rowA = easeOut(Math.min(1, Math.max(0,(t - i*0.08)/0.3)));
+      ctx.globalAlpha = rowA;
+      ctx.font = "700 30px -apple-system, sans-serif"; ctx.textAlign = "left";
+      ctx.fillStyle = "#9498A8"; ctx.fillText(r[0], W*0.12, y);
+      ctx.font = "900 88px ui-monospace, monospace"; ctx.textAlign = "right";
+      ctx.fillStyle = r[2]; ctx.fillText(r[1], W*0.88, y+10);
+      ctx.strokeStyle = "rgba(255,255,255,.14)"; ctx.lineWidth = 2;
+      ctx.beginPath(); ctx.moveTo(W*0.12, y+52); ctx.lineTo(W*0.88, y+52); ctx.stroke();
+      y += H*0.10;
+    });
+    ctx.globalAlpha = 1;
+  }
+  if(kind==="map"){
+    ctx.globalAlpha = a1;
+    drawEyebrow(ctx,W,H*0.26,"Die Route");
+    const geom = buildMapGeometry();
+    const box = {x:W*0.16, y:H*0.30, w:W*0.68, h:H*0.44};
+    const sc = Math.min(box.w/geom.VBW, box.h/geom.VBH);
+    const ox = box.x + (box.w-geom.VBW*sc)/2, oy = box.y + (box.h-geom.VBH*sc)/2;
+    const P = id => { const p = geom.proj(COORDS[id].lat, COORDS[id].lon); return {x:ox+p.x*sc, y:oy+p.y*sc}; };
+    ctx.strokeStyle = "rgba(148,152,168,.35)"; ctx.lineWidth = 4; ctx.lineJoin="round"; ctx.lineCap="round";
+    ctx.beginPath();
+    ROUTE_SEQ.forEach((id,i)=>{ const p=P(id); i?ctx.lineTo(p.x,p.y):ctx.moveTo(p.x,p.y); });
+    ctx.stroke();
+    const prevLast = dayNum===1 ? "start" : DAYS[dayNum-2].way[DAYS[dayNum-2].way.length-1];
+    const seq = [prevLast, ...d.way].map(P);
+    const lens = []; let total = 0;
+    for(let i=1;i<seq.length;i++){ const l=Math.hypot(seq[i].x-seq[i-1].x, seq[i].y-seq[i-1].y); lens.push(l); total+=l; }
+    const drawn = total * easeOut(Math.min(1, Math.max(0,(t-0.1)/0.65)));
+    function strokePartial(width, style, alpha){
+      ctx.globalAlpha = alpha; ctx.strokeStyle = style; ctx.lineWidth = width;
+      ctx.beginPath(); ctx.moveTo(seq[0].x, seq[0].y);
+      let acc = 0;
+      for(let i=1;i<seq.length;i++){
+        if(acc+lens[i-1] <= drawn){ ctx.lineTo(seq[i].x, seq[i].y); acc+=lens[i-1]; }
+        else{
+          const f = Math.max(0,(drawn-acc)/lens[i-1]);
+          ctx.lineTo(seq[i-1].x+(seq[i].x-seq[i-1].x)*f, seq[i-1].y+(seq[i].y-seq[i-1].y)*f);
+          break;
+        }
+      }
+      ctx.stroke();
+    }
+    strokePartial(22, "#FF3E96", .22);
+    strokePartial(9, "#FF3E96", 1);
+    ctx.globalAlpha = 1;
+    let acc2 = 0;
+    seq.forEach((p,i)=>{
+      const reach = i===0 ? 0 : (acc2 += lens[i-1], acc2);
+      if(reach<=drawn+1){
+        const id = i===0 ? prevLast : d.way[i-1];
+        const col = id==="start" ? "#CFFF4D" : ({ok:"#CFFF4D",warn:"#FF8A4C",no:"#FF5C5C",info:"#6FD3FF"})[stopColorClass(WAY[id]||{kind:"town"})];
+        ctx.fillStyle = col; ctx.strokeStyle = "#0B0D14"; ctx.lineWidth = 3;
+        ctx.beginPath(); ctx.arc(p.x,p.y,13,0,Math.PI*2); ctx.fill(); ctx.stroke();
+      }
+    });
+  }
+  if(kind==="elev"){
+    ctx.globalAlpha = a1;
+    drawEyebrow(ctx,W,H*0.28,"Höhenprofil");
+    const pts = ELEV[dayNum];
+    const elevs = pts.map(p=>p[1]);
+    const eMin = Math.min(...elevs), eMax = Math.max(...elevs), span = (eMax-eMin)||100;
+    const box = {x:W*0.10, y:H*0.34, w:W*0.80, h:H*0.30};
+    const X = f => box.x + f*box.w;
+    const Y = e => box.y + (eMax-e)/span*box.h;
+    const frac = easeOut(Math.min(1, Math.max(0,(t-0.1)/0.65)));
+    function pathTo(f){
+      ctx.beginPath();
+      ctx.moveTo(X(pts[0][0]), Y(pts[0][1]));
+      for(let i=1;i<pts.length;i++){
+        if(pts[i][0]<=f) ctx.lineTo(X(pts[i][0]), Y(pts[i][1]));
+        else{
+          const p0=pts[i-1], p1=pts[i];
+          const ff=(f-p0[0])/(p1[0]-p0[0]);
+          ctx.lineTo(X(f), Y(p0[1]+(p1[1]-p0[1])*ff));
+          break;
+        }
+      }
+    }
+    const grad = ctx.createLinearGradient(0,box.y,0,box.y+box.h);
+    grad.addColorStop(0,"rgba(255,62,150,.5)"); grad.addColorStop(1,"rgba(255,62,150,.03)");
+    pathTo(frac);
+    ctx.lineTo(X(frac), box.y+box.h); ctx.lineTo(X(0), box.y+box.h); ctx.closePath();
+    ctx.fillStyle = grad; ctx.fill();
+    pathTo(frac);
+    ctx.strokeStyle = "#FF3E96"; ctx.lineWidth = 7; ctx.lineJoin="round"; ctx.lineCap="round"; ctx.stroke();
+    ctx.font = "700 30px ui-monospace, monospace"; ctx.textAlign="left"; ctx.fillStyle="#9498A8";
+    ctx.fillText(Math.round(eMax)+" m", box.x, box.y-14);
+    ctx.fillText(Math.round(eMin)+" m", box.x, box.y+box.h+40);
+    ctx.globalAlpha = 1;
+  }
+  if(kind==="sleep"){
+    ctx.globalAlpha = a1;
+    drawEyebrow(ctx,W,H*0.38,"Ziel heute Nacht");
+    const ok = d.sleep.status==="ok";
+    const label = ok ? "⛺ CAMPING" : "⚠️ WILDCAMP";
+    ctx.font = "800 34px -apple-system, sans-serif";
+    const tw = ctx.measureText(label).width + 70;
+    const bx = W/2-tw/2, by = H*0.42, bh = 74;
+    ctx.fillStyle = ok ? "rgba(207,255,77,.16)" : "rgba(255,138,76,.18)";
+    ctx.strokeStyle = ok ? "rgba(207,255,77,.5)" : "rgba(255,138,76,.5)";
+    ctx.lineWidth = 2.5;
+    ctx.beginPath();
+    if(ctx.roundRect) ctx.roundRect(bx,by,tw,bh,37); else ctx.rect(bx,by,tw,bh);
+    ctx.fill(); ctx.stroke();
+    ctx.fillStyle = ok ? "#CFFF4D" : "#FF8A4C";
+    ctx.textAlign = "center"; ctx.fillText(label, W/2, by+bh/2+12);
+    ctx.globalAlpha = easeOut(Math.min(1, Math.max(0,(t-0.15)/0.4)));
+    ctx.font = "900 92px "+FD; ctx.fillStyle = "#EDEBE3";
+    const words = d.sleep.place.split(" ");
+    if(words.length>1 && ctx.measureText(d.sleep.place).width > W*0.85){
+      ctx.fillText(words.slice(0,-1).join(" "), W/2, H*0.56);
+      ctx.fillText(words[words.length-1], W/2, H*0.62);
+    } else {
+      ctx.fillText(d.sleep.place, W/2, H*0.58);
+    }
+    ctx.globalAlpha = 1;
+  }
+  drawWatermark(ctx,W,H);
+}
+function pickVideoMime(){
+  const cands = ["video/mp4;codecs=avc1","video/mp4","video/webm","video/webm;codecs=vp8"];
+  for(const c of cands){ if(window.MediaRecorder && MediaRecorder.isTypeSupported && MediaRecorder.isTypeSupported(c)) return c; }
+  return "";
+}
+function startVideoExport(forceMime){
+  if(typeof forceMime !== "string") forceMime = undefined;
+  if(exportRunning) return;
+  if(!window.MediaRecorder){ toast("Video-Export wird von diesem Browser nicht unterstützt"); return; }
+  const mime = forceMime || pickVideoMime();
+  if(!mime){ toast("Kein unterstütztes Videoformat gefunden"); return; }
+  exportRunning = true; exportAbort = false;
+  const overlay = $("#videoExport");
+  overlay.classList.add("show"); overlay.setAttribute("aria-hidden","false");
+  $("#exportActions").innerHTML = `<button class="export-btn" id="exportCancel">Abbrechen</button>`;
+  $("#exportCancel").onclick = ()=>{ exportAbort = true; };
+  $("#exportStatus").textContent = "Rendere Video …";
+  $("#exportSub").textContent = "Das Intro wird direkt auf deinem Gerät gerendert — kein Upload, kein Internet nötig.";
+
+  const canvas = document.getElementById("exportCanvas");
+  canvas.width = VIDEO_CFG.w; canvas.height = VIDEO_CFG.h;
+  const ctx = canvas.getContext("2d");
+  const d = DAYS[activeDay-1];
+  const kinds = ["title","stats","map","elev","sleep"];
+  const slideMs = VIDEO_CFG.slideMs;
+  const totalMs = kinds.length * slideMs;
+
+  const stream = canvas.captureStream(VIDEO_CFG.fps);
+  const track = stream.getVideoTracks()[0];
+  const pushFrame = ()=>{ if(track && typeof track.requestFrame === "function") track.requestFrame(); };
+  const chunks = [];
+  let rec;
+  try{ rec = new MediaRecorder(stream, {mimeType:mime, videoBitsPerSecond: 8_000_000}); }
+  catch(e){ rec = new MediaRecorder(stream); }
+  rec.ondataavailable = e=>{ if(e.data && e.data.size) chunks.push(e.data); };
+  rec.onstop = ()=>{
+    exportRunning = false;
+    if(exportAbort){ closeVideoExport(); return; }
+    const blob = new Blob(chunks, {type: rec.mimeType || mime});
+    if(blob.size === 0 && !forceMime){
+      // Container hat nichts geliefert (passiert je nach Browser beim mp4-Pfad) — einmal mit WebM erneut versuchen
+      const webm = ["video/webm","video/webm;codecs=vp8"].find(c=>MediaRecorder.isTypeSupported && MediaRecorder.isTypeSupported(c));
+      if(webm){ startVideoExport(webm); return; }
+    }
+    if(blob.size === 0){
+      $("#exportStatus").textContent = "Export fehlgeschlagen";
+      $("#exportSub").textContent = "Dieser Browser hat keine Videodaten geliefert. Alternative: Story ansehen und mit der Bildschirmaufnahme des Geräts aufzeichnen.";
+      $("#exportActions").innerHTML = `<button class="export-btn" id="exportClose2">Schließen</button>`;
+      $("#exportClose2").onclick = closeVideoExport;
+      return;
+    }
+    window.__lastVideoBlobSize = blob.size;
+    window.__lastVideoMime = blob.type;
+    const url = URL.createObjectURL(blob);
+    const ext = (blob.type||"").includes("mp4") ? "mp4" : "webm";
+    $("#exportStatus").textContent = "Fertig — " + (blob.size/1024/1024).toFixed(1) + " MB";
+    $("#exportSub").textContent = ext==="webm"
+      ? "Hinweis: Dieser Browser exportiert WebM. Auf dem iPhone (Safari) bekommst du direkt MP4."
+      : "Bereit für CapCut, Schnitt-App oder direkt in die Story.";
+    $("#exportActions").innerHTML = `
+      <a class="export-btn primary" id="exportSave" href="${url}" download="entree_tag${activeDay}_intro.${ext}">Video speichern</a>
+      <button class="export-btn" id="exportClose2">Schließen</button>`;
+    $("#exportClose2").onclick = closeVideoExport;
+  };
+  rec.start(250);
+
+  const t0 = performance.now();
+  function frame(now){
+    const elapsed = now - t0;
+    if(exportAbort){ rec.stop(); return; }
+    if(elapsed >= totalMs){
+      drawSlideCanvas(ctx, kinds[kinds.length-1], 1, d, activeDay);
+      pushFrame();
+      setTimeout(()=>rec.stop(), 300);
+      return;
+    }
+    const idx = Math.min(kinds.length-1, Math.floor(elapsed/slideMs));
+    const t = (elapsed - idx*slideMs)/slideMs;
+    drawSlideCanvas(ctx, kinds[idx], t, d, activeDay);
+    pushFrame();
+    const sec = Math.ceil((totalMs-elapsed)/1000);
+    $("#exportStatus").textContent = `Rendere Video … noch ${sec}s`;
+    requestAnimationFrame(frame);
+  }
+  requestAnimationFrame(frame);
+}
+function closeVideoExport(){
+  const overlay = $("#videoExport");
+  overlay.classList.remove("show"); overlay.setAttribute("aria-hidden","true");
+  const save = document.getElementById("exportSave");
+  if(save && save.href.startsWith("blob:")) setTimeout(()=>URL.revokeObjectURL(save.href), 60_000);
+}
+window.startVideoExport = startVideoExport;
+
+/* ======================= RENDER: HEUTE ======================= */
+let activeDay = 1;
+function renderPills(){
+  const wrap = $("#dayPills"); wrap.innerHTML="";
+  DAYS.forEach(d=>{
+    const btn=document.createElement("button");
+    btn.className="daypill"+(d.n===activeDay?" active":"");
+    btn.style.setProperty("--w", d.km);
+    btn.innerHTML=`<b>${d.n}</b><span>${Math.round(d.km)} km</span>`;
+    btn.setAttribute("aria-pressed", d.n===activeDay);
+    btn.onclick=()=>{activeDay=d.n; renderHeute();};
+    wrap.appendChild(btn);
+  });
+}
+function renderProgress(){
+  const d = DAYS[activeDay-1];
+  const bar = $("#progressBar");
+  bar.innerHTML = `<div class="progress-fill" style="width:${(d.kmTo/495*100).toFixed(1)}%"></div>`;
+  CP_ORDER.forEach(id=>{
+    const cp = CP[id];
+    const t = document.createElement("div");
+    t.className = "tick "+cp.camp.status;
+    t.style.left = (cp.km/495*100).toFixed(1)+"%";
+    t.title = cp.label;
+    bar.appendChild(t);
+  });
+  $("#progCapLeft").textContent = `Tag ${d.n} von 5`;
+  $("#progCapRight").textContent = `${d.kmFrom}–${d.kmTo} / 495 km`;
+}
+function renderHeute(){
+  renderPills(); renderProgress();
+  const d = DAYS[activeDay-1];
+
+  let h = `<div class="story-btnrow">
+    <button class="story-trigger" id="storyTrigger">▶︎ Story ansehen</button>
+    <button class="story-trigger" id="videoExportBtn">🎥 Als Video exportieren</button>
+  </div>`;
+
+  h += `<div class="daymeta">
+    <span class="daymeta-ghost">${String(d.n).padStart(2,"0")}</span>
+    <div class="daymeta-route">${d.from}<span class="arrow">→</span>${d.to}</div>
+    <div class="daymeta-stats mono">${d.km} km · +${d.up.toLocaleString('de-DE')} Hm · −${d.down.toLocaleString('de-DE')} Hm · ${d.time}</div>
+    <div class="daymeta-char">${d.character}</div>
+  </div>`;
+
+  h += mapHtml(activeDay);
+
+  h += `<p class="eyebrow">📈 Höhenprofil</p>
+  <div class="elevcard">${elevationSvg(activeDay, {markers:true, h:150})}</div>
+  <div class="elev-note">Schematisch anhand bekannter Pass-/Checkpoint-Höhen angenähert — kein exaktes GPS-Profil. Punkte antippbar.</div>`;
+
+  h += `<p class="eyebrow">🌦️ Wetter heute</p><div id="weatherSlot">${weatherCardHtml(activeDay, undefined)}</div>`;
+
+  h += `<p class="eyebrow"><span class="flare">⛺</span> Schlafen heute</p>`;
+  h += `<div class="sleep-card ${d.sleep.status}">
+    <div class="sleep-head">${campBadge({status:d.sleep.status})}</div>
+    <div class="sleep-place">${d.sleep.place}</div>
+    <div class="sleep-note">${d.sleep.note}</div>
+    <div class="sleep-detail">${d.sleep.detail}</div>
+  </div>`;
+
+  h += `<p class="eyebrow">✨ Specials heute</p>` + specialsHtml(d);
+
+  $("#heuteBody").innerHTML = h;
+  bindRowToggles();
+  bindMap();
+  loadWeatherFor(activeDay);
+}
+function bindMap(){
+  const svg = document.getElementById("routeMapSvg");
+  const st = document.getElementById("storyTrigger");
+  if(st) st.onclick = openStoryMode;
+  const ve = document.getElementById("videoExportBtn");
+  if(ve) ve.onclick = ()=> startVideoExport();
+  if(!svg) return;
+  let moved = false, downXY = null;
+  svg.addEventListener("pointerdown", (e)=>{ moved=false; downXY={x:e.clientX, y:e.clientY}; });
+  svg.addEventListener("pointermove", (e)=>{
+    if(downXY && Math.hypot(e.clientX-downXY.x, e.clientY-downXY.y) > 8) moved = true;
+  });
+  svg.addEventListener("click", (e)=>{
+    if(moved) return; // war ein Ziehen/Pinch, kein Tap auf einen Punkt
+    const el = e.target.closest("[data-wid]");
+    if(el) openPointSheet(el.dataset.wid);
+  });
+  bindMapGestures(svg);
+
+  const zi = document.getElementById("zoomIn");
+  const zo = document.getElementById("zoomOut");
+  const zr = document.getElementById("mapReset");
+  const gb = document.getElementById("gpsBtn");
+  if(zi) zi.onclick = ()=> zoomBy(1.6, lastGeom.VBW/2, lastGeom.VBH/2);
+  if(zo) zo.onclick = ()=> zoomBy(1/1.6, lastGeom.VBW/2, lastGeom.VBH/2);
+  if(zr) zr.onclick = resetZoom;
+  if(gb) gb.onclick = toggleGPS;
+
+  updateGpsButtonState(gpsWatchId!==null);
+  updateGpsUI(gpsWatchId!==null);
+
+  const elevSvg = document.getElementById("elevSvg" + "d" + activeDay);
+  if(elevSvg){
+    elevSvg.addEventListener("click", (e)=>{
+      const el = e.target.closest("[data-wid]");
+      if(el) openPointSheet(el.dataset.wid);
+    });
+  }
+}
+
+/* ======================= RENDER: CHECKPOINTS ======================= */
+function renderCP(){
+  let h="";
+  CP_ORDER.forEach(id=>{ h+=cpRowHtml(CP[id]); });
+  $("#cpList").innerHTML = h;
+  bindRowToggles();
+}
+
+/* ======================= RENDER: RESUPPLY ======================= */
+function renderResupply(){
+  let h="";
+  DAYS.forEach(d=>{
+    h += `<p class="eyebrow">Tag ${d.n} <span style="color:var(--mist);font-weight:600;text-transform:none;letter-spacing:0;">· ${d.from} → ${d.to}</span></p>`;
+    if(d.way.length){
+      h += `<div class="rowlist">` + d.way.map(wid=>wayRowHtml(WAY[wid])).join("") + `</div>`;
+    } else {
+      h += `<div class="empty">Keine Punkte gelistet.</div>`;
+    }
+  });
+  $("#resupplyBody").innerHTML = h;
+}
+
+/* ======================= RENDER: SCHLAFEN ======================= */
+function renderSchlafen(){
+  let h="";
+  DAYS.forEach(d=>{
+    h += `<p class="eyebrow">Nach Tag ${d.n}</p>
+    <div class="sleep-card ${d.sleep.status}">
+      <div class="sleep-head">${campBadge({status:d.sleep.status})}</div>
+      <div class="sleep-place">${d.sleep.place}</div>
+      <div class="sleep-note">${d.sleep.note}</div>
+      <div class="sleep-detail">${d.sleep.detail}</div>
+    </div>`;
+  });
+  h += `<div class="acc" id="acc-campgeneral">
+    <button class="acc-head"><b>Allgemeine Camping-Regeln</b><span class="chev">›</span></button>
+    <div class="acc-body">
+      <p>Wildcamping ist in Italien/der Schweiz offiziell nicht erlaubt, <b>Not-Biwak wird aber toleriert</b>. Rifugio-Betten sind nicht exklusiv für Teilnehmer:innen reserviert — bei ausgebuchten Betten kann meist in der Nähe gezeltet werden.</p>
+      <p>Richtwerte Rifugio-Kosten allgemein: ca. 10 € Frühstück, ca. 20 € Abendessen, ca. 30 € Übernachtung (je nach Zimmer auch mehr). Bei spätem Ankommen/frühem Aufbruch: kurz mit dem Personal sprechen, Preise/Zeiten sind oft flexibel.</p>
+    </div>
+  </div>`;
+  $("#schlafenBody").innerHTML = h;
+  bindAccordions();
+}
+
+/* ======================= RENDER: MEHR ======================= */
+function renderMehr(){
+  const h = `
+  <div class="acc open" id="acc-schedule">
+    <button class="acc-head"><span class="ico">🗓️</span><b>Zeitplan ENTREE</b><span class="chev">›</span></button>
+    <div class="acc-body">
+      ${SCHEDULE.map(s=>`<div class="schedule-row"><div class="schedule-date">${s.date}</div><div class="schedule-time mono">${s.time}</div><div class="schedule-what">${s.what}</div></div>`).join("")}
+    </div>
+  </div>
+
+  <div class="acc" id="acc-gear">
+    <button class="acc-head"><span class="ico">🎒</span><b>Pflichtausrüstung</b><span class="chev">›</span></button>
+    <div class="acc-body">
+      <div class="gear-count" id="gearCount"></div>
+      <div id="gearList"></div>
+      <div class="subtitle">Empfohlen</div>
+      <ul>${GEAR_REC.map(g=>`<li>${g}</li>`).join("")}</ul>
+    </div>
+  </div>
+
+  <div class="acc" id="acc-tracker">
+    <button class="acc-head"><span class="ico">📡</span><b>Tracker · Follow My Challenge</b><span class="chev">›</span></button>
+    <div class="acc-body">
+      <ul>
+        <li>200 € Kaution 2 Wochen vor Event via PayPal, Rückzahlung bis 20. September.</li>
+        <li>Einschalten: Knopf oben gedrückt halten (~5 Sek.). Rot blinkt beim Start, grün/blau während Signalsuche, dann grün langsam blinkend = bereit.</li>
+        <li><b>Gute Plätze:</b> Oberrohrtasche, Trikottasche, Trinkrucksack, oben auf Satteltasche, Seitenfach Lenkertasche.</li>
+        <li><b>Vermeiden:</b> nahe Tretlager, Rahmentasche, unter Lenker, Boden einer Tasche, gleiche Tasche wie Handy.</li>
+        <li>Laden: USB-A → USB-C nutzen (Fast-Charge-Kabel evtl. inkompatibel). Volle Ladung hält ca. 6 Tage.</li>
+        <li>Langsam blinkendes rotes Licht = Akku niedrig. QR-Code auf der Rückseite für Status/Diagnose.</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="acc" id="acc-outta">
+    <button class="acc-head"><span class="ico">💬</span><b>Kommunikation · OUTTA-App</b><span class="chev">›</span></button>
+    <div class="acc-body">
+      <p>Pflicht: App vor Start installieren & dem SNEAK-PEAKS-Event beitreten. Sämtliche Kommunikation während des Events (Streckenupdates, Wetterwarnungen, Nachrichten zwischen Fahrer:innen) läuft über diese App.</p>
+    </div>
+  </div>
+
+  <div class="acc" id="acc-safety">
+    <button class="acc-head"><span class="ico">🛟</span><b>Sicherheit &amp; Abbruch</b><span class="chev">›</span></button>
+    <div class="acc-body">
+      <p><b>„Do not risk anything.“</b> Es gibt keine Notwendigkeit, Risiken einzugehen. Bei unsicherem Abschnitt: auf eine andere Person warten, gemeinsam überqueren.</p>
+      <div class="subtitle">Bei Abbruch</div>
+      <ul>
+        <li>Niemals abends/nachts abbrechen — Unterschlupf suchen, ausruhen, bei Sonnenaufgang neu entscheiden.</li>
+        <li>Sofort per E-Mail oder WhatsApp Bescheid geben — sonst gilt man als vermisst.</li>
+      </ul>
+      <div class="subtitle">Kontakt</div>
+      <p><a href="mailto:info@orbit360.cc">info@orbit360.cc</a></p>
+    </div>
+  </div>
+
+  <div class="acc" id="acc-exit">
+    <button class="acc-head"><span class="ico">🚪</span><b>Alle Exit-Optionen</b><span class="chev">›</span></button>
+    <div class="acc-body">
+      ${Object.values(EXIT).map(e=>`<div class="schedule-row"><div class="schedule-time mono" style="min-width:52px">km ${e.km}</div><div class="schedule-what"><b>${e.name}</b><br>${e.text}</div></div>`).join("")}
+      <p style="margin-top:10px">Regionalzüge in Südtirol/Trentino nehmen i. d. R. Räder mit. Fahrpläne: trenitalia.com &amp; suedtirolmobil.info. Busse nehmen meist keine Räder mit.</p>
+    </div>
+  </div>
+
+  <div class="acc" id="acc-bike">
+    <button class="acc-head"><span class="ico">🚲</span><b>Bike &amp; Ausrüstungstipps</b><span class="chev">›</span></button>
+    <div class="acc-body">
+      <ul>
+        <li>Reifenfreiheit mind. 45 mm (ideal 50 mm), niedrige Übersetzung (vorne ~34/36, hinten 50/52).</li>
+        <li>Setup „leicht & schnell“ passt gut zu den Resupply-Punkten — aber Wetterumschwung einplanen.</li>
+        <li>Keine Extra-Schuhe fürs Hike-a-Bike — stattdessen MTB-Schuhe wählen, in denen man laufen kann.</li>
+        <li>Vorsicht bei Drainage-Kanälen quer zur Fahrbahn auf steilen Abfahrten.</li>
+      </ul>
+    </div>
+  </div>
+  `;
+  $("#mehrBody").innerHTML = h;
+  renderGear();
+  bindAccordions();
+}
+let checkedGear = new Set();
+function renderGear(){
+  const wrap = $("#gearList");
+  wrap.innerHTML = GEAR_MUST.map((g,i)=>`<div class="gear-item${checkedGear.has(i)?" checked":""}" data-i="${i}"><div class="gear-box">${checkedGear.has(i)?"✓":""}</div><span>${g}</span></div>`).join("");
+  updateGearCount();
+  $$("#gearList .gear-item").forEach(el=>{
+    el.onclick=()=>{
+      const i = Number(el.dataset.i);
+      if(checkedGear.has(i)) checkedGear.delete(i); else checkedGear.add(i);
+      el.classList.toggle("checked");
+      el.querySelector(".gear-box").textContent = el.classList.contains("checked")?"✓":"";
+      updateGearCount();
+    };
+  });
+}
+function updateGearCount(){
+  const total = GEAR_MUST.length;
+  const done = $$("#gearList .gear-item.checked").length;
+  $("#gearCount").textContent = `${done} von ${total} bestätigt`;
+}
+
+/* ======================= INTERAKTION ======================= */
+function bindRowToggles(){
+  $$(".tap[data-cp]").forEach(btn=>{
+    btn.onclick=()=>{
+      const detail = btn.closest(".row-wrap").querySelector(".row-detail");
+      const isOpen = detail.classList.contains("open");
+      detail.classList.toggle("open", !isOpen);
+      btn.classList.toggle("open", !isOpen);
+    };
+  });
+}
+function bindAccordions(){
+  $$(".acc-head").forEach(btn=>{
+    btn.onclick=()=>{ btn.parentElement.classList.toggle("open"); };
+  });
+}
+
+const TAB_RENDER = {heute:renderHeute, cp:renderCP, resupply:renderResupply, schlafen:renderSchlafen, mehr:renderMehr};
+function switchTab(name){
+  $$(".tabbtn").forEach(b=>b.classList.toggle("active", b.dataset.tab===name));
+  $$(".view").forEach(v=>v.classList.toggle("active", v.id==="view-"+name));
+  TAB_RENDER[name]();
+}
+$$(".tabbtn").forEach(b=> b.onclick = ()=> switchTab(b.dataset.tab) );
+
+$("#closeSheetBtn").onclick = closeSheet;
+$("#backdrop").onclick = closeSheet;
+
+/* Quickbar */
+$("#qbEmergency").onclick = openEmergencySheet;
+$("#qbGroup").onclick = ()=>{
+  if(COMM_GROUP_URL){ window.open(COMM_GROUP_URL, "_blank"); }
+  else { toast("Noch kein Gruppen-Link hinterlegt"); }
+};
+$("#qbKomoot").onclick = ()=> window.open(KOMOOT_URL, "_blank");
+
+/* Story-Modus Bindings */
+$("#storyClose").onclick = closeStoryMode;
+$("#storyPrevZone").onclick = storyPrev;
+$("#storyNextZone").onclick = storyNext;
+const storyEl = $("#storyMode");
+storyEl.addEventListener("pointerdown", ()=> pauseStoryTimer());
+storyEl.addEventListener("pointerup", ()=> resumeStoryTimer());
+storyEl.addEventListener("pointercancel", ()=> resumeStoryTimer());
+storyEl.addEventListener("touchmove", (e)=>{ e.preventDefault(); }, {passive:false});
+
+/* Init */
+renderHeute();
+
+if("serviceWorker" in navigator){
+  window.addEventListener("load", ()=>{
+    navigator.serviceWorker.register("sw.js").catch(()=>{});
+  });
+}
+</script>
+</body>
+</html>
