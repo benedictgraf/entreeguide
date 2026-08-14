@@ -1,4 +1,4 @@
-const CACHE = "entree-feldbuch-v1";
+const CACHE = "entree-feldbuch-v2";
 const ASSETS = ["./", "./index.html", "./manifest.json", "./icon.svg"];
 
 self.addEventListener("install", (e) => {
