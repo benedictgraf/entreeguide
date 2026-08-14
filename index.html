@@ -134,6 +134,16 @@ main{flex:1; overflow-y:auto; padding:16px var(--pad) 110px; -webkit-overflow-sc
 .gps-row b{font-size:13px; text-align:right;}
 .gps-note{font-size:10px; color:var(--mist); margin-top:7px; line-height:1.5; border-top:1px solid var(--line); padding-top:7px;}
 
+.emergency-coords{margin:0 0 16px; padding:16px; border-radius:var(--r-lg); background:linear-gradient(155deg, rgba(255,62,150,.16), rgba(255,62,150,.03)); border:1px solid rgba(255,62,150,.4);}
+.emergency-coords-label{font-size:11px; font-weight:800; letter-spacing:.06em; text-transform:uppercase; color:var(--flare); margin-bottom:10px;}
+.emergency-coords-row{display:flex; align-items:baseline; justify-content:space-between; gap:10px; padding:3px 0;}
+.emergency-coords-tag{font-size:11px; font-weight:700; color:var(--mist); letter-spacing:.04em;}
+.emergency-coords-val{font-family:ui-monospace,"SF Mono",monospace; font-variant-numeric:tabular-nums; font-size:28px; font-weight:800; letter-spacing:-.01em; color:var(--fog);}
+.emergency-coords-acc{font-size:11px; color:var(--mist); margin-top:8px;}
+.emergency-coords-actions{display:flex; gap:8px; margin-top:14px;}
+.emergency-coords-btn{flex:1; appearance:none; background:var(--slate2); border:1px solid var(--line); border-radius:var(--r-md); color:var(--fog); font-size:13px; font-weight:700; padding:10px 8px;}
+.emergency-coords-btn:active{opacity:.7;}
+
 /* CARDS */
 .card{background:var(--slate); border:1px solid var(--line); border-radius:var(--r-lg); padding:16px; margin-bottom:12px;}
 .sleep-card{border-radius:var(--r-lg); padding:16px; margin-bottom:12px; border:1px solid; position:relative;}
@@ -330,7 +340,7 @@ nav#tabbar{position:fixed; left:0; right:0; bottom:0; z-index:20; display:flex; 
     <header><div class="brand"><b>Sneak Peaks</b><span class="tag">Entree</span></div></header>
     <div id="quickbar">
       <button class="qbtn" id="qbEmergency">⛑️ <span>Notfall</span></button>
-      <button class="qbtn" id="qbGroup">💬 <span>Gruppe</span></button>
+      <button class="qbtn" id="qbGroup">💬 <span>Community</span></button>
       <button class="qbtn" id="qbKomoot">🗺️ <span>Komoot-Route</span></button>
     </div>
   </div>
@@ -406,9 +416,15 @@ nav#tabbar{position:fixed; left:0; right:0; bottom:0; z-index:20; display:flex; 
 
 <script>
 /* ======================= KONFIG ======================= */
-// TODO: echten Link zur Kommunikations-/Gruppen-Chat eintragen (WhatsApp/Signal/OUTTA-Event)
+// TODO: Invite-/Gruppenlink der OUTTA-App eintragen (in der App: Gruppe "SNEAK PEAKS" -> Teilen -> Link kopieren).
+// Universal Link, öffnet bei installierter OUTTA-App direkt die App statt des Browsers - kein Custom-URL-Scheme nötig.
 const COMM_GROUP_URL = "";
+// Web-Einstieg für alle ohne App / falls der Invite-Link mal abläuft.
+const OUTTA_WEB_URL = "https://outta-app.com/en/outta-app/";
 const KOMOOT_URL = "https://komoot.com/de-de/collection/4519315/-party-pace-patrol-sneak-peaks_entree_5-days-with-lotti";
+const KOMOOT_FULL_URL = "https://www.komoot.com/de-de/collection/4526412/-sneak-peaks-2026-entree";
+const KOMOOT_EXIT_URL = "https://www.komoot.com/de-de/collection/4538266/-exit-options-sneak-peaks-2026";
+const HANDBOOK_URL = "https://drive.google.com/file/d/1prD9qHubYVJjKuWp5jfYEv8b1cFBYq4Y/view";
 
 /* ======================= DATEN ======================= */
 const DAYS = [
@@ -956,12 +972,70 @@ function showSheet(title, sub, bodyHtml){
   $("#sheet").setAttribute("aria-hidden","false");
 }
 function closeSheet(){
+  stopEmergencyGPS();
   $("#backdrop").classList.remove("show");
   $("#sheet").classList.remove("show");
   $("#sheet").setAttribute("aria-hidden","true");
 }
+
+/* ---- Notfall-Koordinaten: eigener, sheet-unabhängiger GPS-Watch für schnellen Fix ---- */
+let emGpsWatchId = null, emLastPos = null;
+function startEmergencyGPS(forceRestart){
+  if(!("geolocation" in navigator)){ renderEmergencyCoords(null, "GPS auf diesem Gerät nicht verfügbar"); return; }
+  if(emGpsWatchId!==null){
+    if(!forceRestart) return;
+    navigator.geolocation.clearWatch(emGpsWatchId);
+    emGpsWatchId = null;
+  }
+  renderEmergencyCoords(null, "Suche GPS-Fix …");
+  emGpsWatchId = navigator.geolocation.watchPosition(
+    pos=>{
+      emLastPos = {lat:pos.coords.latitude, lon:pos.coords.longitude, acc:pos.coords.accuracy};
+      renderEmergencyCoords(emLastPos);
+    },
+    err=>{
+      const msg = err.code===1 ? "Standortzugriff abgelehnt — in den iPhone-Einstellungen für diesen Browser erlauben" : err.code===2 ? "Position nicht verfügbar" : "Zeitüberschreitung beim GPS-Fix";
+      renderEmergencyCoords(null, msg);
+    },
+    {enableHighAccuracy:true, maximumAge:5000, timeout:20000}
+  );
+}
+function stopEmergencyGPS(){
+  if(emGpsWatchId!==null && "geolocation" in navigator){ navigator.geolocation.clearWatch(emGpsWatchId); }
+  emGpsWatchId = null;
+}
+function renderEmergencyCoords(pos, msg){
+  const el = document.getElementById("emCoordsBody");
+  if(!el) return;
+  if(!pos){
+    el.innerHTML = `<div style="font-size:14px;font-weight:600;color:var(--mist);">${msg||"Suche GPS-Fix …"}</div>`;
+    return;
+  }
+  el.innerHTML = `
+    <div class="emergency-coords-row"><span class="emergency-coords-tag">BREITE</span><span class="emergency-coords-val">${pos.lat.toFixed(5)}</span></div>
+    <div class="emergency-coords-row"><span class="emergency-coords-tag">LÄNGE</span><span class="emergency-coords-val">${pos.lon.toFixed(5)}</span></div>
+    <div class="emergency-coords-acc">Genauigkeit: ±${Math.round(pos.acc||0)} m — Fix wird automatisch verfeinert</div>
+  `;
+}
+function copyEmergencyCoords(){
+  if(!emLastPos){ toast("Noch keine Position verfügbar"); return; }
+  const text = `${emLastPos.lat.toFixed(5)}, ${emLastPos.lon.toFixed(5)}`;
+  if(navigator.clipboard && navigator.clipboard.writeText){
+    navigator.clipboard.writeText(text).then(()=>toast("Koordinaten kopiert")).catch(()=>toast("Kopieren fehlgeschlagen"));
+  } else {
+    toast("Kopieren auf diesem Gerät nicht unterstützt");
+  }
+}
 function openEmergencySheet(){
   const body = `
+    <div class="emergency-coords">
+      <div class="emergency-coords-label">📍 Deine Position — zum Telefonieren bereit</div>
+      <div id="emCoordsBody"><div style="font-size:14px;font-weight:600;color:var(--mist);">Suche GPS-Fix …</div></div>
+      <div class="emergency-coords-actions">
+        <button class="emergency-coords-btn" type="button" id="emCopyBtn">📋 Kopieren</button>
+        <button class="emergency-coords-btn" type="button" id="emRefreshBtn">🔄 Aktualisieren</button>
+      </div>
+    </div>
     <div class="subtitle" style="font-weight:700;margin-bottom:6px;">Pflichtausrüstung dabei?</div>
     <ul style="margin:0 0 14px;padding-left:18px;font-size:13.5px;line-height:1.6;">${GEAR_MUST.map(g=>`<li>${g}</li>`).join("")}</ul>
     <div class="subtitle" style="font-weight:700;margin-bottom:6px;">Bei Abbruch</div>
@@ -973,6 +1047,9 @@ function openEmergencySheet(){
     <p style="font-size:13.5px;margin:0 0 4px;"><a href="mailto:info@orbit360.cc">info@orbit360.cc</a></p>
   `;
   showSheet("⛑️ Notfall & Sicherheit", "Do not risk anything", body);
+  startEmergencyGPS();
+  $("#emCopyBtn").onclick = ()=>copyEmergencyCoords();
+  $("#emRefreshBtn").onclick = ()=>startEmergencyGPS(true);
 }
 function openPointSheet(wid){
   if(wid==="start"){
@@ -1703,6 +1780,15 @@ function renderMehr(){
     </div>
   </div>
 
+  <div class="acc" id="acc-sources">
+    <button class="acc-head"><span class="ico">📄</span><b>Quellen &amp; ganze Route</b><span class="chev">›</span></button>
+    <div class="acc-body">
+      <p style="font-size:13.5px;line-height:1.6;"><a href="${HANDBOOK_URL}" target="_blank" rel="noopener">📄 Offizielles Rider Handbook 2026 (PDF)</a></p>
+      <p style="font-size:13.5px;line-height:1.6;"><a href="${KOMOOT_FULL_URL}" target="_blank" rel="noopener">🗺️ Komoot: gesamte ENTREE-Route</a></p>
+      <p style="font-size:13.5px;line-height:1.6;"><a href="${KOMOOT_URL}" target="_blank" rel="noopener">🗺️ Komoot: Party Pace Patrol „Lotti“ (Tagesetappen)</a></p>
+    </div>
+  </div>
+
   <div class="acc" id="acc-gear">
     <button class="acc-head"><span class="ico">🎒</span><b>Pflichtausrüstung</b><span class="chev">›</span></button>
     <div class="acc-body">
@@ -1753,6 +1839,7 @@ function renderMehr(){
     <div class="acc-body">
       ${Object.values(EXIT).map(e=>`<div class="schedule-row"><div class="schedule-time mono" style="min-width:52px">km ${e.km}</div><div class="schedule-what"><b>${e.name}</b><br>${e.text}</div></div>`).join("")}
       <p style="margin-top:10px">Regionalzüge in Südtirol/Trentino nehmen i. d. R. Räder mit. Fahrpläne: trenitalia.com &amp; suedtirolmobil.info. Busse nehmen meist keine Räder mit.</p>
+      <p style="margin-top:10px;font-size:13.5px;"><a href="${KOMOOT_EXIT_URL}" target="_blank" rel="noopener">🗺️ Alle Exit-Routen auf Komoot</a></p>
     </div>
   </div>
 
@@ -1823,10 +1910,7 @@ $("#backdrop").onclick = closeSheet;
 
 /* Quickbar */
 $("#qbEmergency").onclick = openEmergencySheet;
-$("#qbGroup").onclick = ()=>{
-  if(COMM_GROUP_URL){ window.open(COMM_GROUP_URL, "_blank"); }
-  else { toast("Noch kein Gruppen-Link hinterlegt"); }
-};
+$("#qbGroup").onclick = ()=> window.open(COMM_GROUP_URL || OUTTA_WEB_URL, "_blank");
 $("#qbKomoot").onclick = ()=> window.open(KOMOOT_URL, "_blank");
 
 /* Story-Modus Bindings */
