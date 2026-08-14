@@ -1097,13 +1097,15 @@ function buildStorySlides(dayNum){
   const d = DAYS[dayNum-1];
   const slides = [];
 
-  slides.push({dur:3, kind:"title", html:`
+  slides.push({dur:4.2, kind:"intro", html:`
     <div class="story-eyebrow">Sneak Peaks · Entree</div>
-    <div class="story-daynum">TAG <b>${d.n}</b><span style="color:var(--fog)">/5</span></div>
+    <div class="story-daynum" style="font-size:56px;">TAG <b>${d.n}</b></div>
     <div class="story-route">${d.from}<span class="arrow">→</span>${d.to}</div>
+    <div class="story-mapwrap" style="max-width:180px; margin-top:16px;">${storyMapSvg(dayNum)}</div>
+    <div class="story-detail">${d.character}</div>
   `});
 
-  slides.push({dur:3.2, kind:"stats", html:`
+  slides.push({dur:3, kind:"stats", html:`
     <div class="story-stats">
       <div class="story-stat-row"><span class="lb">Distanz</span><span class="val mono"><span class="cnt" data-val="${d.km}" data-dec="${d.km%1?1:0}">0</span> km</span></div>
       <div class="story-stat-row"><span class="lb">Anstieg</span><span class="val up mono">+<span class="cnt" data-val="${d.up}">0</span> m</span></div>
@@ -1111,12 +1113,7 @@ function buildStorySlides(dayNum){
     </div>
   `});
 
-  slides.push({dur:3.4, kind:"map", html:`
-    <div class="story-eyebrow">Die Route</div>
-    <div class="story-mapwrap">${storyMapSvg(dayNum)}</div>
-  `});
-
-  slides.push({dur:3.4, kind:"elev", html:`
+  slides.push({dur:3.2, kind:"elev", html:`
     <div class="story-eyebrow">Höhenprofil</div>
     <div class="story-elevwrap">${elevationSvg(dayNum, {h:210, suffix:"story"+dayNum})}</div>
     <div class="story-sub mono">↑ ${Math.round(Math.max(...ELEV[dayNum].map(p=>p[1])))} m</div>
@@ -1244,7 +1241,7 @@ function storyPrev(){
 }
 
 /* ======================= VIDEO-EXPORT (Canvas + MediaRecorder) ======================= */
-const VIDEO_CFG = {slideMs:3000, fps:30, w:1080, h:1920};
+const VIDEO_CFG = {slideMs:3300, fps:30, w:1080, h:1920};
 window.VIDEO_CFG = VIDEO_CFG;
 let exportAbort = false, exportRunning = false;
 
@@ -1269,7 +1266,8 @@ function drawWatermark(ctx,W,H){
   ctx.font = "800 26px -apple-system, sans-serif";
   ctx.textAlign = "center";
   ctx.fillStyle = "rgba(148,152,168,.9)";
-  ctx.fillText("S N E A K   P E A K S   ·   E N T R E E", W/2, H-64);
+  // etwas über dem unteren Rand, damit YouTube-Shorts-UI (Caption/Username) das Wasserzeichen nicht verdeckt
+  ctx.fillText("S N E A K   P E A K S   ·   E N T R E E", W/2, H*0.93);
 }
 function drawEyebrow(ctx,W,y,text){
   ctx.font = "800 34px -apple-system, sans-serif";
@@ -1277,27 +1275,91 @@ function drawEyebrow(ctx,W,y,text){
   ctx.fillStyle = "#FF3E96";
   ctx.fillText(text.toUpperCase().split("").join("\u200a\u200a"), W/2, y);
 }
+function wrapText(ctx, text, maxWidth){
+  const words = text.split(" ");
+  const lines = []; let line = "";
+  words.forEach(w=>{
+    const test = line ? line+" "+w : w;
+    if(ctx.measureText(test).width > maxWidth && line){ lines.push(line); line = w; }
+    else line = test;
+  });
+  if(line) lines.push(line);
+  return lines;
+}
+function drawCenteredSegments(ctx, segments, y){
+  const widths = segments.map(s=>ctx.measureText(s.text).width);
+  const total = widths.reduce((a,b)=>a+b,0);
+  let x = ctx.canvas.width/2 - total/2;
+  ctx.textAlign = "left";
+  segments.forEach((s,i)=>{ ctx.fillStyle = s.color; ctx.fillText(s.text, x, y); x += widths[i]; });
+}
 const FD = "ui-rounded, -apple-system, sans-serif";
 function drawSlideCanvas(ctx, kind, t, d, dayNum){
   const {w:W, h:H} = VIDEO_CFG;
   drawExportBg(ctx,W,H);
   const a1 = easeOut(Math.min(1, t/0.35));
-  if(kind==="title"){
+  if(kind==="intro"){
     ctx.globalAlpha = a1;
-    drawEyebrow(ctx,W,H*0.36,"Sneak Peaks · Entree");
-    ctx.globalAlpha = easeOut(Math.min(1, Math.max(0,(t-0.08)/0.4)));
-    const scale = 0.9 + 0.1*easeOut(Math.min(1, t/0.5));
-    ctx.save(); ctx.translate(W/2, H*0.47); ctx.scale(scale,scale);
-    ctx.font = "900 190px "+FD; ctx.textAlign = "center";
-    ctx.fillStyle = "#EDEBE3"; ctx.fillText("TAG", -175, 0);
-    ctx.fillStyle = "#CFFF4D"; ctx.fillText(String(d.n), 105, 0);
-    ctx.fillStyle = "#EDEBE3"; ctx.font = "900 120px "+FD; ctx.fillText("/5", 265, 0);
-    ctx.restore();
-    ctx.globalAlpha = easeOut(Math.min(1, Math.max(0,(t-0.2)/0.4)));
-    ctx.font = "800 58px "+FD; ctx.textAlign = "center"; ctx.fillStyle = "#EDEBE3";
-    ctx.fillText(d.from, W/2, H*0.56);
-    ctx.fillStyle = "#FF3E96"; ctx.fillText("↓", W/2, H*0.60);
-    ctx.fillStyle = "#EDEBE3"; ctx.fillText(d.to, W/2, H*0.64);
+    drawEyebrow(ctx,W,H*0.095,"Sneak Peaks · Entree");
+    ctx.font = "900 130px "+FD;
+    drawCenteredSegments(ctx, [{text:"TAG ",color:"#EDEBE3"},{text:String(d.n),color:"#CFFF4D"}], H*0.235);
+
+    ctx.globalAlpha = easeOut(Math.min(1, Math.max(0,(t-0.1)/0.35)));
+    let routeFont = 44;
+    ctx.font = `800 ${routeFont}px ${FD}`;
+    const routeText = `${d.from}   →   ${d.to}`;
+    while(ctx.measureText(routeText).width > W*0.86 && routeFont>26){ routeFont-=2; ctx.font = `800 ${routeFont}px ${FD}`; }
+    drawCenteredSegments(ctx, [{text:d.from+"   ",color:"#EDEBE3"},{text:"→",color:"#FF3E96"},{text:"   "+d.to,color:"#EDEBE3"}], H*0.30);
+    ctx.globalAlpha = 1;
+
+    const geom = buildMapGeometry();
+    const box = {x:W*0.20, y:H*0.35, w:W*0.60, h:H*0.32};
+    const sc = Math.min(box.w/geom.VBW, box.h/geom.VBH);
+    const ox = box.x + (box.w-geom.VBW*sc)/2, oy = box.y + (box.h-geom.VBH*sc)/2;
+    const P = id => { const p = geom.proj(COORDS[id].lat, COORDS[id].lon); return {x:ox+p.x*sc, y:oy+p.y*sc}; };
+    ctx.globalAlpha = a1;
+    ctx.strokeStyle = "rgba(148,152,168,.35)"; ctx.lineWidth = 4; ctx.lineJoin="round"; ctx.lineCap="round";
+    ctx.beginPath();
+    ROUTE_SEQ.forEach((id,i)=>{ const p=P(id); i?ctx.lineTo(p.x,p.y):ctx.moveTo(p.x,p.y); });
+    ctx.stroke();
+    const prevLast = dayNum===1 ? "start" : DAYS[dayNum-2].way[DAYS[dayNum-2].way.length-1];
+    const seq = [prevLast, ...d.way].map(P);
+    const lens = []; let total = 0;
+    for(let i=1;i<seq.length;i++){ const l=Math.hypot(seq[i].x-seq[i-1].x, seq[i].y-seq[i-1].y); lens.push(l); total+=l; }
+    const drawn = total * easeOut(Math.min(1, Math.max(0,(t-0.15)/0.55)));
+    function strokePartial(width, style, alpha){
+      ctx.globalAlpha = alpha; ctx.strokeStyle = style; ctx.lineWidth = width;
+      ctx.beginPath(); ctx.moveTo(seq[0].x, seq[0].y);
+      let acc = 0;
+      for(let i=1;i<seq.length;i++){
+        if(acc+lens[i-1] <= drawn){ ctx.lineTo(seq[i].x, seq[i].y); acc+=lens[i-1]; }
+        else{
+          const f = Math.max(0,(drawn-acc)/lens[i-1]);
+          ctx.lineTo(seq[i-1].x+(seq[i].x-seq[i-1].x)*f, seq[i-1].y+(seq[i].y-seq[i-1].y)*f);
+          break;
+        }
+      }
+      ctx.stroke();
+    }
+    strokePartial(20, "#FF3E96", .22);
+    strokePartial(8, "#FF3E96", 1);
+    ctx.globalAlpha = 1;
+    let acc2 = 0;
+    seq.forEach((p,i)=>{
+      const reach = i===0 ? 0 : (acc2 += lens[i-1], acc2);
+      if(reach<=drawn+1){
+        const id = i===0 ? prevLast : d.way[i-1];
+        const col = id==="start" ? "#CFFF4D" : ({ok:"#CFFF4D",warn:"#FF8A4C",no:"#FF5C5C",info:"#6FD3FF"})[stopColorClass(WAY[id]||{kind:"town"})];
+        ctx.fillStyle = col; ctx.strokeStyle = "#0B0D14"; ctx.lineWidth = 3;
+        ctx.beginPath(); ctx.arc(p.x,p.y,11,0,Math.PI*2); ctx.fill(); ctx.stroke();
+      }
+    });
+
+    ctx.globalAlpha = easeOut(Math.min(1, Math.max(0,(t-0.55)/0.35)));
+    ctx.font = "700 30px -apple-system, sans-serif"; ctx.textAlign="center"; ctx.fillStyle="#9498A8";
+    const capLines = wrapText(ctx, d.character, W*0.78);
+    let cy = H*0.735;
+    capLines.slice(0,3).forEach(line=>{ ctx.fillText(line, W/2, cy); cy += 40; });
     ctx.globalAlpha = 1;
   }
   if(kind==="stats"){
@@ -1319,51 +1381,6 @@ function drawSlideCanvas(ctx, kind, t, d, dayNum){
       y += H*0.10;
     });
     ctx.globalAlpha = 1;
-  }
-  if(kind==="map"){
-    ctx.globalAlpha = a1;
-    drawEyebrow(ctx,W,H*0.26,"Die Route");
-    const geom = buildMapGeometry();
-    const box = {x:W*0.16, y:H*0.30, w:W*0.68, h:H*0.44};
-    const sc = Math.min(box.w/geom.VBW, box.h/geom.VBH);
-    const ox = box.x + (box.w-geom.VBW*sc)/2, oy = box.y + (box.h-geom.VBH*sc)/2;
-    const P = id => { const p = geom.proj(COORDS[id].lat, COORDS[id].lon); return {x:ox+p.x*sc, y:oy+p.y*sc}; };
-    ctx.strokeStyle = "rgba(148,152,168,.35)"; ctx.lineWidth = 4; ctx.lineJoin="round"; ctx.lineCap="round";
-    ctx.beginPath();
-    ROUTE_SEQ.forEach((id,i)=>{ const p=P(id); i?ctx.lineTo(p.x,p.y):ctx.moveTo(p.x,p.y); });
-    ctx.stroke();
-    const prevLast = dayNum===1 ? "start" : DAYS[dayNum-2].way[DAYS[dayNum-2].way.length-1];
-    const seq = [prevLast, ...d.way].map(P);
-    const lens = []; let total = 0;
-    for(let i=1;i<seq.length;i++){ const l=Math.hypot(seq[i].x-seq[i-1].x, seq[i].y-seq[i-1].y); lens.push(l); total+=l; }
-    const drawn = total * easeOut(Math.min(1, Math.max(0,(t-0.1)/0.65)));
-    function strokePartial(width, style, alpha){
-      ctx.globalAlpha = alpha; ctx.strokeStyle = style; ctx.lineWidth = width;
-      ctx.beginPath(); ctx.moveTo(seq[0].x, seq[0].y);
-      let acc = 0;
-      for(let i=1;i<seq.length;i++){
-        if(acc+lens[i-1] <= drawn){ ctx.lineTo(seq[i].x, seq[i].y); acc+=lens[i-1]; }
-        else{
-          const f = Math.max(0,(drawn-acc)/lens[i-1]);
-          ctx.lineTo(seq[i-1].x+(seq[i].x-seq[i-1].x)*f, seq[i-1].y+(seq[i].y-seq[i-1].y)*f);
-          break;
-        }
-      }
-      ctx.stroke();
-    }
-    strokePartial(22, "#FF3E96", .22);
-    strokePartial(9, "#FF3E96", 1);
-    ctx.globalAlpha = 1;
-    let acc2 = 0;
-    seq.forEach((p,i)=>{
-      const reach = i===0 ? 0 : (acc2 += lens[i-1], acc2);
-      if(reach<=drawn+1){
-        const id = i===0 ? prevLast : d.way[i-1];
-        const col = id==="start" ? "#CFFF4D" : ({ok:"#CFFF4D",warn:"#FF8A4C",no:"#FF5C5C",info:"#6FD3FF"})[stopColorClass(WAY[id]||{kind:"town"})];
-        ctx.fillStyle = col; ctx.strokeStyle = "#0B0D14"; ctx.lineWidth = 3;
-        ctx.beginPath(); ctx.arc(p.x,p.y,13,0,Math.PI*2); ctx.fill(); ctx.stroke();
-      }
-    });
   }
   if(kind==="elev"){
     ctx.globalAlpha = a1;
@@ -1452,7 +1469,7 @@ function startVideoExport(forceMime){
   canvas.width = VIDEO_CFG.w; canvas.height = VIDEO_CFG.h;
   const ctx = canvas.getContext("2d");
   const d = DAYS[activeDay-1];
-  const kinds = ["title","stats","map","elev","sleep"];
+  const kinds = ["intro","stats","elev","sleep"];
   const slideMs = VIDEO_CFG.slideMs;
   const totalMs = kinds.length * slideMs;
 
