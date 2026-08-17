@@ -55,6 +55,8 @@ header{display:flex; align-items:center; justify-content:space-between; padding:
 .brand{display:flex; align-items:baseline; gap:8px;}
 .brand b{font-weight:800; letter-spacing:.04em; font-size:15px; text-transform:uppercase;}
 .brand .tag{font-size:11px; font-weight:800; letter-spacing:.08em; text-transform:uppercase; background:var(--acid); color:var(--acid-ink); padding:3px 8px; border-radius:999px;}
+.langbtn{appearance:none; background:var(--slate2); border:1px solid var(--line); color:var(--fog); font-size:11px; font-weight:800; letter-spacing:.04em; padding:6px 10px; border-radius:999px;}
+.langbtn:active{opacity:.7;}
 #quickbar{display:flex; gap:8px; padding:0 var(--pad) 12px; overflow-x:auto; scrollbar-width:none;}
 #quickbar::-webkit-scrollbar{display:none;}
 .qbtn{flex:0 0 auto; display:flex; align-items:center; gap:6px; padding:8px 13px; background:var(--slate); border:1px solid var(--line); border-radius:999px; font-size:12.5px; font-weight:700;}
@@ -357,6 +359,7 @@ nav#tabbar{position:fixed; left:0; right:0; bottom:0; z-index:20; display:flex; 
 #onboarding.show{display:flex;}
 #onboarding::after{content:""; position:absolute; left:-25%; right:-25%; bottom:-32%; height:62%; background:radial-gradient(ellipse at center, rgba(207,255,77,.14), transparent 65%); pointer-events:none; z-index:1;}
 .ob-progress{display:flex; gap:4px; padding:calc(env(safe-area-inset-top) + 16px) 20px 0; position:relative; z-index:6;}
+.ob-langbtn{position:absolute; top:calc(env(safe-area-inset-top) + 14px); right:14px; z-index:7;}
 .ob-dot{flex:1; height:3px; border-radius:99px; background:rgba(255,255,255,.18);}
 .ob-dot.done{background:var(--acid);}
 .ob-dot.current{background:var(--flare);}
@@ -418,11 +421,11 @@ nav#tabbar{position:fixed; left:0; right:0; bottom:0; z-index:20; display:flex; 
 <div id="app">
 
   <div id="topbar">
-    <header><div class="brand"><b>Sneak Peaks</b><span class="tag">Entree</span></div></header>
+    <header><div class="brand"><b>Sneak Peaks</b><span class="tag">Entree</span></div><button class="langbtn" id="langToggle" type="button" aria-label="Switch language / Sprache wechseln">EN</button></header>
     <div id="quickbar">
-      <button class="qbtn" id="qbEmergency">⛑️ <span>Notfall</span></button>
-      <button class="qbtn" id="qbGroup">💬 <span>Community</span></button>
-      <button class="qbtn" id="qbKomoot">🗺️ <span>Komoot-Route</span></button>
+      <button class="qbtn" id="qbEmergency">⛑️ <span data-i18n="qb.emergency">Notfall</span></button>
+      <button class="qbtn" id="qbGroup">💬 <span data-i18n="qb.community">Community</span></button>
+      <button class="qbtn" id="qbKomoot">🗺️ <span data-i18n="qb.komoot">Komoot-Route</span></button>
     </div>
   </div>
 
@@ -436,12 +439,12 @@ nav#tabbar{position:fixed; left:0; right:0; bottom:0; z-index:20; display:flex; 
     </section>
 
     <section class="view" id="view-cp">
-      <p class="eyebrow">6 Checkpoints + Ziel · der Reihe nach</p>
+      <p class="eyebrow" data-i18n="eyebrow.cp">6 Checkpoints + Ziel · der Reihe nach</p>
       <div class="rowlist" id="cpList"></div>
     </section>
 
     <section class="view" id="view-resupply">
-      <p class="eyebrow">Alle Stationen · der Reihe nach</p>
+      <p class="eyebrow" data-i18n="eyebrow.resupply">Alle Stationen · der Reihe nach</p>
       <div id="resupplyBody"></div>
     </section>
 
@@ -451,25 +454,25 @@ nav#tabbar{position:fixed; left:0; right:0; bottom:0; z-index:20; display:flex; 
     </section>
 
     <section class="view" id="view-diary">
-      <p class="eyebrow">Dein Etappen-Tagebuch</p>
+      <p class="eyebrow" data-i18n="eyebrow.diary">Dein Etappen-Tagebuch</p>
       <div id="diaryBody"></div>
     </section>
 
     <section class="view" id="view-mehr">
-      <p class="eyebrow">Zeitplan &amp; Vorbereitung</p>
+      <p class="eyebrow" data-i18n="eyebrow.mehr">Zeitplan &amp; Vorbereitung</p>
       <div id="mehrBody"></div>
-      <p class="offline-note">Diese Seite ist als installierbare Web-App gebaut: einmal mit Empfang öffnen und zum Homescreen hinzufügen — danach läuft sie komplett offline. Nur die Wettervorhersage braucht jeweils kurz Empfang zum Aktualisieren.</p>
+      <p class="offline-note" data-i18n="offline.note">Diese Seite ist als installierbare Web-App gebaut: einmal mit Empfang öffnen und zum Homescreen hinzufügen — danach läuft sie komplett offline. Nur die Wettervorhersage braucht jeweils kurz Empfang zum Aktualisieren.</p>
     </section>
 
   </main>
 
   <nav id="tabbar">
-    <button class="tabbtn active" data-tab="heute"><span class="ic">🚵</span><span class="lb">Heute</span></button>
-    <button class="tabbtn" data-tab="cp"><span class="ic">📍</span><span class="lb">Checkpoints</span></button>
-    <button class="tabbtn" data-tab="resupply"><span class="ic">🥖</span><span class="lb">Resupply</span></button>
-    <button class="tabbtn" data-tab="schlafen"><span class="ic">⛺</span><span class="lb">Schlafen</span></button>
-    <button class="tabbtn" data-tab="diary"><span class="ic">📓</span><span class="lb">Tagebuch</span><span class="tabdot" id="diaryDot" hidden></span></button>
-    <button class="tabbtn" data-tab="mehr"><span class="ic">☰</span><span class="lb">Mehr</span></button>
+    <button class="tabbtn active" data-tab="heute"><span class="ic">🚵</span><span class="lb" data-i18n="tab.heute">Heute</span></button>
+    <button class="tabbtn" data-tab="cp"><span class="ic">📍</span><span class="lb" data-i18n="tab.cp">Checkpoints</span></button>
+    <button class="tabbtn" data-tab="resupply"><span class="ic">🥖</span><span class="lb" data-i18n="tab.resupply">Resupply</span></button>
+    <button class="tabbtn" data-tab="schlafen"><span class="ic">⛺</span><span class="lb" data-i18n="tab.schlafen">Schlafen</span></button>
+    <button class="tabbtn" data-tab="diary"><span class="ic">📓</span><span class="lb" data-i18n="tab.diary">Tagebuch</span><span class="tabdot" id="diaryDot" hidden></span></button>
+    <button class="tabbtn" data-tab="mehr"><span class="ic">☰</span><span class="lb" data-i18n="tab.mehr">Mehr</span></button>
   </nav>
 </div>
 
@@ -479,16 +482,16 @@ nav#tabbar{position:fixed; left:0; right:0; bottom:0; z-index:20; display:flex; 
   <div class="sheet-title" id="sheetTitle"></div>
   <div class="sheet-sub" id="sheetSub"></div>
   <div id="sheetBody"></div>
-  <button class="closeSheet" id="closeSheetBtn">Schließen</button>
+  <button class="closeSheet" id="closeSheetBtn" data-i18n="sheet.close">Schließen</button>
 </div>
 <div id="toast"></div>
 
 <div id="videoExport" aria-hidden="true">
   <canvas id="exportCanvas" width="1080" height="1920"></canvas>
-  <div class="export-status" id="exportStatus">Rendere Video …</div>
-  <div class="export-sub" id="exportSub">Das Intro wird direkt auf deinem Gerät gerendert — kein Upload, kein Internet nötig.</div>
+  <div class="export-status" id="exportStatus" data-i18n="export.rendering">Rendere Video …</div>
+  <div class="export-sub" id="exportSub" data-i18n="export.sub">Das Intro wird direkt auf deinem Gerät gerendert — kein Upload, kein Internet nötig.</div>
   <div class="export-actions" id="exportActions">
-    <button class="export-btn" id="exportCancel">Abbrechen</button>
+    <button class="export-btn" id="exportCancel" data-i18n="export.cancel">Abbrechen</button>
   </div>
 </div>
 
@@ -503,6 +506,7 @@ nav#tabbar{position:fixed; left:0; right:0; bottom:0; z-index:20; display:flex; 
 
 <div id="onboarding" aria-hidden="true">
   <div class="bgstars"></div>
+  <button class="langbtn ob-langbtn" id="langToggleOb" type="button" aria-label="Switch language / Sprache wechseln">EN</button>
   <div class="ob-progress" id="obProgress"></div>
   <div class="ob-wrap" id="obWrap"></div>
 </div>
@@ -522,14 +526,14 @@ const KOMOOT_EXIT_URL = "https://www.komoot.com/de-de/collection/4538266/-exit-o
 const HANDBOOK_URL = "https://drive.google.com/file/d/1prD9qHubYVJjKuWp5jfYEv8b1cFBYq4Y/view";
 
 const ROUTE_DEFS = {
-  lotti:{ id:"lotti", title:"Party Pace Patrol · Lotti", tag:"5 Tage · fertig geplant",
-    desc:"Lottis fertiger Tempo-Plan — alle Etappen, Specials und Schlafplätze schon von uns vorbereitet.",
+  lotti:{ id:"lotti", title:{de:"Party Pace Patrol · Lotti", en:"Party Pace Patrol · Lotti"}, tag:{de:"5 Tage · fertig geplant", en:"5 days · fully planned"},
+    desc:{de:"Lottis fertiger Tempo-Plan — alle Etappen, Specials und Schlafplätze schon von uns vorbereitet.", en:"Lotti's ready-made pace plan — all stages, highlights and sleep spots already prepared for you."},
     komoot:()=>KOMOOT_URL, needsDays:false },
-  paula:{ id:"paula", title:"Party Pace Patrol · Paula", tag:"6 Tage · fertig geplant",
-    desc:"Paulas fertiger 6-Tage-Plan mit Zwischenstopp am Lago Federa — alle Etappen schon vorbereitet.",
+  paula:{ id:"paula", title:{de:"Party Pace Patrol · Paula", en:"Party Pace Patrol · Paula"}, tag:{de:"6 Tage · fertig geplant", en:"6 days · fully planned"},
+    desc:{de:"Paulas fertiger 6-Tage-Plan mit Zwischenstopp am Lago Federa — alle Etappen schon vorbereitet.", en:"Paula's ready-made 6-day plan with a stop at Lago Federa — all stages already prepared."},
     komoot:()=>KOMOOT_PAULA_URL, needsDays:false },
-  general:{ id:"general", title:"ENTREE komplett", tag:"495 km · dein Tempo",
-    desc:"Die gesamte Strecke ohne Vorgabe. Du bestimmst deine eigenen Etappen im nächsten Schritt.",
+  general:{ id:"general", title:{de:"ENTREE komplett", en:"ENTREE complete"}, tag:{de:"495 km · dein Tempo", en:"495 km · your pace"},
+    desc:{de:"Die gesamte Strecke ohne Vorgabe. Du bestimmst deine eigenen Etappen im nächsten Schritt.", en:"The whole route with no preset plan. You set your own stages in the next step."},
     komoot:()=>KOMOOT_FULL_URL, needsDays:true },
 };
 const PROFILE_KEY = "entree_profile_v1";
@@ -539,6 +543,236 @@ function clearProfile(){ try{ localStorage.removeItem(PROFILE_KEY); }catch(e){} 
 function escHtml(s){ return String(s).replace(/[&<>"']/g, c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c])); }
 let PROFILE = loadProfile();
 
+/* ======================= SPRACHE / LANGUAGE ======================= */
+const LANG_KEY = "entree_lang_v1";
+let LANG = localStorage.getItem(LANG_KEY) === "en" ? "en" : "de";
+function setLang(l){
+  LANG = l;
+  try{ localStorage.setItem(LANG_KEY, l); }catch(e){}
+  document.documentElement.lang = l;
+  const label = l==="de" ? "EN" : "DE";
+  const btn = document.getElementById("langToggle");
+  if(btn) btn.textContent = label;
+  const btnOb = document.getElementById("langToggleOb");
+  if(btnOb) btnOb.textContent = label;
+}
+// t(key): kurze UI-Textbausteine (Labels, Buttons, Ueberschriften).
+// tf(field): Inhaltsfelder aus den Datenobjekten, die als {de,en} oder als reiner (nur deutscher) String vorliegen.
+function t(key){
+  const entry = I18N[key];
+  if(!entry){ return key; }
+  return entry[LANG] || entry.de || key;
+}
+function tf(field){
+  if(field==null) return "";
+  if(typeof field==="object") return field[LANG] || field.de || "";
+  return field;
+}
+// Wie tf(), aber fuer eine explizit angegebene Sprache statt der aktuellen LANG - noetig, wenn
+// beide Sprachvarianten gleichzeitig gebaut werden muessen (z.B. generierte Tagesobjekte).
+function tfLang(field, lang){
+  if(field==null) return "";
+  if(typeof field==="object") return field[lang] || field.de || "";
+  return field;
+}
+const I18N = {
+  "tab.heute": {de:"Heute", en:"Today"},
+  "tab.cp": {de:"Checkpoints", en:"Checkpoints"},
+  "tab.resupply": {de:"Resupply", en:"Resupply"},
+  "tab.schlafen": {de:"Schlafen", en:"Sleep"},
+  "tab.diary": {de:"Tagebuch", en:"Diary"},
+  "tab.mehr": {de:"Mehr", en:"More"},
+  "qb.emergency": {de:"Notfall", en:"Emergency"},
+  "qb.community": {de:"Community", en:"Community"},
+  "qb.komoot": {de:"Komoot-Route", en:"Komoot route"},
+  "eyebrow.cp": {de:"6 Checkpoints + Ziel · der Reihe nach", en:"6 checkpoints + finish · in order"},
+  "eyebrow.resupply": {de:"Alle Stationen · der Reihe nach", en:"All stops · in order"},
+  "eyebrow.schlafen": {de:"Nächte im Überblick", en:"Nights at a glance"},
+  "eyebrow.diary": {de:"Dein Etappen-Tagebuch", en:"Your stage diary"},
+  "eyebrow.mehr": {de:"Zeitplan & Vorbereitung", en:"Schedule & preparation"},
+  "eyebrow.elev": {de:"📈 Höhenprofil", en:"📈 Elevation profile"},
+  "eyebrow.weather": {de:"🌦️ Wetter heute", en:"🌦️ Weather today"},
+  "eyebrow.sleep": {de:"⛺ Schlafen heute", en:"⛺ Sleep tonight"},
+  "eyebrow.specials": {de:"✨ Specials heute", en:"✨ Highlights today"},
+  "elev.note": {de:"Schematisch anhand bekannter Pass-/Checkpoint-Höhen angenähert — kein exaktes GPS-Profil. Punkte antippbar.", en:"Schematic, approximated from known pass/checkpoint elevations — not an exact GPS profile. Points are tappable."},
+  "story.watch": {de:"▶︎ Story ansehen", en:"▶︎ Watch story"},
+  "story.export": {de:"🎥 Als Video exportieren", en:"🎥 Export as video"},
+  "specials.empty": {de:"Keine besonderen Hinweise für diesen Tag.", en:"No special notes for this day."},
+  "sheet.close": {de:"Schließen", en:"Close"},
+  "offline.note": {de:"Diese Seite ist als installierbare Web-App gebaut: einmal mit Empfang öffnen und zum Homescreen hinzufügen — danach läuft sie komplett offline. Nur die Wettervorhersage braucht jeweils kurz Empfang zum Aktualisieren.", en:"This page is built as an installable web app: open it once with a connection and add it to your home screen — after that it runs fully offline. Only the weather forecast needs a brief connection to refresh."},
+  "gps.searching": {de:"Suche GPS-Fix …", en:"Finding GPS fix …"},
+  "gps.denied": {de:"Standortzugriff abgelehnt", en:"Location access denied"},
+  "gps.unavailable": {de:"Position nicht verfügbar", en:"Position unavailable"},
+  "gps.timeout": {de:"Zeitüberschreitung beim GPS-Fix", en:"GPS fix timed out"},
+  "gps.notsupported": {de:"GPS auf diesem Gerät nicht verfügbar", en:"GPS not available on this device"},
+  "gps.nearest": {de:"📍 Nächster Punkt in der Nähe", en:"📍 Nearest point nearby"},
+  "gps.until": {de:"🏁 Bis", en:"🏁 To"},
+  "gps.note": {de:"Luftlinie, nicht Streckenkilometer — auf Serpentinen kann die tatsächliche Restdistanz deutlich länger sein. GPS-Genauigkeit: ±", en:"Straight-line distance, not route km — on switchbacks the real remaining distance can be much longer. GPS accuracy: ±"},
+  "distancenote": {de:"km Luftlinie von deiner aktuellen Position.", en:"km straight-line from your current position."},
+  "export.rendering": {de:"Rendere Video …", en:"Rendering video …"},
+  "export.sub": {de:"Das Intro wird direkt auf deinem Gerät gerendert — kein Upload, kein Internet nötig.", en:"The intro is rendered directly on your device — no upload, no internet needed."},
+  "export.cancel": {de:"Abbrechen", en:"Cancel"},
+  "word.day": {de:"Tag", en:"Day"},
+  "word.days": {de:"Tage", en:"Days"},
+  "word.of": {de:"von", en:"of"},
+  "word.finish": {de:"Ziel", en:"Finish"},
+  "role.end": {de:"Ende Tag {n}", en:"End of Day {n}"},
+  "role.passthrough": {de:"Durchfahrt Tag {n}", en:"Pass-through Day {n}"},
+  "role.finish": {de:"Ziel · Ende Tag {n}", en:"Finish · End of Day {n}"},
+  "word.passthrough": {de:"Durchfahrt", en:"Pass-through"},
+  "word.daysplanned": {de:"Tage geplant", en:"days planned"},
+  "word.after": {de:"Nach", en:"After"},
+  "campgeneral.title": {de:"Allgemeine Camping-Regeln", en:"General camping rules"},
+  "campgeneral.p1": {de:"Wildcamping ist in Italien/der Schweiz offiziell nicht erlaubt, <b>Not-Biwak wird aber toleriert</b>. Rifugio-Betten sind nicht exklusiv für Teilnehmer:innen reserviert — bei ausgebuchten Betten kann meist in der Nähe gezeltet werden.", en:"Wild camping is officially not allowed in Italy/Switzerland, but <b>emergency bivouacking is tolerated</b>. Rifugio beds aren't reserved exclusively for participants — if beds are full you can usually camp nearby."},
+  "campgeneral.p2": {de:"Richtwerte Rifugio-Kosten allgemein: ca. 10 € Frühstück, ca. 20 € Abendessen, ca. 30 € Übernachtung (je nach Zimmer auch mehr). Bei spätem Ankommen/frühem Aufbruch: kurz mit dem Personal sprechen, Preise/Zeiten sind oft flexibel.", en:"Rough rifugio price guide: approx. €10 breakfast, approx. €20 dinner, approx. €30 overnight (can be more depending on the room). Arriving late/leaving early: just talk to the staff, prices/times are often flexible."},
+  "badge.ok": {de:"Camping möglich", en:"Camping possible"},
+  "badge.warn": {de:"Eingeschränkt", en:"Restricted"},
+  "badge.no": {de:"Nicht erlaubt", en:"Not allowed"},
+  "ob.welcome": {de:"Willkommen", en:"Welcome"},
+  "ob.welcometitle": {de:"Dein persönliches<br><b>ENTREE Feldbuch</b>", en:"Your personal<br><b>ENTREE field book</b>"},
+  "ob.welcomedesc": {de:"Ein kurzes, einmaliges Setup — danach merkt sich die App alles auf diesem Gerät. Kein Konto, kein Server, alles bleibt bei dir.", en:"A short, one-time setup — after that the app remembers everything on this device. No account, no server, everything stays with you."},
+  "ob.nameplaceholder": {de:"Dein Name", en:"Your name"},
+  "ob.namehint": {de:"Optional — nur für die Begrüßung im Dashboard.", en:"Optional — only used for the dashboard greeting."},
+  "ob.next": {de:"Los geht's →", en:"Let's go →"},
+  "ob.step": {de:"Schritt", en:"Step"},
+  "ob.of": {de:"von", en:"of"},
+  "ob.routetitle": {de:"Welche Route<br>fährst du?", en:"Which route<br>are you riding?"},
+  "ob.routedesc": {de:"Alle drei führen über dieselbe Strecke — nur Tempo und Tagesaufteilung unterscheiden sich.", en:"All three follow the same route — only pace and day structure differ."},
+  "ob.komootlink": {de:"Route auf Komoot ansehen ↗", en:"View route on Komoot ↗"},
+  "ob.next2": {de:"Weiter →", en:"Next →"},
+  "ob.dayendlabel": {de:"Tagesende bei", en:"Day end at"},
+  "ob.daystitle": {de:"Wo endet<br>dein Tag?", en:"Where does<br>your day end?"},
+  "ob.daysdesc": {de:"Wähle, an welchen Checkpoints du übernachten willst. Alle sind vorausgewählt (kürzeste Tage) — schalte welche aus, um Tage zusammenzulegen.", en:"Choose which checkpoints you want to sleep at. All are pre-selected (shortest days) — turn some off to merge days together."},
+  "ob.ready": {de:"Alles bereit", en:"All set"},
+  "ob.total": {de:"km gesamt", en:"km total"},
+  "ob.finish": {de:"Los geht's 🚵", en:"Let's ride 🚵"},
+  "ob.rider": {de:"Rider", en:"Rider"},
+  "mehr.schedule.title": {de:"Zeitplan ENTREE", en:"ENTREE schedule"},
+  "mehr.sources.title": {de:"Quellen & ganze Route", en:"Sources & full route"},
+  "mehr.sources.handbook": {de:"📄 Offizielles Rider Handbook 2026 (PDF)", en:"📄 Official Rider Handbook 2026 (PDF)"},
+  "mehr.sources.full": {de:"🗺️ Komoot: gesamte ENTREE-Route", en:"🗺️ Komoot: full ENTREE route"},
+  "mehr.sources.lotti": {de:"🗺️ Komoot: Party Pace Patrol „Lotti“ (Tagesetappen)", en:"🗺️ Komoot: Party Pace Patrol \"Lotti\" (daily stages)"},
+  "mehr.gear.title": {de:"Pflichtausrüstung", en:"Mandatory gear"},
+  "mehr.gear.recommended": {de:"Empfohlen", en:"Recommended"},
+  "mehr.tracker.title": {de:"Tracker · Follow My Challenge", en:"Tracker · Follow My Challenge"},
+  "mehr.tracker.1": {de:"200 € Kaution 2 Wochen vor Event via PayPal, Rückzahlung bis 20. September.", en:"€200 deposit via PayPal 2 weeks before the event, refunded by September 20."},
+  "mehr.tracker.2": {de:"Einschalten: Knopf oben gedrückt halten (~5 Sek.). Rot blinkt beim Start, grün/blau während Signalsuche, dann grün langsam blinkend = bereit.", en:"Turn on: hold the top button (~5 sec). Red blinks at start, green/blue while searching for signal, then slow blinking green = ready."},
+  "mehr.tracker.3": {de:"<b>Gute Plätze:</b> Oberrohrtasche, Trikottasche, Trinkrucksack, oben auf Satteltasche, Seitenfach Lenkertasche.", en:"<b>Good spots:</b> top-tube bag, jersey pocket, hydration pack, on top of the saddle bag, side pocket of the handlebar bag."},
+  "mehr.tracker.4": {de:"<b>Vermeiden:</b> nahe Tretlager, Rahmentasche, unter Lenker, Boden einer Tasche, gleiche Tasche wie Handy.", en:"<b>Avoid:</b> near the bottom bracket, frame bag, under the handlebar, bottom of a bag, same bag as your phone."},
+  "mehr.tracker.5": {de:"Laden: USB-A → USB-C nutzen (Fast-Charge-Kabel evtl. inkompatibel). Volle Ladung hält ca. 6 Tage.", en:"Charging: use USB-A → USB-C (fast-charge cables may be incompatible). A full charge lasts about 6 days."},
+  "mehr.tracker.6": {de:"Langsam blinkendes rotes Licht = Akku niedrig. QR-Code auf der Rückseite für Status/Diagnose.", en:"Slow blinking red light = low battery. QR code on the back for status/diagnostics."},
+  "mehr.outta.title": {de:"Kommunikation · OUTTA-App", en:"Communication · OUTTA app"},
+  "mehr.outta.text": {de:"Pflicht: App vor Start installieren & dem SNEAK-PEAKS-Event beitreten. Sämtliche Kommunikation während des Events (Streckenupdates, Wetterwarnungen, Nachrichten zwischen Fahrer:innen) läuft über diese App.", en:"Mandatory: install the app before the start and join the SNEAK PEAKS event. All communication during the event (route updates, weather warnings, messages between riders) runs through this app."},
+  "mehr.safety.title": {de:"Sicherheit & Abbruch", en:"Safety & bailing out"},
+  "mehr.safety.intro": {de:"„Do not risk anything.“ Es gibt keine Notwendigkeit, Risiken einzugehen. Bei unsicherem Abschnitt: auf eine andere Person warten, gemeinsam überqueren.", en:"\"Do not risk anything.\" There's no need to take risks. On an unsafe section: wait for another person, cross together."},
+  "mehr.safety.abort": {de:"Bei Abbruch", en:"If you bail out"},
+  "mehr.safety.a1": {de:"Niemals abends/nachts abbrechen — Unterschlupf suchen, ausruhen, bei Sonnenaufgang neu entscheiden.", en:"Never bail out in the evening/at night — find shelter, rest, decide again at sunrise."},
+  "mehr.safety.a2": {de:"Sofort per E-Mail oder WhatsApp Bescheid geben — sonst gilt man als vermisst.", en:"Notify us immediately by email or WhatsApp — otherwise you'll be considered missing."},
+  "mehr.safety.contact": {de:"Kontakt", en:"Contact"},
+  "mehr.exit.title": {de:"Alle Exit-Optionen", en:"All exit options"},
+  "mehr.exit.trains": {de:"Regionalzüge in Südtirol/Trentino nehmen i. d. R. Räder mit. Fahrpläne: trenitalia.com &amp; suedtirolmobil.info. Busse nehmen meist keine Räder mit.", en:"Regional trains in South Tyrol/Trentino generally take bikes. Timetables: trenitalia.com &amp; suedtirolmobil.info. Buses usually don't take bikes."},
+  "mehr.exit.komoot": {de:"🗺️ Alle Exit-Routen auf Komoot", en:"🗺️ All exit routes on Komoot"},
+  "mehr.bike.title": {de:"Bike & Ausrüstungstipps", en:"Bike & gear tips"},
+  "mehr.bike.1": {de:"Reifenfreiheit mind. 45 mm (ideal 50 mm), niedrige Übersetzung (vorne ~34/36, hinten 50/52).", en:"Minimum 45 mm tire clearance (ideally 50 mm), low gearing (front ~34/36, rear 50/52)."},
+  "mehr.bike.2": {de:"Setup „leicht & schnell“ passt gut zu den Resupply-Punkten — aber Wetterumschwung einplanen.", en:"A \"light & fast\" setup suits the resupply points well — but plan for weather changes."},
+  "mehr.bike.3": {de:"Keine Extra-Schuhe fürs Hike-a-Bike — stattdessen MTB-Schuhe wählen, in denen man laufen kann.", en:"No extra shoes for hike-a-bike sections — instead choose MTB shoes you can walk in."},
+  "mehr.bike.4": {de:"Vorsicht bei Drainage-Kanälen quer zur Fahrbahn auf steilen Abfahrten.", en:"Watch out for drainage channels crossing the road on steep descents."},
+  "mehr.profile.title": {de:"Dein Profil", en:"Your profile"},
+  "mehr.profile.none": {de:"Kein Profil gespeichert.", en:"No profile saved."},
+  "mehr.profile.note": {de:"Bleibt nur auf diesem Gerät gespeichert (lokaler Speicher, kein Server). „Zurücksetzen“ löscht es hier und startet das Setup neu.", en:"Stays saved only on this device (local storage, no server). \"Reset\" deletes it here and restarts the setup."},
+  "mehr.profile.reset": {de:"🔄 Profil zurücksetzen", en:"🔄 Reset profile"},
+  "mehr.profile.confirm": {de:"Profil wirklich zurücksetzen? Name und Routenwahl gehen verloren.", en:"Really reset your profile? Your name and route choice will be lost."},
+  "diary.placeholder": {de:"Schreib, was dir gerade durch den Kopf geht …", en:"Write down whatever's on your mind …"},
+  "diary.locmeta": {de:"📍 Standort wird beim Speichern automatisch erfasst — optional, klappt auch ohne.", en:"📍 Location is captured automatically when you save — optional, works without it too."},
+  "diary.save": {de:"Speichern", en:"Save"},
+  "diary.saving": {de:"Speichert …", en:"Saving …"},
+  "diary.waiting": {de:"Die nächste Frage taucht zu einem unregelmäßigen Moment im Lauf des Tages auf — schau später nochmal vorbei.", en:"The next question will pop up at some random point during the day — check back later."},
+  "diary.alldone": {de:"sind alle Fragen beantwortet. Stark!", en:"all questions answered. Nice work!"},
+  "diary.for": {de:"Für", en:"For"},
+  "diary.writenow": {de:"Ich will jetzt schreiben", en:"I want to write now"},
+  "diary.moments": {de:"🗺️ Deine Route-Momente", en:"🗺️ Your route moments"},
+  "diary.entries": {de:"📖 Bisherige Einträge", en:"📖 Previous entries"},
+  "diary.noentries": {de:"Noch keine Einträge — die erste Frage kommt bald.", en:"No entries yet — the first question is coming soon."},
+  "diary.emptyanswer": {de:"Schreib kurz was — oder komm später wieder.", en:"Write a quick note — or come back later."},
+  "diary.saved": {de:"Eintrag gespeichert", en:"Entry saved"},
+  "diary.near": {de:"von", en:"from"},
+  "wx.noconnection": {de:"📡 Keine Verbindung — Wetterdaten nicht verfügbar.<br>Wird automatisch nachgeladen, sobald du wieder Empfang hast.", en:"📡 No connection — weather data not available.<br>Will reload automatically once you're back online."},
+  "wx.loading": {de:"Lade Wettervorhersage…", en:"Loading weather forecast…"},
+  "wx.stale": {de:"Offline — zeige letzten bekannten Stand.", en:"Offline — showing last known state."},
+  "wx.wind": {de:"Wind", en:"Wind"},
+  "wx.today": {de:"Heute", en:"Today"},
+  "wx.tomorrow": {de:"Morgen", en:"Tomorrow"},
+  "wx.asof": {de:"Stand", en:"As of"},
+  "wx.time": {de:"Uhr", en:""},
+  "wx.note": {de:"Ungefähre Region, keine exakte GPS-Position der Route. Bei kritischen Passagen zusätzlich lokale Quellen prüfen (z. B. Bergwetter Südtirol, Meteotrentino).", en:"Approximate region, not an exact GPS position on the route. For critical sections, also check local sources (e.g. Bergwetter Südtirol, Meteotrentino)."},
+  "wx.updated": {de:"Wetter aktualisiert", en:"Weather updated"},
+  "video.notsupported": {de:"Video-Export wird von diesem Browser nicht unterstützt", en:"Video export isn't supported by this browser"},
+  "video.noformat": {de:"Kein unterstütztes Videoformat gefunden", en:"No supported video format found"},
+  "video.failed": {de:"Export fehlgeschlagen", en:"Export failed"},
+  "video.faileddetail": {de:"Dieser Browser hat keine Videodaten geliefert. Alternative: Story ansehen und mit der Bildschirmaufnahme des Geräts aufzeichnen.", en:"This browser didn't produce any video data. Alternative: watch the story and screen-record it with your device."},
+  "video.done": {de:"Fertig —", en:"Done —"},
+  "video.webmhint": {de:"Hinweis: Dieser Browser exportiert WebM. Auf dem iPhone (Safari) bekommst du direkt MP4.", en:"Note: this browser exports WebM. On iPhone (Safari) you get MP4 directly."},
+  "video.ready": {de:"Bereit für CapCut, Schnitt-App oder direkt in die Story.", en:"Ready for CapCut, an editing app, or straight into your story."},
+  "video.save": {de:"Video speichern", en:"Save video"},
+  "map.zoomin": {de:"Vergrößern", en:"Zoom in"},
+  "map.zoomout": {de:"Verkleinern", en:"Zoom out"},
+  "map.reset": {de:"Ganze Route zeigen", en:"Show whole route"},
+  "map.ownpos": {de:"Eigene Position", en:"My position"},
+  "map.schematic": {de:"schematisch", en:"schematic"},
+  "legend.startfinish": {de:"Start/Ziel", en:"Start/finish"},
+  "legend.campok": {de:"Camping ok", en:"Camping ok"},
+  "legend.restricted": {de:"eingeschränkt", en:"restricted"},
+  "legend.notallowed": {de:"nicht erlaubt", en:"not allowed"},
+  "legend.resupply": {de:"Resupply", en:"Resupply"},
+  "legend.tapdetails": {de:"· antippen für Details", en:"· tap for details"},
+  "gear.confirmed": {de:"bestätigt", en:"confirmed"},
+  "gear.of": {de:"von", en:"of"},
+  "unit.hm": {de:"Hm", en:"m elev."},
+  "em.title": {de:"⛑️ Notfall & Sicherheit", en:"⛑️ Emergency & safety"},
+  "em.subtitle": {de:"Do not risk anything", en:"Do not risk anything"},
+  "em.poslabel": {de:"📍 Deine Position — zum Telefonieren bereit", en:"📍 Your position — ready to read out over the phone"},
+  "em.copy": {de:"📋 Kopieren", en:"📋 Copy"},
+  "em.refresh": {de:"🔄 Aktualisieren", en:"🔄 Refresh"},
+  "em.gearq": {de:"Pflichtausrüstung dabei?", en:"Got your mandatory gear?"},
+  "em.abort": {de:"Bei Abbruch", en:"If you bail out"},
+  "em.a1": {de:"Nie abends/nachts abbrechen — Unterschlupf suchen, bei Sonnenaufgang entscheiden.", en:"Never bail out in the evening/at night — find shelter, decide at sunrise."},
+  "em.a2": {de:"Sofort per E-Mail/WhatsApp melden, sonst gilt man als vermisst.", en:"Notify us immediately by email/WhatsApp — otherwise you'll be considered missing."},
+  "em.contact": {de:"Kontakt", en:"Contact"},
+  "em.accuracy": {de:"Genauigkeit: ±", en:"Accuracy: ±"},
+  "em.accuracysuffix": {de:"m — Fix wird automatisch verfeinert", en:"m — fix refines automatically"},
+  "em.noposition": {de:"Noch keine Position verfügbar", en:"No position available yet"},
+  "em.copied": {de:"Koordinaten kopiert", en:"Coordinates copied"},
+  "em.copyfailed": {de:"Kopieren fehlgeschlagen", en:"Copy failed"},
+  "em.copynotsupported": {de:"Kopieren auf diesem Gerät nicht unterstützt", en:"Copying not supported on this device"},
+  "em.iossettings": {de:"Standortzugriff abgelehnt — in den iPhone-Einstellungen für diesen Browser erlauben", en:"Location access denied — allow it for this browser in iPhone Settings"},
+  "em.lat": {de:"BREITE", en:"LATITUDE"},
+  "em.lon": {de:"LÄNGE", en:"LONGITUDE"},
+  "cp.food": {de:"Essen", en:"Food"},
+  "cp.hours": {de:"Öffnung", en:"Hours"},
+  "cp.camping": {de:"Camping", en:"Camping"},
+  "cp.stay": {de:"Übernachtung", en:"Lodging"},
+  "cp.wifi": {de:"WLAN", en:"WiFi"},
+  "cp.water": {de:"Wasser", en:"Water"},
+  "cp.power": {de:"Strom", en:"Power"},
+  "cp.contact": {de:"Kontakt", en:"Contact"},
+  "word.yes": {de:"Ja", en:"Yes"},
+  "word.no": {de:"Nein", en:"No"},
+  "start.title": {de:"🚩 Ahoi Minigolf", en:"🚩 Ahoi Minigolf"},
+  "start.sub": {de:"Start (Tag 1) & Ziel (Tag {n}) · Bozen", en:"Start (Day 1) & finish (Day {n}) · Bolzano"},
+  "start.detail": {de:"Zelten kostenlos, Duschen &amp; Toiletten vorhanden. Nach dem Zieleinlauf darfst du bis Montag bleiben.", en:"Free camping, showers &amp; toilets available. You can stay until Monday after finishing."},
+  "word.question": {de:"Frage", en:"Question"},
+  "camp.ok": {de:"⛺ Camping", en:"⛺ Camping"},
+  "camp.warn": {de:"⚠️ Wildcamp", en:"⚠️ Wild camp"},
+  "story.distance": {de:"Distanz", en:"Distance"},
+  "story.up": {de:"Anstieg", en:"Ascent"},
+  "story.down": {de:"Abfahrt", en:"Descent"},
+  "story.elev": {de:"Höhenprofil", en:"Elevation profile"},
+  "story.tonight": {de:"Ziel heute Nacht", en:"Tonight's destination"},
+};
+function applyStaticI18n(){
+  document.querySelectorAll("[data-i18n]").forEach(el=>{ el.textContent = t(el.dataset.i18n); });
+}
+
 /* ======================= DATEN ======================= */
 // DAYS/ELEV/WEATHER_LOC sind absichtlich "let": Standardwert ist Lottis fertig
 // kuratierter 5-Tage-Plan; waehlt ein Nutzer im Onboarding Paula (fertiger 6-Tage-Plan)
@@ -546,108 +780,108 @@ let PROFILE = loadProfile();
 // umgesetzt bzw. aus den Checkpoint-Rohdaten (CP/WAY/COORDS) neu zusammengesetzt -
 // ehrlich abgeleitet, nicht erfunden.
 let DAYS = [
- {n:1, from:"Ahoi Minigolf", to:"Rifugio Conseria", subtitle:"CP1 · 1.835 m", km:88.9, time:"6:18 Std.", up:3180, down:1630, kmFrom:0, kmTo:89,
-  character:"Überwiegend befestigte Wege — konditionell hart, technisch aber unkompliziert.",
-  sleep:{status:"ok", place:"Rifugio Conseria", note:"CP1 · 1.835 m", detail:"Zelten in der Nähe kostenlos. Alternativ Halbpension 62 € oder Übernachtung 30 €."},
+ {n:1, from:"Ahoi Minigolf", to:"Rifugio Conseria", subtitle:"CP1 · 1.835 m", km:88.9, time:{de:"6:18 Std.", en:"6:18 h"}, up:3180, down:1630, kmFrom:0, kmTo:89,
+  character:{de:"Überwiegend befestigte Wege — konditionell hart, technisch aber unkompliziert.", en:"Mostly paved/gravel roads — physically hard, but technically uncomplicated."},
+  sleep:{status:"ok", place:"Rifugio Conseria", note:"CP1 · 1.835 m", detail:{de:"Zelten in der Nähe kostenlos. Alternativ Halbpension 62 € oder Übernachtung 30 €.", en:"Free camping nearby. Alternatively half board €62 or overnight €30."}},
   way:[1,2],
-  specials:[{type:"highlight", title:"Manghen Pass", text:"Weitgehend autofrei, raue und isolierte Alpenatmosphäre — seit Jahren Teil vieler Giro-d'Italia-Geschichten."}]},
- {n:2, from:"Rifugio Conseria", to:"Rifugio Scarpa", subtitle:"CP2 · 1.735 m", km:92.5, time:"6:24 Std.", up:3290, down:3420, kmFrom:89, kmTo:182,
-  character:"Auf einigen Passagen ist Schieben wahrscheinlich.",
-  sleep:{status:"ok", place:"Rifugio Scarpa", note:"CP2 · 1.735 m", detail:"Zelten in der Nähe kostenlos. Alternativ Halbpension 70 € oder Übernachtung 32 €."},
+  specials:[{type:"highlight", title:{de:"Manghen Pass", en:"Manghen Pass"}, text:{de:"Weitgehend autofrei, raue und isolierte Alpenatmosphäre — seit Jahren Teil vieler Giro-d'Italia-Geschichten.", en:"Largely car-free, raw and isolated alpine atmosphere — part of many Giro d'Italia stories for years."}}]},
+ {n:2, from:"Rifugio Conseria", to:"Rifugio Scarpa", subtitle:"CP2 · 1.735 m", km:92.5, time:{de:"6:24 Std.", en:"6:24 h"}, up:3290, down:3420, kmFrom:89, kmTo:182,
+  character:{de:"Auf einigen Passagen ist Schieben wahrscheinlich.", en:"Pushing your bike is likely on some sections."},
+  sleep:{status:"ok", place:"Rifugio Scarpa", note:"CP2 · 1.735 m", detail:{de:"Zelten in der Nähe kostenlos. Alternativ Halbpension 70 € oder Übernachtung 32 €.", en:"Free camping nearby. Alternatively half board €70 or overnight €32."}},
   way:[3,4,5],
   specials:[
-    {type:"warn", title:"Magna Pass", km:"91–98", text:"Nicht steil, aber blockiert mit Felsbrocken, kein Handyempfang."},
-    {type:"warn", title:"Dead End zu Rifugio Scarpa", km:"176–186", text:"Sackgassen-Stichstrecke, Ø13 %, Spitzen bis 25 %. Teils Absteigen nötig — rechts halten, auf Abfahrer achten."}
+    {type:"warn", title:{de:"Magna Pass", en:"Magna Pass"}, km:"91–98", text:{de:"Nicht steil, aber blockiert mit Felsbrocken, kein Handyempfang.", en:"Not steep, but blocked with boulders, no phone signal."}},
+    {type:"warn", title:{de:"Dead End zu Rifugio Scarpa", en:"Dead end to Rifugio Scarpa"}, km:"176–186", text:{de:"Sackgassen-Stichstrecke, Ø13 %, Spitzen bis 25 %. Teils Absteigen nötig — rechts halten, auf Abfahrer achten.", en:"Dead-end spur, avg. 13%, peaks up to 25%. Dismounting needed in places — keep right, watch for descending riders."}}
   ]},
- {n:3, from:"Rifugio Scarpa", to:"Glittnersee", subtitle:"kein Handbook-Checkpoint", km:126, time:"9:17 Std.", up:4830, down:4400, kmFrom:182, kmTo:307,
-  character:"Längster & höhenmeterreichster Tag der Route.",
-  sleep:{status:"warn", place:"Glittnersee", note:"Bergsee, ca. 2.150 m — nicht im Handbook", detail:"Kein Rifugio, keine Verpflegung vor Ort. Nur Wildcamping/Notbiwak (offiziell nicht erlaubt, aber toleriert) — dafür ist die Notfalldecke/der Biwaksack Pflichtausrüstung. Fallback: Rifugio Campoforte liegt ca. 10 km weiter, gleich zu Beginn von Tag 4."},
+ {n:3, from:"Rifugio Scarpa", to:"Glittnersee", subtitle:{de:"kein Handbook-Checkpoint", en:"not a handbook checkpoint"}, km:126, time:{de:"9:17 Std.", en:"9:17 h"}, up:4830, down:4400, kmFrom:182, kmTo:307,
+  character:{de:"Längster & höhenmeterreichster Tag der Route.", en:"Longest day of the route, both in distance and elevation gain."},
+  sleep:{status:"warn", place:"Glittnersee", note:{de:"Bergsee, ca. 2.150 m — nicht im Handbook", en:"Mountain lake, approx. 2,150 m — not in the handbook"}, detail:{de:"Kein Rifugio, keine Verpflegung vor Ort. Nur Wildcamping/Notbiwak (offiziell nicht erlaubt, aber toleriert) — dafür ist die Notfalldecke/der Biwaksack Pflichtausrüstung. Fallback: Rifugio Campoforte liegt ca. 10 km weiter, gleich zu Beginn von Tag 4.", en:"No rifugio, no food on site. Wild camping/emergency bivouac only (officially not allowed, but tolerated) — that's why the emergency blanket/bivy bag is mandatory gear. Fallback: Rifugio Campoforte is about 10 km further, right at the start of Day 4."}},
   way:[6,7,8,"federa",9,10,11,12],
   specials:[
-    {type:"highlight", title:"Ambrizzola Pass", text:"„Unser persönliches Highlight“ — jedes Jahr Teil der Strecke. Danach der wunderschöne Lago Federa."},
-    {type:"warn", title:"Forcella Ambrizzola Trail", km:"237–240", text:"Überquerung auf 2.277 m, ca. 3 km Hike-a-Bike — dafür Panoramablick über die Ampezzo-Dolomiten."}
+    {type:"highlight", title:{de:"Ambrizzola Pass", en:"Ambrizzola Pass"}, text:{de:"„Unser persönliches Highlight“ — jedes Jahr Teil der Strecke. Danach der wunderschöne Lago Federa.", en:"\"Our personal highlight\" — part of the route every year. Followed by the beautiful Lago Federa."}},
+    {type:"warn", title:{de:"Forcella Ambrizzola Trail", en:"Forcella Ambrizzola trail"}, km:"237–240", text:{de:"Überquerung auf 2.277 m, ca. 3 km Hike-a-Bike — dafür Panoramablick über die Ampezzo-Dolomiten.", en:"Crossing at 2,277 m, about 3 km of hike-a-bike — rewarded with a panoramic view over the Ampezzo Dolomites."}}
   ]},
- {n:4, from:"Glittnersee", to:"Weitenbergalm", subtitle:"CP5 · 1.956 m", km:52.0, time:"3:28 Std.", up:1580, down:1770, kmFrom:307, kmTo:358,
-  character:"Kürzester Tag — so etwas wie ein Erholungstag nach Tag 3.",
-  sleep:{status:"ok", place:"Weitenbergalm", note:"CP5 · 1.956 m", detail:"Einzige Option: keine Zimmer/Schlafsäle vorhanden — Zelten ist hier Standard, kostenlos."},
+ {n:4, from:"Glittnersee", to:"Weitenbergalm", subtitle:"CP5 · 1.956 m", km:52.0, time:{de:"3:28 Std.", en:"3:28 h"}, up:1580, down:1770, kmFrom:307, kmTo:358,
+  character:{de:"Kürzester Tag — so etwas wie ein Erholungstag nach Tag 3.", en:"Shortest day — something like a recovery day after Day 3."},
+  sleep:{status:"ok", place:"Weitenbergalm", note:"CP5 · 1.956 m", detail:{de:"Einzige Option: keine Zimmer/Schlafsäle vorhanden — Zelten ist hier Standard, kostenlos.", en:"Only option: no rooms/dorms available — camping is the standard here, free of charge."}},
   way:[13,14,15,16],
-  specials:[{type:"highlight", title:"Weitenbergalm", text:"„Ein echtes verstecktes Kleinod“ abseits des Tourismus."}]},
- {n:5, from:"Weitenbergalm", to:"Ahoi Minigolf", subtitle:"Ziel · 289 m", km:137, time:"9:46 Std.", up:4460, down:6130, kmFrom:358, kmTo:495,
-  character:"Längster Tag in km, meiste Abfahrtsmeter.",
-  sleep:{status:"ok", place:"Ahoi Minigolf", note:"Ziel · 289 m", detail:"Zelten kostenlos, Duschen & Toiletten vorhanden. Nach dem Zieleinlauf darfst du bis Montag bleiben."},
+  specials:[{type:"highlight", title:{de:"Weitenbergalm", en:"Weitenbergalm"}, text:{de:"„Ein echtes verstecktes Kleinod“ abseits des Tourismus.", en:"\"A real hidden gem\" away from tourism."}}]},
+ {n:5, from:"Weitenbergalm", to:"Ahoi Minigolf", subtitle:"Ziel · 289 m", km:137, time:{de:"9:46 Std.", en:"9:46 h"}, up:4460, down:6130, kmFrom:358, kmTo:495,
+  character:{de:"Längster Tag in km, meiste Abfahrtsmeter.", en:"Longest day in km, most descending meters."},
+  sleep:{status:"ok", place:"Ahoi Minigolf", note:"Ziel · 289 m", detail:{de:"Zelten kostenlos, Duschen & Toiletten vorhanden. Nach dem Zieleinlauf darfst du bis Montag bleiben.", en:"Free camping, showers & toilets available. You can stay until Monday after finishing."}},
   way:[17,18,19,20,21],
   specials:[
-    {type:"highlight", title:"Jaufenpass", text:"Glatter, verkehrsfreier Asphalt — einer der wenigen Anstiege, die man nicht hart antreten muss."},
-    {type:"warn", title:"Pfunderer Joch", km:"360–365", text:"Zickzack steil direkt nach Weitenbergalm, flacht kurz ab, wird dann wieder steiler."},
-    {type:"warn", title:"Sarntaler Alpen — Schlussanstieg", text:"Schwerster Anstieg der gesamten Route: 2.300 Hm auf 25 km."},
-    {type:"warn", title:"Forcella Osvaldo", km:"458–462", text:"Sehr steil, 800 Hm auf < 4 km — volle Hike-a-Bike-Herausforderung, mental wie körperlich."},
-    {type:"highlight", title:"Zielabfahrt", text:"Letzte 42 km sind reine Abfahrt (−2.000 Hm) zurück nach Bozen."}
+    {type:"highlight", title:{de:"Jaufenpass", en:"Jaufen Pass"}, text:{de:"Glatter, verkehrsfreier Asphalt — einer der wenigen Anstiege, die man nicht hart antreten muss.", en:"Smooth, traffic-free asphalt — one of the few climbs you don't have to push hard."}},
+    {type:"warn", title:{de:"Pfunderer Joch", en:"Pfunderer Joch"}, km:"360–365", text:{de:"Zickzack steil direkt nach Weitenbergalm, flacht kurz ab, wird dann wieder steiler.", en:"Zigzag-steep right after Weitenbergalm, flattens briefly, then gets steep again."}},
+    {type:"warn", title:{de:"Sarntaler Alpen — Schlussanstieg", en:"Sarntal Alps — final climb"}, text:{de:"Schwerster Anstieg der gesamten Route: 2.300 Hm auf 25 km.", en:"Toughest climb of the whole route: 2,300 m elevation over 25 km."}},
+    {type:"warn", title:{de:"Forcella Osvaldo", en:"Forcella Osvaldo"}, km:"458–462", text:{de:"Sehr steil, 800 Hm auf < 4 km — volle Hike-a-Bike-Herausforderung, mental wie körperlich.", en:"Very steep, 800 m elevation over < 4 km — a full hike-a-bike challenge, mentally and physically."}},
+    {type:"highlight", title:{de:"Zielabfahrt", en:"Finish descent"}, text:{de:"Letzte 42 km sind reine Abfahrt (−2.000 Hm) zurück nach Bozen.", en:"The last 42 km are pure descent (−2,000 m elevation) back to Bolzano."}}
   ]},
 ];
 const LOTTI_DAYS = DAYS; // unveraenderter Referenzplan, ueberlebt spaetere Neuzuweisungen von DAYS
 
 const CP = {
- cp1:{id:"cp1", label:"Rifugio Conseria", role:"Ende Tag 1", km:89, alt:1835,
+ cp1:{id:"cp1", label:"Rifugio Conseria", role:{de:"Ende Tag 1", en:"End of Day 1"}, km:89, alt:1835,
    web:"rifugioconseria.it", mail:"info@rifugioconseria.it", tel:"+393495507733", telShow:"+39 349 5507733",
-   hours:"7–22 Uhr · außerhalb: Stempel liegt an der Tür", food:"Italienisch, Signature-Dish Polenta · Primo 8–10 € · Secondo 10–15 €",
-   camp:{status:"ok", text:"Zelten in der Nähe kostenlos"}, stay:"Halbpension 62 € · Übernachtung 30 €",
-   wifi:true, water:"ja", power:true},
- cp2:{id:"cp2", label:"Rifugio Scarpa", role:"Ende Tag 2", km:182, alt:1735,
+   hours:{de:"7–22 Uhr · außerhalb: Stempel liegt an der Tür", en:"7am–10pm · outside those hours: stamp is at the door"}, food:{de:"Italienisch, Signature-Dish Polenta · Primo 8–10 € · Secondo 10–15 €", en:"Italian, signature dish polenta · Primo €8–10 · Secondo €10–15"},
+   camp:{status:"ok", text:{de:"Zelten in der Nähe kostenlos", en:"Free camping nearby"}}, stay:{de:"Halbpension 62 € · Übernachtung 30 €", en:"Half board €62 · Overnight €30"},
+   wifi:true, water:{de:"ja", en:"yes"}, power:true},
+ cp2:{id:"cp2", label:"Rifugio Scarpa", role:{de:"Ende Tag 2", en:"End of Day 2"}, km:182, alt:1735,
    web:"rifugioscarpa.com", mail:"info@rifugioscarpa.com", tel:"+393313152963", telShow:"+39 331 315 2963",
-   hours:"7–22 Uhr", food:"Italienisch · Primo 12–14 € · Secondo 13–16 €",
-   camp:{status:"ok", text:"Zelten in der Nähe kostenlos"}, stay:"Halbpension 70 € · Übernachtung 32 €",
-   wifi:true, water:"ja, nicht trinkbar", power:true},
- cp3:{id:"cp3", label:"Rifugio Città di Fiume", role:"Durchfahrt Tag 3", km:233, alt:1911,
+   hours:{de:"7–22 Uhr", en:"7am–10pm"}, food:{de:"Italienisch · Primo 12–14 € · Secondo 13–16 €", en:"Italian · Primo €12–14 · Secondo €13–16"},
+   camp:{status:"ok", text:{de:"Zelten in der Nähe kostenlos", en:"Free camping nearby"}}, stay:{de:"Halbpension 70 € · Übernachtung 32 €", en:"Half board €70 · Overnight €32"},
+   wifi:true, water:{de:"ja, nicht trinkbar", en:"yes, not potable"}, power:true},
+ cp3:{id:"cp3", label:"Rifugio Città di Fiume", role:{de:"Durchfahrt Tag 3", en:"Pass-through Day 3"}, km:233, alt:1911,
    web:"rifugiocittadifiume.it", mail:"info@rifugiocittadifiume.it", tel:"+393200377432", telShow:"+39 320 0377432",
-   hours:"7–21:30 Uhr · Küche zw. den Mahlzeiten geschlossen", food:"Italienisch · Primo 9–15 € · Secondo 14–19 €",
-   camp:{status:"warn", text:"Nicht direkt am Haus (private Kuhweide) — davor/danach möglich"}, stay:"Halbpension 75 € · Übernachtung 40 € — kann ausgebucht sein!",
-   wifi:true, water:"ja, nicht trinkbar", power:true},
- cp4:{id:"cp4", label:"Rifugio Pederü", role:"Durchfahrt Tag 3", km:277, alt:1584,
+   hours:{de:"7–21:30 Uhr · Küche zw. den Mahlzeiten geschlossen", en:"7am–9:30pm · kitchen closed between meals"}, food:{de:"Italienisch · Primo 9–15 € · Secondo 14–19 €", en:"Italian · Primo €9–15 · Secondo €14–19"},
+   camp:{status:"warn", text:{de:"Nicht direkt am Haus (private Kuhweide) — davor/danach möglich", en:"Not directly at the house (private pasture) — possible before/after"}}, stay:{de:"Halbpension 75 € · Übernachtung 40 € — kann ausgebucht sein!", en:"Half board €75 · Overnight €40 — can be fully booked!"},
+   wifi:true, water:{de:"ja, nicht trinkbar", en:"yes, not potable"}, power:true},
+ cp4:{id:"cp4", label:"Rifugio Pederü", role:{de:"Durchfahrt Tag 3", en:"Pass-through Day 3"}, km:277, alt:1584,
    web:"pederue.it", mail:"info@pederue.it", tel:"+390474834316", telShow:"+39 0474 834316",
-   hours:"8–20 Uhr", food:"Italienisch · Primo 10–12 € · Secondo 14–25 €",
-   camp:{status:"no", text:"Nicht erlaubt (Fanes-Region/Nationalpark)"}, stay:"Schlafsaal 61 €",
-   wifi:"nur für Gäste", water:"ja", power:true},
- cp5:{id:"cp5", label:"Weitenbergalm", role:"Ende Tag 4", km:358, alt:1956,
+   hours:{de:"8–20 Uhr", en:"8am–8pm"}, food:{de:"Italienisch · Primo 10–12 € · Secondo 14–25 €", en:"Italian · Primo €10–12 · Secondo €14–25"},
+   camp:{status:"no", text:{de:"Nicht erlaubt (Fanes-Region/Nationalpark)", en:"Not allowed (Fanes region/national park)"}}, stay:{de:"Schlafsaal 61 €", en:"Dorm room €61"},
+   wifi:{de:"nur für Gäste", en:"guests only"}, water:{de:"ja", en:"yes"}, power:true},
+ cp5:{id:"cp5", label:"Weitenbergalm", role:{de:"Ende Tag 4", en:"End of Day 4"}, km:358, alt:1956,
    web:"weitenberg-alm.com", mail:"fmmeister@t-online.de", tel:"+491726922200", telShow:"+49 172 6922200",
-   hours:"6–22 Uhr", food:"Italienisch · nur Secondo 10–16 €",
-   camp:{status:"ok", text:"Einzige Option — keine Zimmer/Schlafsäle, Zelten kostenlos"}, stay:"—",
-   wifi:false, water:"ja", power:true},
- cp6:{id:"cp6", label:"Malga Kirchsteiger", role:"Durchfahrt Tag 5", km:458, alt:1945,
+   hours:{de:"6–22 Uhr", en:"6am–10pm"}, food:{de:"Italienisch · nur Secondo 10–16 €", en:"Italian · Secondo only €10–16"},
+   camp:{status:"ok", text:{de:"Einzige Option — keine Zimmer/Schlafsäle, Zelten kostenlos", en:"Only option — no rooms/dorms, free camping"}}, stay:{de:"—", en:"—"},
+   wifi:false, water:{de:"ja", en:"yes"}, power:true},
+ cp6:{id:"cp6", label:"Malga Kirchsteiger", role:{de:"Durchfahrt Tag 5", en:"Pass-through Day 5"}, km:458, alt:1945,
    web:"kirchsteigeralm.com", mail:"info@kirchsteigeralm.com", tel:"+393497749284", telShow:"+39 349 774 9284",
-   hours:"8–18 Uhr · Küche nur 11–16 Uhr", food:"Italienisch · Primo 8–12 € · Secondo 10–20 €",
-   camp:{status:"ok", text:"Zelten in der Nähe kostenlos"}, stay:"B&B 60 € inkl. Frühstücksbuffet",
-   wifi:true, water:"ja", power:true},
- finish:{id:"finish", label:"Ahoi Minigolf", role:"Ziel · Ende Tag 5", km:495, alt:289,
+   hours:{de:"8–18 Uhr · Küche nur 11–16 Uhr", en:"8am–6pm · kitchen only 11am–4pm"}, food:{de:"Italienisch · Primo 8–12 € · Secondo 10–20 €", en:"Italian · Primo €8–12 · Secondo €10–20"},
+   camp:{status:"ok", text:{de:"Zelten in der Nähe kostenlos", en:"Free camping nearby"}}, stay:{de:"B&B 60 € inkl. Frühstücksbuffet", en:"B&B €60 incl. breakfast buffet"},
+   wifi:true, water:{de:"ja", en:"yes"}, power:true},
+ finish:{id:"finish", label:"Ahoi Minigolf", role:{de:"Ziel · Ende Tag 5", en:"Finish · End of Day 5"}, km:495, alt:289,
    web:"ahoi.bz", mail:"info@ahoi.bz", tel:"+390471342597", telShow:"+39 0471 342597",
-   hours:"durchgehend geöffnet", food:"Italienisch · Primo 8–12 € · Secondo 9–16 €",
-   camp:{status:"ok", text:"Zelten kostenlos, Duschen & Toiletten vorhanden"}, stay:"—",
-   wifi:false, water:"ja", power:true},
+   hours:{de:"durchgehend geöffnet", en:"open around the clock"}, food:{de:"Italienisch · Primo 8–12 € · Secondo 9–16 €", en:"Italian · Primo €8–12 · Secondo €9–16"},
+   camp:{status:"ok", text:{de:"Zelten kostenlos, Duschen & Toiletten vorhanden", en:"Free camping, showers & toilets available"}}, stay:{de:"—", en:"—"},
+   wifi:false, water:{de:"ja", en:"yes"}, power:true},
 };
 const CP_ORDER = ["cp1","cp2","cp3","cp4","cp5","cp6","finish"];
 
 const WAY = {
- 1:{km:46, name:"Molina di Fiemme", kind:"town", offer:"Supermarkt · Restaurants · Apotheke · Brunnen"},
- 2:{km:89, name:"Rifugio Conseria", kind:"cp", cp:"cp1", offer:"Stempel · Essen · Getränke · Wasser"},
- 3:{km:122, name:"Canal San Bovo", kind:"town", offer:"Supermarkt · Restaurants · Apotheke · Brunnen"},
- 4:{km:134, name:"Mezzano", kind:"town", offer:"Supermarkt · Restaurants · Apotheke · Brunnen"},
- 5:{km:182, name:"Rifugio Scarpa", kind:"cp", cp:"cp2", offer:"Stempel · Essen · Getränke · Wasser"},
- 6:{km:196, name:"Agordo", kind:"town", offer:"Supermarkt · Restaurants · Apotheke · Brunnen"},
- 7:{km:223, name:"Mareson", kind:"town", offer:"Supermarkt · Restaurants · Apotheke · Brunnen"},
- 8:{km:233, name:"Rifugio Città di Fiume", kind:"cp", cp:"cp3", offer:"Stempel · Essen · Getränke · Wasser · Übernachtung"},
- federa:{km:240, name:"Lago Federa", kind:"camp", offer:"Kein Rifugio direkt am See — Rifugio Croda da Lago (Essen/Getränke/Wasser) ca. 1 km weiter"},
- 9:{km:241, name:"Rifugio Croda da Lago", kind:"rifugio", offer:"Essen · Getränke · Wasser"},
- 10:{km:252, name:"Cortina d'Ampezzo", kind:"town", offer:"Supermarkt · Restaurants · Apotheke · Brunnen (off-route)"},
- 11:{km:276, name:"Rifugio Pederü", kind:"cp", cp:"cp4", offer:"Stempel · Essen · Getränke · Wasser"},
- 12:{km:307, name:"Glittnersee", kind:"camp", offer:"Tagesziel Tag 3 (Komoot) — kein Handbook-Eintrag, siehe Schlafen"},
- 13:{km:317, name:"Rifugio Campoforte", kind:"rifugio", offer:"Essen · Getränke · Wasser"},
- 14:{km:334, name:"Mühlbach", kind:"town", offer:"Supermarkt · Restaurants · Apotheke · Brunnen"},
- 15:{km:340, name:"Niedervintl", kind:"town", offer:"Supermarkt · Restaurants · Apotheke · Brunnen"},
- 16:{km:358, name:"Weitenbergalm", kind:"cp", cp:"cp5", offer:"Stempel · Essen · Getränke · Wasser · kostenloses Camping"},
- 17:{km:385, name:"Sterzing", kind:"town", offer:"Supermarkt · Restaurants · Apotheke · Brunnen"},
- 18:{km:447, name:"Gompm Alm", kind:"rifugio", offer:"Essen · Getränke · Wasser"},
- 19:{km:456, name:"Streitweider Alm", kind:"rifugio", offer:"Essen · Getränke · Wasser"},
- 20:{km:461, name:"Malga Kirchsteiger", kind:"cp", cp:"cp6", offer:"Stempel · Essen · Getränke · Wasser · Übernachtung · kostenloses Camping"},
- 21:{km:495, name:"Ahoi Minigolf", kind:"finish", offer:"Ziel — „Big hugs at the finish line“"},
+ 1:{km:46, name:"Molina di Fiemme", kind:"town", offer:{de:"Supermarkt · Restaurants · Apotheke · Brunnen", en:"Supermarket · restaurants · pharmacy · water fountain"}},
+ 2:{km:89, name:"Rifugio Conseria", kind:"cp", cp:"cp1", offer:{de:"Stempel · Essen · Getränke · Wasser", en:"Stamp · food · drinks · water"}},
+ 3:{km:122, name:"Canal San Bovo", kind:"town", offer:{de:"Supermarkt · Restaurants · Apotheke · Brunnen", en:"Supermarket · restaurants · pharmacy · water fountain"}},
+ 4:{km:134, name:"Mezzano", kind:"town", offer:{de:"Supermarkt · Restaurants · Apotheke · Brunnen", en:"Supermarket · restaurants · pharmacy · water fountain"}},
+ 5:{km:182, name:"Rifugio Scarpa", kind:"cp", cp:"cp2", offer:{de:"Stempel · Essen · Getränke · Wasser", en:"Stamp · food · drinks · water"}},
+ 6:{km:196, name:"Agordo", kind:"town", offer:{de:"Supermarkt · Restaurants · Apotheke · Brunnen", en:"Supermarket · restaurants · pharmacy · water fountain"}},
+ 7:{km:223, name:"Mareson", kind:"town", offer:{de:"Supermarkt · Restaurants · Apotheke · Brunnen", en:"Supermarket · restaurants · pharmacy · water fountain"}},
+ 8:{km:233, name:"Rifugio Città di Fiume", kind:"cp", cp:"cp3", offer:{de:"Stempel · Essen · Getränke · Wasser · Übernachtung", en:"Stamp · food · drinks · water · lodging"}},
+ federa:{km:240, name:"Lago Federa", kind:"camp", offer:{de:"Kein Rifugio direkt am See — Rifugio Croda da Lago (Essen/Getränke/Wasser) ca. 1 km weiter", en:"No rifugio directly at the lake — Rifugio Croda da Lago (food/drinks/water) about 1 km further"}},
+ 9:{km:241, name:"Rifugio Croda da Lago", kind:"rifugio", offer:{de:"Essen · Getränke · Wasser", en:"Food · drinks · water"}},
+ 10:{km:252, name:"Cortina d'Ampezzo", kind:"town", offer:{de:"Supermarkt · Restaurants · Apotheke · Brunnen (off-route)", en:"Supermarket · restaurants · pharmacy · water fountain (off-route)"}},
+ 11:{km:276, name:"Rifugio Pederü", kind:"cp", cp:"cp4", offer:{de:"Stempel · Essen · Getränke · Wasser", en:"Stamp · food · drinks · water"}},
+ 12:{km:307, name:"Glittnersee", kind:"camp", offer:{de:"Tagesziel Tag 3 (Komoot) — kein Handbook-Eintrag, siehe Schlafen", en:"Day 3 target (Komoot) — not in the handbook, see Sleep tab"}},
+ 13:{km:317, name:"Rifugio Campoforte", kind:"rifugio", offer:{de:"Essen · Getränke · Wasser", en:"Food · drinks · water"}},
+ 14:{km:334, name:"Mühlbach", kind:"town", offer:{de:"Supermarkt · Restaurants · Apotheke · Brunnen", en:"Supermarket · restaurants · pharmacy · water fountain"}},
+ 15:{km:340, name:"Niedervintl", kind:"town", offer:{de:"Supermarkt · Restaurants · Apotheke · Brunnen", en:"Supermarket · restaurants · pharmacy · water fountain"}},
+ 16:{km:358, name:"Weitenbergalm", kind:"cp", cp:"cp5", offer:{de:"Stempel · Essen · Getränke · Wasser · kostenloses Camping", en:"Stamp · food · drinks · water · free camping"}},
+ 17:{km:385, name:"Sterzing", kind:"town", offer:{de:"Supermarkt · Restaurants · Apotheke · Brunnen", en:"Supermarket · restaurants · pharmacy · water fountain"}},
+ 18:{km:447, name:"Gompm Alm", kind:"rifugio", offer:{de:"Essen · Getränke · Wasser", en:"Food · drinks · water"}},
+ 19:{km:456, name:"Streitweider Alm", kind:"rifugio", offer:{de:"Essen · Getränke · Wasser", en:"Food · drinks · water"}},
+ 20:{km:461, name:"Malga Kirchsteiger", kind:"cp", cp:"cp6", offer:{de:"Stempel · Essen · Getränke · Wasser · Übernachtung · kostenloses Camping", en:"Stamp · food · drinks · water · lodging · free camping"}},
+ 21:{km:495, name:"Ahoi Minigolf", kind:"finish", offer:{de:"Ziel — „Big hugs at the finish line“", en:"Finish — \"Big hugs at the finish line\""}},
 };
 
 // Ungefähre Koordinaten (Handbook nennt keine GPS-Daten, nur Ortsnamen — per Web-Recherche
@@ -680,27 +914,40 @@ const COORDS = {
 };
 
 const EXIT = {
- e1:{km:89, name:"Rifugio Conseria", text:"Nach Trento, dort regelmäßiger Zug."},
- e2:{km:142, name:"Mezzano", text:"Kein ÖPNV — Route zurück nach Bolzano."},
- e3:{km:196, name:"Agordo", text:"Kein ÖPNV — Route zurück nach Bolzano."},
- e4:{km:279, name:"Rifugio Pederü", text:"Nach Bruneck Bahnhof, dort regelmäßiger Zug."},
- e5:{km:337, name:"Mühlbach", text:"Kein ÖPNV — Route zurück nach Bolzano."},
- e6:{km:387, name:"Sterzing", text:"ÖPNV nutzen oder Route zurück nach Bolzano."},
- e7:{km:426, name:"St. Leonhard in Passeier", text:"Kein ÖPNV — Route zurück nach Bolzano."},
+ e1:{km:89, name:"Rifugio Conseria", text:{de:"Nach Trento, dort regelmäßiger Zug.", en:"To Trento, regular train service there."}},
+ e2:{km:142, name:"Mezzano", text:{de:"Kein ÖPNV — Route zurück nach Bolzano.", en:"No public transit — route back to Bolzano."}},
+ e3:{km:196, name:"Agordo", text:{de:"Kein ÖPNV — Route zurück nach Bolzano.", en:"No public transit — route back to Bolzano."}},
+ e4:{km:279, name:"Rifugio Pederü", text:{de:"Nach Bruneck Bahnhof, dort regelmäßiger Zug.", en:"To Bruneck station, regular train service there."}},
+ e5:{km:337, name:"Mühlbach", text:{de:"Kein ÖPNV — Route zurück nach Bolzano.", en:"No public transit — route back to Bolzano."}},
+ e6:{km:387, name:"Sterzing", text:{de:"ÖPNV nutzen oder Route zurück nach Bolzano.", en:"Use public transit or route back to Bolzano."}},
+ e7:{km:426, name:"St. Leonhard in Passeier", text:{de:"Kein ÖPNV — Route zurück nach Bolzano.", en:"No public transit — route back to Bolzano."}},
 };
 
 const SCHEDULE = [
- {date:"Sa 29.8.", time:"14–17", what:"Akkreditierung & Gepäckabgabe ENTREE"},
- {date:"Sa 29.8.", time:"17:30", what:"Briefing ENTREE"},
- {date:"Sa 29.8.", time:"18:00", what:"Abendessen & Get-together (Camping inklusive)"},
- {date:"So 30.8.", time:"7–9", what:"Frühstück & Gepäckabgabe"},
- {date:"So 30.8.", time:"09:00", what:"START ENTREE"},
- {date:"Fr 4.9.", time:"18:00", what:"Rider Dinner & Willkommen PPP (Pizza inklusive)"},
- {date:"Sa 5.9.", time:"10:00", what:"Hill Climbing Challenge (1,5 km / 330 Hm)"},
+ {date:{de:"Sa 29.8.", en:"Sat Aug 29"}, time:"14–17", what:{de:"Akkreditierung & Gepäckabgabe ENTREE", en:"Accreditation & luggage drop-off ENTREE"}},
+ {date:{de:"Sa 29.8.", en:"Sat Aug 29"}, time:"17:30", what:{de:"Briefing ENTREE", en:"ENTREE briefing"}},
+ {date:{de:"Sa 29.8.", en:"Sat Aug 29"}, time:"18:00", what:{de:"Abendessen & Get-together (Camping inklusive)", en:"Dinner & get-together (camping included)"}},
+ {date:{de:"So 30.8.", en:"Sun Aug 30"}, time:"7–9", what:{de:"Frühstück & Gepäckabgabe", en:"Breakfast & luggage drop-off"}},
+ {date:{de:"So 30.8.", en:"Sun Aug 30"}, time:"09:00", what:{de:"START ENTREE", en:"ENTREE START"}},
+ {date:{de:"Fr 4.9.", en:"Fri Sep 4"}, time:"18:00", what:{de:"Rider Dinner & Willkommen PPP (Pizza inklusive)", en:"Rider dinner & welcome PPP (pizza included)"}},
+ {date:{de:"Sa 5.9.", en:"Sat Sep 5"}, time:"10:00", what:{de:"Hill Climbing Challenge (1,5 km / 330 Hm)", en:"Hill climbing challenge (1.5 km / 330 m elevation)"}},
 ];
 
-const GEAR_MUST = ["2× Frontlicht & 2× Rücklicht","Notfall-/Rettungsdecke oder Biwaksack","Helm","Reflektierende Jacke","Mind. 2 l Wasserkapazität","Ein Paar Ersatz-Bremsbeläge","USB-C-Kabel für den Tracker"];
-const GEAR_REC = ["Erste-Hilfe-Set","Handschuhe","Daunenjacke","Wasserreinigungstabletten"];
+const GEAR_MUST = [
+  {de:"2× Frontlicht & 2× Rücklicht", en:"2× front light & 2× rear light"},
+  {de:"Notfall-/Rettungsdecke oder Biwaksack", en:"Emergency/space blanket or bivy bag"},
+  {de:"Helm", en:"Helmet"},
+  {de:"Reflektierende Jacke", en:"Reflective jacket"},
+  {de:"Mind. 2 l Wasserkapazität", en:"At least 2 L water capacity"},
+  {de:"Ein Paar Ersatz-Bremsbeläge", en:"One pair of spare brake pads"},
+  {de:"USB-C-Kabel für den Tracker", en:"USB-C cable for the tracker"},
+];
+const GEAR_REC = [
+  {de:"Erste-Hilfe-Set", en:"First-aid kit"},
+  {de:"Handschuhe", en:"Gloves"},
+  {de:"Daunenjacke", en:"Down jacket"},
+  {de:"Wasserreinigungstabletten", en:"Water purification tablets"},
+];
 
 let WEATHER_LOC = {
  1:{lat:46.17, lon:11.58, label:"Lagorai / Rifugio Conseria (ca.)"},
@@ -711,24 +958,24 @@ let WEATHER_LOC = {
 };
 const LOTTI_WEATHER_LOC = WEATHER_LOC;
 const WMO = {
- 0:["☀️","Klar"],1:["🌤️","Meist klar"],2:["⛅","Wolkig"],3:["☁️","Bedeckt"],
- 45:["🌫️","Nebel"],48:["🌫️","Reifnebel"],
- 51:["🌦️","Niesel leicht"],53:["🌦️","Niesel"],55:["🌧️","Niesel stark"],
- 56:["🌧️","Gefr. Niesel"],57:["🌧️","Gefr. Niesel stark"],
- 61:["🌧️","Regen leicht"],63:["🌧️","Regen"],65:["🌧️","Regen stark"],
- 66:["🌧️","Gefr. Regen"],67:["🌧️","Gefr. Regen stark"],
- 71:["🌨️","Schnee leicht"],73:["🌨️","Schnee"],75:["❄️","Schnee stark"],77:["❄️","Schneekörner"],
- 80:["🌦️","Schauer leicht"],81:["🌧️","Schauer"],82:["⛈️","Schauer stark"],
- 85:["🌨️","Schneeschauer"],86:["❄️","Schneeschauer stark"],
- 95:["⛈️","Gewitter"],96:["⛈️","Gewitter/Hagel"],99:["⛈️","Gewitter/Hagel stark"],
+ 0:["☀️",{de:"Klar",en:"Clear"}],1:["🌤️",{de:"Meist klar",en:"Mostly clear"}],2:["⛅",{de:"Wolkig",en:"Cloudy"}],3:["☁️",{de:"Bedeckt",en:"Overcast"}],
+ 45:["🌫️",{de:"Nebel",en:"Fog"}],48:["🌫️",{de:"Reifnebel",en:"Rime fog"}],
+ 51:["🌦️",{de:"Niesel leicht",en:"Light drizzle"}],53:["🌦️",{de:"Niesel",en:"Drizzle"}],55:["🌧️",{de:"Niesel stark",en:"Heavy drizzle"}],
+ 56:["🌧️",{de:"Gefr. Niesel",en:"Freezing drizzle"}],57:["🌧️",{de:"Gefr. Niesel stark",en:"Heavy freezing drizzle"}],
+ 61:["🌧️",{de:"Regen leicht",en:"Light rain"}],63:["🌧️",{de:"Regen",en:"Rain"}],65:["🌧️",{de:"Regen stark",en:"Heavy rain"}],
+ 66:["🌧️",{de:"Gefr. Regen",en:"Freezing rain"}],67:["🌧️",{de:"Gefr. Regen stark",en:"Heavy freezing rain"}],
+ 71:["🌨️",{de:"Schnee leicht",en:"Light snow"}],73:["🌨️",{de:"Schnee",en:"Snow"}],75:["❄️",{de:"Schnee stark",en:"Heavy snow"}],77:["❄️",{de:"Schneekörner",en:"Snow grains"}],
+ 80:["🌦️",{de:"Schauer leicht",en:"Light showers"}],81:["🌧️",{de:"Schauer",en:"Showers"}],82:["⛈️",{de:"Schauer stark",en:"Heavy showers"}],
+ 85:["🌨️",{de:"Schneeschauer",en:"Snow showers"}],86:["❄️",{de:"Schneeschauer stark",en:"Heavy snow showers"}],
+ 95:["⛈️",{de:"Gewitter",en:"Thunderstorm"}],96:["⛈️",{de:"Gewitter/Hagel",en:"Thunderstorm/hail"}],99:["⛈️",{de:"Gewitter/Hagel stark",en:"Severe thunderstorm/hail"}],
 };
-function wmo(code){ return WMO[code] || ["❓","–"]; }
+function wmo(code){ return WMO[code] || ["❓",{de:"–",en:"–"}]; }
 
 /* ======================= HELPERS ======================= */
 const $ = s => document.querySelector(s);
 const $$ = s => Array.from(document.querySelectorAll(s));
 function campBadge(camp){
-  const label = camp.status==="ok"?"Camping möglich":camp.status==="warn"?"Eingeschränkt":"Nicht erlaubt";
+  const label = camp.status==="ok"?t("badge.ok"):camp.status==="warn"?t("badge.warn"):t("badge.no");
   const icon = camp.status==="ok"?"✓":camp.status==="warn"?"△":"✕";
   return `<span class="badge ${camp.status}">${icon} ${label}</span>`;
 }
@@ -747,14 +994,14 @@ function toast(msg){
 }
 function cpDetailDl(cp){
   return `<dl>
-    <dt>Essen</dt><dd>${cp.food}</dd>
-    <dt>Öffnung</dt><dd>${cp.hours}</dd>
-    <dt>Camping</dt><dd>${cp.camp.text}</dd>
-    <dt>Übernachtung</dt><dd>${cp.stay}</dd>
-    <dt>WLAN</dt><dd>${cp.wifi===true?"Ja":cp.wifi===false?"Nein":cp.wifi}</dd>
-    <dt>Wasser</dt><dd>${cp.water}</dd>
-    <dt>Strom</dt><dd>${cp.power?"Ja":"Nein"}</dd>
-    <dt>Kontakt</dt><dd><a href="tel:${cp.tel}">${cp.telShow}</a> · <a href="https://${cp.web}" target="_blank" rel="noopener">${cp.web}</a></dd>
+    <dt>${t("cp.food")}</dt><dd>${tf(cp.food)}</dd>
+    <dt>${t("cp.hours")}</dt><dd>${tf(cp.hours)}</dd>
+    <dt>${t("cp.camping")}</dt><dd>${tf(cp.camp.text)}</dd>
+    <dt>${t("cp.stay")}</dt><dd>${tf(cp.stay)}</dd>
+    <dt>${t("cp.wifi")}</dt><dd>${cp.wifi===true?t("word.yes"):cp.wifi===false?t("word.no"):tf(cp.wifi)}</dd>
+    <dt>${t("cp.water")}</dt><dd>${tf(cp.water)}</dd>
+    <dt>${t("cp.power")}</dt><dd>${cp.power?t("word.yes"):t("word.no")}</dd>
+    <dt>${t("cp.contact")}</dt><dd><a href="tel:${cp.tel}">${cp.telShow}</a> · <a href="https://${cp.web}" target="_blank" rel="noopener">${cp.web}</a></dd>
   </dl>`;
 }
 function cpRowHtml(cp){
@@ -769,7 +1016,7 @@ function cpRowHtml(cp){
   </div>`;
 }
 function wayRowHtml(w){
-  return `<div class="row"><span class="km mono">${w.km}</span><span style="font-size:15px">${stopIcon(w.kind)}</span><div class="name">${w.name}<div class="sub">${w.offer}</div></div></div>`;
+  return `<div class="row"><span class="km mono">${w.km}</span><span style="font-size:15px">${stopIcon(w.kind)}</span><div class="name">${w.name}<div class="sub">${tf(w.offer)}</div></div></div>`;
 }
 
 // Schematisches Höhenprofil pro Tag: [Streckenanteil 0-1, Höhe in m].
@@ -865,7 +1112,8 @@ const LOTTI_AVG_KMH = (()=>{
 function estimateTimeStr(km){
   const hoursDec = km/LOTTI_AVG_KMH;
   const h = Math.floor(hoursDec), m = Math.round((hoursDec-h)*60);
-  return `≈ ${h}:${String(m).padStart(2,"0")} Std. (Schätzung)`;
+  const hm = `${h}:${String(m).padStart(2,"0")}`;
+  return {de:`≈ ${hm} Std. (Schätzung)`, en:`≈ ${hm} h (estimate)`};
 }
 function elevGeometry(dayNum, W, H, pad){
   const pts = ELEV[dayNum];
@@ -918,17 +1166,17 @@ let mapState = {scale:1, tx:0, ty:0};
 
 /* ======================= ROUTEN-KONFIGURATION (Onboarding) ======================= */
 function roleForCP(cpId){
-  if(cpId==="finish") return `Ziel · Ende Tag ${DAYS.length}`;
+  if(cpId==="finish") return t("role.finish").replace("{n}", DAYS.length);
   for(const d of DAYS){
     const lastWay = d.way[d.way.length-1];
-    if(lastWay!==undefined && WAY[lastWay] && WAY[lastWay].cp===cpId) return `Ende Tag ${d.n}`;
+    if(lastWay!==undefined && WAY[lastWay] && WAY[lastWay].cp===cpId) return t("role.end").replace("{n}", d.n);
   }
   for(const d of DAYS){
-    if(CP[cpId].km>d.kmFrom && CP[cpId].km<d.kmTo) return `Durchfahrt Tag ${d.n}`;
+    if(CP[cpId].km>d.kmFrom && CP[cpId].km<d.kmTo) return t("role.passthrough").replace("{n}", d.n);
   }
-  return CP[cpId].role;
+  return tf(CP[cpId].role);
 }
-function fmtM(n){ return Math.round(n).toLocaleString("de-DE")+" m"; }
+function fmtM(n){ return Math.round(n).toLocaleString(LANG==='de'?'de-DE':'en-US')+" m"; }
 // boundaryCpIds: geordnete Liste von Checkpoint-IDs, die je ein Tagesende markieren,
 // immer mit "finish" endend, z.B. ["cp1","cp3","cp5","finish"].
 function buildCustomDays(boundaryCpIds){
@@ -943,16 +1191,23 @@ function buildCustomDays(boundaryCpIds){
     const {up, down} = upDownBetween(fromKm, toKm);
     const km = +(toKm-fromKm).toFixed(1);
     const isFinish = toId==="finish";
+    const altStr = isFinish ? "289 m" : fmtM(CP[toId].alt);
+    const noteStr = isFinish ? `${t("word.finish")} · ${altStr}` : `${toId.toUpperCase()} · ${altStr}`;
+    const roundedUp = Math.round(up), roundedDown = Math.round(down);
+    const charFor = lang => `${fromName} → ${toName} · ${km} km, +${roundedUp} / −${roundedDown} ${lang==="de"?"Hm":"m elevation"}.`;
     days.push({
       n: i+1, from: fromName, to: toName,
-      subtitle: isFinish ? "Ziel · 289 m" : `${toId.toUpperCase()} · ${fmtM(CP[toId].alt)}`,
-      km, time: estimateTimeStr(km), up: Math.round(up), down: Math.round(down),
+      subtitle: isFinish ? {de:"Ziel · 289 m", en:"Finish · 289 m"} : noteStr,
+      km, time: estimateTimeStr(km), up: roundedUp, down: roundedDown,
       kmFrom: fromKm, kmTo: toKm,
-      character: `${fromName} → ${toName} · ${km} km, +${Math.round(up)} / −${Math.round(down)} Hm.`,
+      character: {de:charFor("de"), en:charFor("en")},
       sleep: isFinish
-        ? {status:"ok", place:"Ahoi Minigolf", note:"Ziel · 289 m", detail:"Zelten kostenlos, Duschen & Toiletten vorhanden. Nach dem Zieleinlauf darfst du bis Montag bleiben."}
-        : {status:CP[toId].camp.status, place:CP[toId].label, note:`${toId.toUpperCase()} · ${fmtM(CP[toId].alt)}`,
-           detail: `${CP[toId].camp.text}.` + (CP[toId].stay && CP[toId].stay!=="—" ? ` Alternativ ${CP[toId].stay}.` : "")},
+        ? {status:"ok", place:"Ahoi Minigolf", note:{de:"Ziel · 289 m", en:"Finish · 289 m"}, detail:{de:"Zelten kostenlos, Duschen & Toiletten vorhanden. Nach dem Zieleinlauf darfst du bis Montag bleiben.", en:"Free camping, showers & toilets available. You can stay until Monday after finishing."}}
+        : {status:CP[toId].camp.status, place:CP[toId].label, note:noteStr,
+           detail: {
+             de: `${tfLang(CP[toId].camp.text,"de")}.` + (tfLang(CP[toId].stay,"de") && tfLang(CP[toId].stay,"de")!=="—" ? ` Alternativ ${tfLang(CP[toId].stay,"de")}.` : ""),
+             en: `${tfLang(CP[toId].camp.text,"en")}.` + (tfLang(CP[toId].stay,"en") && tfLang(CP[toId].stay,"en")!=="—" ? ` Alternatively ${tfLang(CP[toId].stay,"en")}.` : "")
+           }},
       way: ROUTE_SEQ.filter(id=>id!=="start" && WAY[id].km>fromKm && WAY[id].km<=toKm),
       specials: []
     });
@@ -970,16 +1225,16 @@ const PAULA_DAY4_DOWN = 4400 - PAULA_DAY3_DOWN;
 const PAULA_DAYS = [
   {...LOTTI_DAYS[0], n:1},
   {...LOTTI_DAYS[1], n:2},
-  {n:3, from:"Rifugio Scarpa", to:"Lago Federa", subtitle:"Bergsee, ca. 2.120 m — kein Handbook-Checkpoint", km:58, time:estimateTimeStr(58), up:2510, down:PAULA_DAY3_DOWN, kmFrom:182, kmTo:240,
-    character:"Ambrizzola Pass, dann hinunter zum Lago Federa — laut Lotti-Crew „unser persönliches Highlight“.",
-    sleep:{status:"warn", place:"Lago Federa", note:"Bergsee, ca. 2.120 m — nicht im Handbook", detail:"Kein Rifugio direkt am See. Rifugio Croda da Lago (Essen/Getränke/Wasser) liegt ca. 1 km weiter. Nur Wildcamping/Notbiwak (offiziell nicht erlaubt, aber toleriert) — Notfalldecke/Biwaksack sind Pflichtausrüstung."},
+  {n:3, from:"Rifugio Scarpa", to:"Lago Federa", subtitle:{de:"Bergsee, ca. 2.120 m — kein Handbook-Checkpoint", en:"Mountain lake, approx. 2,120 m — not a handbook checkpoint"}, km:58, time:estimateTimeStr(58), up:2510, down:PAULA_DAY3_DOWN, kmFrom:182, kmTo:240,
+    character:{de:"Ambrizzola Pass, dann hinunter zum Lago Federa — laut Lotti-Crew „unser persönliches Highlight“.", en:"Ambrizzola Pass, then down to Lago Federa — Lotti's crew calls it \"our personal highlight\"."},
+    sleep:{status:"warn", place:"Lago Federa", note:{de:"Bergsee, ca. 2.120 m — nicht im Handbook", en:"Mountain lake, approx. 2,120 m — not in the handbook"}, detail:{de:"Kein Rifugio direkt am See. Rifugio Croda da Lago (Essen/Getränke/Wasser) liegt ca. 1 km weiter. Nur Wildcamping/Notbiwak (offiziell nicht erlaubt, aber toleriert) — Notfalldecke/Biwaksack sind Pflichtausrüstung.", en:"No rifugio directly at the lake. Rifugio Croda da Lago (food/drinks/water) is about 1 km further. Wild camping/emergency bivouac only (officially not allowed, but tolerated) — emergency blanket/bivy bag are mandatory gear."}},
     way:[6,7,8,"federa"],
     specials:[
-      {type:"highlight", title:"Ambrizzola Pass", text:"„Unser persönliches Highlight“ — jedes Jahr Teil der Strecke. Danach der wunderschöne Lago Federa."},
-      {type:"warn", title:"Forcella Ambrizzola Trail", km:"237–240", text:"Überquerung auf 2.277 m, ca. 3 km Hike-a-Bike — dafür Panoramablick über die Ampezzo-Dolomiten."}
+      {type:"highlight", title:{de:"Ambrizzola Pass", en:"Ambrizzola Pass"}, text:{de:"„Unser persönliches Highlight“ — jedes Jahr Teil der Strecke. Danach der wunderschöne Lago Federa.", en:"\"Our personal highlight\" — part of the route every year. Followed by the beautiful Lago Federa."}},
+      {type:"warn", title:{de:"Forcella Ambrizzola Trail", en:"Forcella Ambrizzola trail"}, km:"237–240", text:{de:"Überquerung auf 2.277 m, ca. 3 km Hike-a-Bike — dafür Panoramablick über die Ampezzo-Dolomiten.", en:"Crossing at 2,277 m, about 3 km of hike-a-bike — rewarded with a panoramic view over the Ampezzo Dolomites."}}
     ]},
-  {n:4, from:"Lago Federa", to:"Glittnersee", subtitle:"Bergsee, ca. 2.150 m — kein Handbook-Checkpoint", km:67, time:estimateTimeStr(67), up:2320, down:PAULA_DAY4_DOWN, kmFrom:240, kmTo:307,
-    character:"Kürzerer Zwischentag über Cortina-Gegend und Rifugio Pederü zum Glittnersee.",
+  {n:4, from:"Lago Federa", to:"Glittnersee", subtitle:{de:"Bergsee, ca. 2.150 m — kein Handbook-Checkpoint", en:"Mountain lake, approx. 2,150 m — not a handbook checkpoint"}, km:67, time:estimateTimeStr(67), up:2320, down:PAULA_DAY4_DOWN, kmFrom:240, kmTo:307,
+    character:{de:"Kürzerer Zwischentag über Cortina-Gegend und Rifugio Pederü zum Glittnersee.", en:"A shorter transition day via the Cortina area and Rifugio Pederü to Glittnersee."},
     sleep:{...LOTTI_DAYS[2].sleep},
     way:[9,10,11,12],
     specials:[]},
@@ -1098,22 +1353,22 @@ function mapHtml(dayNum){
       </g>
     </svg>
     <div class="map-compass">N ↑</div>
-    <div class="map-note">schematisch</div>
+    <div class="map-note">${t("map.schematic")}</div>
     <div class="map-controls">
-      <button class="mapctl" id="zoomIn" aria-label="Vergrößern">+</button>
-      <button class="mapctl" id="zoomOut" aria-label="Verkleinern">−</button>
-      <button class="mapctl" id="mapReset" aria-label="Ganze Route zeigen">⤢</button>
-      <button class="mapctl" id="gpsBtn" aria-label="Eigene Position">📍</button>
+      <button class="mapctl" id="zoomIn" aria-label="${t("map.zoomin")}">+</button>
+      <button class="mapctl" id="zoomOut" aria-label="${t("map.zoomout")}">−</button>
+      <button class="mapctl" id="mapReset" aria-label="${t("map.reset")}">⤢</button>
+      <button class="mapctl" id="gpsBtn" aria-label="${t("map.ownpos")}">📍</button>
     </div>
   </div>
   <div id="gpsReadout"></div>
   <div class="legend">
-    <span><i style="background:var(--fog)"></i>Start/Ziel</span>
-    <span><i style="background:var(--acid)"></i>Camping ok</span>
-    <span><i style="background:var(--warn)"></i>eingeschränkt</span>
-    <span><i style="background:var(--bad)"></i>nicht erlaubt</span>
-    <span><i style="background:var(--info)"></i>Resupply</span>
-    <span>· antippen für Details</span>
+    <span><i style="background:var(--fog)"></i>${t("legend.startfinish")}</span>
+    <span><i style="background:var(--acid)"></i>${t("legend.campok")}</span>
+    <span><i style="background:var(--warn)"></i>${t("legend.restricted")}</span>
+    <span><i style="background:var(--bad)"></i>${t("legend.notallowed")}</span>
+    <span><i style="background:var(--info)"></i>${t("legend.resupply")}</span>
+    <span>${t("legend.tapdetails")}</span>
   </div>`;
 }
 
@@ -1212,14 +1467,14 @@ function haversineKm(lat1,lon1,lat2,lon2){
   return R*2*Math.atan2(Math.sqrt(a), Math.sqrt(1-a));
 }
 function startGPS(){
-  if(!("geolocation" in navigator)){ toast("GPS auf diesem Gerät nicht verfügbar"); return; }
+  if(!("geolocation" in navigator)){ toast(t("gps.notsupported")); return; }
   gpsWatchId = navigator.geolocation.watchPosition(
     pos=>{
       lastPos = {lat:pos.coords.latitude, lon:pos.coords.longitude, acc:pos.coords.accuracy};
       updateGpsUI(true);
     },
     err=>{
-      const msg = err.code===1 ? "Standortzugriff abgelehnt" : err.code===2 ? "Position nicht verfügbar" : "Zeitüberschreitung beim GPS-Fix";
+      const msg = err.code===1 ? t("gps.denied") : err.code===2 ? t("gps.unavailable") : t("gps.timeout");
       toast(msg);
       if(err.code===1) stopGPS();
     },
@@ -1277,16 +1532,16 @@ function renderGpsReadout(){
   const endId = seq[seq.length-1];
   const endDist = haversineKm(lastPos.lat, lastPos.lon, COORDS[endId].lat, COORDS[endId].lon);
   el.innerHTML = `
-    <div class="gps-row"><span>📍 Nächster Punkt in der Nähe</span><b class="mono">${nameOfId(nearest)} · ${nearestDist.toFixed(1)} km</b></div>
-    <div class="gps-row"><span>🏁 Bis ${nameOfId(endId)}</span><b class="mono">${endDist.toFixed(1)} km</b></div>
-    <div class="gps-note">Luftlinie, nicht Streckenkilometer — auf Serpentinen kann die tatsächliche Restdistanz deutlich länger sein. GPS-Genauigkeit: ±${Math.round(lastPos.acc||0)} m</div>
+    <div class="gps-row"><span>${t("gps.nearest")}</span><b class="mono">${nameOfId(nearest)} · ${nearestDist.toFixed(1)} km</b></div>
+    <div class="gps-row"><span>${t("gps.until")} ${nameOfId(endId)}</span><b class="mono">${endDist.toFixed(1)} km</b></div>
+    <div class="gps-note">${t("gps.note")}${Math.round(lastPos.acc||0)} m</div>
   `;
 }
 function distanceNote(id){
   if(!lastPos) return "";
   const c = COORDS[id];
   const dist = haversineKm(lastPos.lat, lastPos.lon, c.lat, c.lon);
-  return `<p style="font-size:12.5px;color:var(--mist);margin-top:10px;border-top:1px solid var(--line);padding-top:10px;">📍 ≈ ${dist.toFixed(1)} km Luftlinie von deiner aktuellen Position.</p>`;
+  return `<p style="font-size:12.5px;color:var(--mist);margin-top:10px;border-top:1px solid var(--line);padding-top:10px;">📍 ≈ ${dist.toFixed(1)} ${t("distancenote")}</p>`;
 }
 
 /* ======================= SHEET (generisch: Notfall + Karten-Punkte) ======================= */
@@ -1308,20 +1563,20 @@ function closeSheet(){
 /* ---- Notfall-Koordinaten: eigener, sheet-unabhängiger GPS-Watch für schnellen Fix ---- */
 let emGpsWatchId = null, emLastPos = null;
 function startEmergencyGPS(forceRestart){
-  if(!("geolocation" in navigator)){ renderEmergencyCoords(null, "GPS auf diesem Gerät nicht verfügbar"); return; }
+  if(!("geolocation" in navigator)){ renderEmergencyCoords(null, t("gps.notsupported")); return; }
   if(emGpsWatchId!==null){
     if(!forceRestart) return;
     navigator.geolocation.clearWatch(emGpsWatchId);
     emGpsWatchId = null;
   }
-  renderEmergencyCoords(null, "Suche GPS-Fix …");
+  renderEmergencyCoords(null, t("gps.searching"));
   emGpsWatchId = navigator.geolocation.watchPosition(
     pos=>{
       emLastPos = {lat:pos.coords.latitude, lon:pos.coords.longitude, acc:pos.coords.accuracy};
       renderEmergencyCoords(emLastPos);
     },
     err=>{
-      const msg = err.code===1 ? "Standortzugriff abgelehnt — in den iPhone-Einstellungen für diesen Browser erlauben" : err.code===2 ? "Position nicht verfügbar" : "Zeitüberschreitung beim GPS-Fix";
+      const msg = err.code===1 ? t("em.iossettings") : err.code===2 ? t("gps.unavailable") : t("gps.timeout");
       renderEmergencyCoords(null, msg);
     },
     {enableHighAccuracy:true, maximumAge:5000, timeout:20000}
@@ -1335,53 +1590,53 @@ function renderEmergencyCoords(pos, msg){
   const el = document.getElementById("emCoordsBody");
   if(!el) return;
   if(!pos){
-    el.innerHTML = `<div style="font-size:14px;font-weight:600;color:var(--mist);">${msg||"Suche GPS-Fix …"}</div>`;
+    el.innerHTML = `<div style="font-size:14px;font-weight:600;color:var(--mist);">${msg||t("gps.searching")}</div>`;
     return;
   }
   el.innerHTML = `
-    <div class="emergency-coords-row"><span class="emergency-coords-tag">BREITE</span><span class="emergency-coords-val">${pos.lat.toFixed(5)}</span></div>
-    <div class="emergency-coords-row"><span class="emergency-coords-tag">LÄNGE</span><span class="emergency-coords-val">${pos.lon.toFixed(5)}</span></div>
-    <div class="emergency-coords-acc">Genauigkeit: ±${Math.round(pos.acc||0)} m — Fix wird automatisch verfeinert</div>
+    <div class="emergency-coords-row"><span class="emergency-coords-tag">${t("em.lat")}</span><span class="emergency-coords-val">${pos.lat.toFixed(5)}</span></div>
+    <div class="emergency-coords-row"><span class="emergency-coords-tag">${t("em.lon")}</span><span class="emergency-coords-val">${pos.lon.toFixed(5)}</span></div>
+    <div class="emergency-coords-acc">${t("em.accuracy")}${Math.round(pos.acc||0)} ${t("em.accuracysuffix")}</div>
   `;
 }
 function copyEmergencyCoords(){
-  if(!emLastPos){ toast("Noch keine Position verfügbar"); return; }
+  if(!emLastPos){ toast(t("em.noposition")); return; }
   const text = `${emLastPos.lat.toFixed(5)}, ${emLastPos.lon.toFixed(5)}`;
   if(navigator.clipboard && navigator.clipboard.writeText){
-    navigator.clipboard.writeText(text).then(()=>toast("Koordinaten kopiert")).catch(()=>toast("Kopieren fehlgeschlagen"));
+    navigator.clipboard.writeText(text).then(()=>toast(t("em.copied"))).catch(()=>toast(t("em.copyfailed")));
   } else {
-    toast("Kopieren auf diesem Gerät nicht unterstützt");
+    toast(t("em.copynotsupported"));
   }
 }
 function openEmergencySheet(){
   const body = `
     <div class="emergency-coords">
-      <div class="emergency-coords-label">📍 Deine Position — zum Telefonieren bereit</div>
-      <div id="emCoordsBody"><div style="font-size:14px;font-weight:600;color:var(--mist);">Suche GPS-Fix …</div></div>
+      <div class="emergency-coords-label">${t("em.poslabel")}</div>
+      <div id="emCoordsBody"><div style="font-size:14px;font-weight:600;color:var(--mist);">${t("gps.searching")}</div></div>
       <div class="emergency-coords-actions">
-        <button class="emergency-coords-btn" type="button" id="emCopyBtn">📋 Kopieren</button>
-        <button class="emergency-coords-btn" type="button" id="emRefreshBtn">🔄 Aktualisieren</button>
+        <button class="emergency-coords-btn" type="button" id="emCopyBtn">${t("em.copy")}</button>
+        <button class="emergency-coords-btn" type="button" id="emRefreshBtn">${t("em.refresh")}</button>
       </div>
     </div>
-    <div class="subtitle" style="font-weight:700;margin-bottom:6px;">Pflichtausrüstung dabei?</div>
-    <ul style="margin:0 0 14px;padding-left:18px;font-size:13.5px;line-height:1.6;">${GEAR_MUST.map(g=>`<li>${g}</li>`).join("")}</ul>
-    <div class="subtitle" style="font-weight:700;margin-bottom:6px;">Bei Abbruch</div>
+    <div class="subtitle" style="font-weight:700;margin-bottom:6px;">${t("em.gearq")}</div>
+    <ul style="margin:0 0 14px;padding-left:18px;font-size:13.5px;line-height:1.6;">${GEAR_MUST.map(g=>`<li>${tf(g)}</li>`).join("")}</ul>
+    <div class="subtitle" style="font-weight:700;margin-bottom:6px;">${t("em.abort")}</div>
     <ul style="margin:0 0 14px;padding-left:18px;font-size:13.5px;line-height:1.6;">
-      <li>Nie abends/nachts abbrechen — Unterschlupf suchen, bei Sonnenaufgang entscheiden.</li>
-      <li>Sofort per E-Mail/WhatsApp melden, sonst gilt man als vermisst.</li>
+      <li>${t("em.a1")}</li>
+      <li>${t("em.a2")}</li>
     </ul>
-    <div class="subtitle" style="font-weight:700;margin-bottom:6px;">Kontakt</div>
+    <div class="subtitle" style="font-weight:700;margin-bottom:6px;">${t("em.contact")}</div>
     <p style="font-size:13.5px;margin:0 0 4px;"><a href="mailto:info@orbit360.cc">info@orbit360.cc</a></p>
   `;
-  showSheet("⛑️ Notfall & Sicherheit", "Do not risk anything", body);
+  showSheet(t("em.title"), t("em.subtitle"), body);
   startEmergencyGPS();
   $("#emCopyBtn").onclick = ()=>copyEmergencyCoords();
   $("#emRefreshBtn").onclick = ()=>startEmergencyGPS(true);
 }
 function openPointSheet(wid){
   if(wid==="start"){
-    showSheet("🚩 Ahoi Minigolf", "Start (Tag 1) & Ziel (Tag 5) · Bozen",
-      `<p style="font-size:13.5px;line-height:1.6;">Zelten kostenlos, Duschen &amp; Toiletten vorhanden. Nach dem Zieleinlauf darfst du bis Montag bleiben.</p>` + distanceNote(wid));
+    showSheet(t("start.title"), t("start.sub").replace("{n}", DAYS.length),
+      `<p style="font-size:13.5px;line-height:1.6;">${t("start.detail")}</p>` + distanceNote(wid));
     return;
   }
   const w = WAY[wid];
@@ -1389,20 +1644,20 @@ function openPointSheet(wid){
     const cp = CP[w.cp];
     showSheet("📍 " + w.name, `km ${w.km} · ${roleForCP(cp.id)}`, cpDetailDl(cp) + distanceNote(wid));
   } else {
-    showSheet(stopIcon(w.kind) + " " + w.name, `km ${w.km}`, `<p style="font-size:13.5px;line-height:1.6;">${w.offer}</p>` + distanceNote(wid));
+    showSheet(stopIcon(w.kind) + " " + w.name, `km ${w.km}`, `<p style="font-size:13.5px;line-height:1.6;">${tf(w.offer)}</p>` + distanceNote(wid));
   }
 }
 
 /* ======================= SPECIALS ======================= */
 function specialsHtml(day){
-  if(!day.specials.length) return `<div class="empty">Keine besonderen Hinweise für diesen Tag.</div>`;
+  if(!day.specials.length) return `<div class="empty">${t("specials.empty")}</div>`;
   return day.specials.map(s=>{
     const icon = s.type==="highlight" ? "✨" : "⚠️";
     const cls = s.type==="highlight" ? "special-hi" : "";
     return `<div class="callout ${cls}">
-      <div class="ctitle">${icon} ${s.title}</div>
+      <div class="ctitle">${icon} ${tf(s.title)}</div>
       ${s.km?`<div class="ckm">km ${s.km}</div>`:""}
-      <p>${s.text}</p>
+      <p>${tf(s.text)}</p>
     </div>`;
   }).join("");
 }
@@ -1421,34 +1676,35 @@ async function fetchWeather(dayNum){
 function weatherCardHtml(dayNum, state){
   const loc = WEATHER_LOC[dayNum];
   const c = weatherCache[dayNum];
+  const locale = LANG==='de'?'de-DE':'en-US';
   if(!c && state==="error"){
-    return `<div class="weather-card"><div class="wx-error">📡 Keine Verbindung — Wetterdaten nicht verfügbar.<br>Wird automatisch nachgeladen, sobald du wieder Empfang hast.</div></div>`;
+    return `<div class="weather-card"><div class="wx-error">${t("wx.noconnection")}</div></div>`;
   }
   if(!c){
-    return `<div class="weather-card"><div class="wx-loading">Lade Wettervorhersage…</div></div>`;
+    return `<div class="weather-card"><div class="wx-loading">${t("wx.loading")}</div></div>`;
   }
   const cur = c.data.current;
   const daily = c.data.daily;
   const [curIcon, curLabel] = wmo(cur.weather_code);
-  const stamp = new Date(c.ts).toLocaleTimeString('de-DE',{hour:'2-digit',minute:'2-digit'});
-  const stale = state==="error" ? `<div class="wx-error" style="margin-top:8px; padding:8px 4px;">Offline — zeige letzten bekannten Stand.</div>` : "";
-  const days = daily.time.map((t,i)=>{
+  const stamp = new Date(c.ts).toLocaleTimeString(locale,{hour:'2-digit',minute:'2-digit'});
+  const stale = state==="error" ? `<div class="wx-error" style="margin-top:8px; padding:8px 4px;">${t("wx.stale")}</div>` : "";
+  const days = daily.time.map((tm,i)=>{
     const [ic] = wmo(daily.weather_code[i]);
-    const dLabel = i===0?"Heute":i===1?"Morgen":new Date(t).toLocaleDateString('de-DE',{weekday:'short'});
+    const dLabel = i===0?t("wx.today"):i===1?t("wx.tomorrow"):new Date(tm).toLocaleDateString(locale,{weekday:'short'});
     return `<div class="wx-day"><span class="lb">${dLabel}</span><span class="ic">${ic}</span><span class="tp mono">${Math.round(daily.temperature_2m_max[i])}°/${Math.round(daily.temperature_2m_min[i])}°</span><span class="pr mono">💧${daily.precipitation_probability_max[i]}%</span></div>`;
   }).join("");
   return `<div class="weather-card">
     <div class="wx-head">
       <div>
         <div class="wx-now"><span class="wx-icon">${curIcon}</span><b class="mono">${Math.round(cur.temperature_2m)}°C</b></div>
-        <div class="wx-desc">${curLabel} · Wind ${Math.round(cur.wind_speed_10m)} km/h</div>
+        <div class="wx-desc">${tf(curLabel)} · ${t("wx.wind")} ${Math.round(cur.wind_speed_10m)} km/h</div>
       </div>
       <button class="wx-refresh" id="wxRefresh">🔄</button>
     </div>
     <div class="wx-days">${days}</div>
-    <div class="wx-meta">Stand ${stamp} Uhr · ${loc.label}</div>
+    <div class="wx-meta">${t("wx.asof")} ${stamp}${t("wx.time")?" "+t("wx.time"):""} · ${loc.label}</div>
     ${stale}
-    <div class="wx-note">Ungefähre Region, keine exakte GPS-Position der Route. Bei kritischen Passagen zusätzlich lokale Quellen prüfen (z. B. Bergwetter Südtirol, Meteotrentino).</div>
+    <div class="wx-note">${t("wx.note")}</div>
   </div>`;
 }
 function renderWeatherInPlace(dayNum, state){
@@ -1470,7 +1726,7 @@ async function loadWeatherFor(dayNum, force){
   try{
     await fetchWeather(dayNum);
     renderWeatherInPlace(dayNum);
-    if(force) toast("Wetter aktualisiert");
+    if(force) toast(t("wx.updated"));
   }catch(e){
     renderWeatherInPlace(dayNum, "error");
   }
@@ -1503,30 +1759,30 @@ function buildStorySlides(dayNum){
 
   slides.push({dur:4.2, kind:"intro", html:`
     <div class="story-eyebrow">Sneak Peaks · Entree</div>
-    <div class="story-daynum" style="font-size:56px;">TAG <b>${d.n}</b></div>
+    <div class="story-daynum" style="font-size:56px;">${t("word.day").toUpperCase()} <b>${d.n}</b></div>
     <div class="story-route">${d.from}<span class="arrow">→</span>${d.to}</div>
     <div class="story-mapwrap" style="max-width:180px; margin-top:16px;">${storyMapSvg(dayNum)}</div>
-    <div class="story-detail">${d.character}</div>
+    <div class="story-detail">${tf(d.character)}</div>
   `});
 
   slides.push({dur:3, kind:"stats", html:`
     <div class="story-stats">
-      <div class="story-stat-row"><span class="lb">Distanz</span><span class="val mono"><span class="cnt" data-val="${d.km}" data-dec="${d.km%1?1:0}">0</span> km</span></div>
-      <div class="story-stat-row"><span class="lb">Anstieg</span><span class="val up mono">+<span class="cnt" data-val="${d.up}">0</span> m</span></div>
-      <div class="story-stat-row"><span class="lb">Abfahrt</span><span class="val down mono">−<span class="cnt" data-val="${d.down}">0</span> m</span></div>
+      <div class="story-stat-row"><span class="lb">${t("story.distance")}</span><span class="val mono"><span class="cnt" data-val="${d.km}" data-dec="${d.km%1?1:0}">0</span> km</span></div>
+      <div class="story-stat-row"><span class="lb">${t("story.up")}</span><span class="val up mono">+<span class="cnt" data-val="${d.up}">0</span> m</span></div>
+      <div class="story-stat-row"><span class="lb">${t("story.down")}</span><span class="val down mono">−<span class="cnt" data-val="${d.down}">0</span> m</span></div>
     </div>
   `});
 
   slides.push({dur:3.2, kind:"elev", html:`
-    <div class="story-eyebrow">Höhenprofil</div>
+    <div class="story-eyebrow">${t("story.elev")}</div>
     <div class="story-elevwrap">${elevationSvg(dayNum, {h:210, suffix:"story"+dayNum})}</div>
     <div class="story-sub mono">↑ ${Math.round(Math.max(...ELEV[dayNum].map(p=>p[1])))} m</div>
   `});
 
   slides.push({dur:3, kind:"sleep", html:`
-    <div class="story-eyebrow">Ziel heute Nacht</div>
-    <div class="story-badge-big ${d.sleep.status==='ok'?'ok':'warn'}">${d.sleep.status==='ok'?'⛺ Camping':'⚠️ Wildcamp'}</div>
-    <div class="story-place">${d.sleep.place}</div>
+    <div class="story-eyebrow">${t("story.tonight")}</div>
+    <div class="story-badge-big ${d.sleep.status==='ok'?'ok':'warn'}">${d.sleep.status==='ok'?t("camp.ok"):t("camp.warn")}</div>
+    <div class="story-place">${tf(d.sleep.place)}</div>
   `});
 
   return slides;
@@ -1551,12 +1807,13 @@ function prepStoryAnimations(){
   cnts.forEach(el=>{
     const target = parseFloat(el.dataset.val);
     const dec = parseInt(el.dataset.dec||"0",10);
-    if(reduced){ el.textContent = target.toLocaleString('de-DE',{minimumFractionDigits:dec,maximumFractionDigits:dec}); return; }
+    const numLocale = LANG==='de'?'de-DE':'en-US';
+    if(reduced){ el.textContent = target.toLocaleString(numLocale,{minimumFractionDigits:dec,maximumFractionDigits:dec}); return; }
     const t0 = performance.now(), dur = 1300;
     function tick(now){
       const t = Math.min(1,(now-t0)/dur);
       const ease = 1-Math.pow(1-t,3);
-      el.textContent = (target*ease).toLocaleString('de-DE',{minimumFractionDigits:dec,maximumFractionDigits:dec});
+      el.textContent = (target*ease).toLocaleString(numLocale,{minimumFractionDigits:dec,maximumFractionDigits:dec});
       if(t<1 && document.contains(el)) requestAnimationFrame(tick);
     }
     requestAnimationFrame(tick);
@@ -1698,17 +1955,17 @@ function drawCenteredSegments(ctx, segments, y){
   segments.forEach((s,i)=>{ ctx.fillStyle = s.color; ctx.fillText(s.text, x, y); x += widths[i]; });
 }
 const FD = "ui-rounded, -apple-system, sans-serif";
-function drawSlideCanvas(ctx, kind, t, d, dayNum){
+function drawSlideCanvas(ctx, kind, tt, d, dayNum){
   const {w:W, h:H} = VIDEO_CFG;
   drawExportBg(ctx,W,H);
-  const a1 = easeOut(Math.min(1, t/0.35));
+  const a1 = easeOut(Math.min(1, tt/0.35));
   if(kind==="intro"){
     ctx.globalAlpha = a1;
     drawEyebrow(ctx,W,H*0.095,"Sneak Peaks · Entree");
     ctx.font = "900 130px "+FD;
-    drawCenteredSegments(ctx, [{text:"TAG ",color:"#EDEBE3"},{text:String(d.n),color:"#CFFF4D"}], H*0.235);
+    drawCenteredSegments(ctx, [{text:t("word.day").toUpperCase()+" ",color:"#EDEBE3"},{text:String(d.n),color:"#CFFF4D"}], H*0.235);
 
-    ctx.globalAlpha = easeOut(Math.min(1, Math.max(0,(t-0.1)/0.35)));
+    ctx.globalAlpha = easeOut(Math.min(1, Math.max(0,(tt-0.1)/0.35)));
     let routeFont = 44;
     ctx.font = `800 ${routeFont}px ${FD}`;
     const routeText = `${d.from}   →   ${d.to}`;
@@ -1730,7 +1987,7 @@ function drawSlideCanvas(ctx, kind, t, d, dayNum){
     const seq = [prevLast, ...d.way].map(P);
     const lens = []; let total = 0;
     for(let i=1;i<seq.length;i++){ const l=Math.hypot(seq[i].x-seq[i-1].x, seq[i].y-seq[i-1].y); lens.push(l); total+=l; }
-    const drawn = total * easeOut(Math.min(1, Math.max(0,(t-0.15)/0.55)));
+    const drawn = total * easeOut(Math.min(1, Math.max(0,(tt-0.15)/0.55)));
     function strokePartial(width, style, alpha){
       ctx.globalAlpha = alpha; ctx.strokeStyle = style; ctx.lineWidth = width;
       ctx.beginPath(); ctx.moveTo(seq[0].x, seq[0].y);
@@ -1759,22 +2016,23 @@ function drawSlideCanvas(ctx, kind, t, d, dayNum){
       }
     });
 
-    ctx.globalAlpha = easeOut(Math.min(1, Math.max(0,(t-0.55)/0.35)));
+    ctx.globalAlpha = easeOut(Math.min(1, Math.max(0,(tt-0.55)/0.35)));
     ctx.font = "700 30px -apple-system, sans-serif"; ctx.textAlign="center"; ctx.fillStyle="#9498A8";
-    const capLines = wrapText(ctx, d.character, W*0.78);
+    const capLines = wrapText(ctx, tf(d.character), W*0.78);
     let cy = H*0.735;
     capLines.slice(0,3).forEach(line=>{ ctx.fillText(line, W/2, cy); cy += 40; });
     ctx.globalAlpha = 1;
   }
   if(kind==="stats"){
+    const loc = LANG==='de' ? 'de-DE' : 'en-US';
     const rows = [
-      ["DISTANZ", d.km.toLocaleString('de-DE') + " km", "#EDEBE3"],
-      ["ANSTIEG", "+" + Math.round(d.up*easeOut(Math.min(1,t/0.55))).toLocaleString('de-DE') + " m", "#CFFF4D"],
-      ["ABFAHRT", "−" + Math.round(d.down*easeOut(Math.min(1,t/0.55))).toLocaleString('de-DE') + " m", "#6FD3FF"],
+      [t("story.distance").toUpperCase(), d.km.toLocaleString(loc) + " km", "#EDEBE3"],
+      [t("story.up").toUpperCase(), "+" + Math.round(d.up*easeOut(Math.min(1,tt/0.55))).toLocaleString(loc) + " m", "#CFFF4D"],
+      [t("story.down").toUpperCase(), "−" + Math.round(d.down*easeOut(Math.min(1,tt/0.55))).toLocaleString(loc) + " m", "#6FD3FF"],
     ];
     let y = H*0.40;
     rows.forEach((r,i)=>{
-      const rowA = easeOut(Math.min(1, Math.max(0,(t - i*0.08)/0.3)));
+      const rowA = easeOut(Math.min(1, Math.max(0,(tt - i*0.08)/0.3)));
       ctx.globalAlpha = rowA;
       ctx.font = "700 30px -apple-system, sans-serif"; ctx.textAlign = "left";
       ctx.fillStyle = "#9498A8"; ctx.fillText(r[0], W*0.12, y);
@@ -1788,14 +2046,14 @@ function drawSlideCanvas(ctx, kind, t, d, dayNum){
   }
   if(kind==="elev"){
     ctx.globalAlpha = a1;
-    drawEyebrow(ctx,W,H*0.28,"Höhenprofil");
+    drawEyebrow(ctx,W,H*0.28,t("story.elev"));
     const pts = ELEV[dayNum];
     const elevs = pts.map(p=>p[1]);
     const eMin = Math.min(...elevs), eMax = Math.max(...elevs), span = (eMax-eMin)||100;
     const box = {x:W*0.10, y:H*0.34, w:W*0.80, h:H*0.30};
     const X = f => box.x + f*box.w;
     const Y = e => box.y + (eMax-e)/span*box.h;
-    const frac = easeOut(Math.min(1, Math.max(0,(t-0.1)/0.65)));
+    const frac = easeOut(Math.min(1, Math.max(0,(tt-0.1)/0.65)));
     function pathTo(f){
       ctx.beginPath();
       ctx.moveTo(X(pts[0][0]), Y(pts[0][1]));
@@ -1823,9 +2081,9 @@ function drawSlideCanvas(ctx, kind, t, d, dayNum){
   }
   if(kind==="sleep"){
     ctx.globalAlpha = a1;
-    drawEyebrow(ctx,W,H*0.38,"Ziel heute Nacht");
+    drawEyebrow(ctx,W,H*0.38,t("story.tonight"));
     const ok = d.sleep.status==="ok";
-    const label = ok ? "⛺ CAMPING" : "⚠️ WILDCAMP";
+    const label = (ok ? t("camp.ok") : t("camp.warn")).toUpperCase();
     ctx.font = "800 34px -apple-system, sans-serif";
     const tw = ctx.measureText(label).width + 70;
     const bx = W/2-tw/2, by = H*0.42, bh = 74;
@@ -1837,7 +2095,7 @@ function drawSlideCanvas(ctx, kind, t, d, dayNum){
     ctx.fill(); ctx.stroke();
     ctx.fillStyle = ok ? "#CFFF4D" : "#FF8A4C";
     ctx.textAlign = "center"; ctx.fillText(label, W/2, by+bh/2+12);
-    ctx.globalAlpha = easeOut(Math.min(1, Math.max(0,(t-0.15)/0.4)));
+    ctx.globalAlpha = easeOut(Math.min(1, Math.max(0,(tt-0.15)/0.4)));
     ctx.font = "900 92px "+FD; ctx.fillStyle = "#EDEBE3";
     const words = d.sleep.place.split(" ");
     if(words.length>1 && ctx.measureText(d.sleep.place).width > W*0.85){
@@ -1858,16 +2116,16 @@ function pickVideoMime(){
 function startVideoExport(forceMime){
   if(typeof forceMime !== "string") forceMime = undefined;
   if(exportRunning) return;
-  if(!window.MediaRecorder){ toast("Video-Export wird von diesem Browser nicht unterstützt"); return; }
+  if(!window.MediaRecorder){ toast(t("video.notsupported")); return; }
   const mime = forceMime || pickVideoMime();
-  if(!mime){ toast("Kein unterstütztes Videoformat gefunden"); return; }
+  if(!mime){ toast(t("video.noformat")); return; }
   exportRunning = true; exportAbort = false;
   const overlay = $("#videoExport");
   overlay.classList.add("show"); overlay.setAttribute("aria-hidden","false");
-  $("#exportActions").innerHTML = `<button class="export-btn" id="exportCancel">Abbrechen</button>`;
+  $("#exportActions").innerHTML = `<button class="export-btn" id="exportCancel">${t("export.cancel")}</button>`;
   $("#exportCancel").onclick = ()=>{ exportAbort = true; };
-  $("#exportStatus").textContent = "Rendere Video …";
-  $("#exportSub").textContent = "Das Intro wird direkt auf deinem Gerät gerendert — kein Upload, kein Internet nötig.";
+  $("#exportStatus").textContent = t("export.rendering");
+  $("#exportSub").textContent = t("export.sub");
 
   const canvas = document.getElementById("exportCanvas");
   canvas.width = VIDEO_CFG.w; canvas.height = VIDEO_CFG.h;
@@ -1895,9 +2153,9 @@ function startVideoExport(forceMime){
       if(webm){ startVideoExport(webm); return; }
     }
     if(blob.size === 0){
-      $("#exportStatus").textContent = "Export fehlgeschlagen";
-      $("#exportSub").textContent = "Dieser Browser hat keine Videodaten geliefert. Alternative: Story ansehen und mit der Bildschirmaufnahme des Geräts aufzeichnen.";
-      $("#exportActions").innerHTML = `<button class="export-btn" id="exportClose2">Schließen</button>`;
+      $("#exportStatus").textContent = t("video.failed");
+      $("#exportSub").textContent = t("video.faileddetail");
+      $("#exportActions").innerHTML = `<button class="export-btn" id="exportClose2">${t("sheet.close")}</button>`;
       $("#exportClose2").onclick = closeVideoExport;
       return;
     }
@@ -1905,13 +2163,11 @@ function startVideoExport(forceMime){
     window.__lastVideoMime = blob.type;
     const url = URL.createObjectURL(blob);
     const ext = (blob.type||"").includes("mp4") ? "mp4" : "webm";
-    $("#exportStatus").textContent = "Fertig — " + (blob.size/1024/1024).toFixed(1) + " MB";
-    $("#exportSub").textContent = ext==="webm"
-      ? "Hinweis: Dieser Browser exportiert WebM. Auf dem iPhone (Safari) bekommst du direkt MP4."
-      : "Bereit für CapCut, Schnitt-App oder direkt in die Story.";
+    $("#exportStatus").textContent = t("video.done") + " " + (blob.size/1024/1024).toFixed(1) + " MB";
+    $("#exportSub").textContent = ext==="webm" ? t("video.webmhint") : t("video.ready");
     $("#exportActions").innerHTML = `
-      <a class="export-btn primary" id="exportSave" href="${url}" download="entree_tag${activeDay}_intro.${ext}">Video speichern</a>
-      <button class="export-btn" id="exportClose2">Schließen</button>`;
+      <a class="export-btn primary" id="exportSave" href="${url}" download="entree_tag${activeDay}_intro.${ext}">${t("video.save")}</a>
+      <button class="export-btn" id="exportClose2">${t("sheet.close")}</button>`;
     $("#exportClose2").onclick = closeVideoExport;
   };
   rec.start(250);
@@ -1931,7 +2187,7 @@ function startVideoExport(forceMime){
     drawSlideCanvas(ctx, kinds[idx], t, d, activeDay);
     pushFrame();
     const sec = Math.ceil((totalMs-elapsed)/1000);
-    $("#exportStatus").textContent = `Rendere Video … noch ${sec}s`;
+    $("#exportStatus").textContent = LANG==='de' ? `Rendere Video … noch ${sec}s` : `Rendering video … ${sec}s left`;
     requestAnimationFrame(frame);
   }
   requestAnimationFrame(frame);
@@ -1970,7 +2226,7 @@ function renderProgress(){
     t.title = cp.label;
     bar.appendChild(t);
   });
-  $("#progCapLeft").textContent = `Tag ${d.n} von ${DAYS.length}`;
+  $("#progCapLeft").textContent = `${t("word.day")} ${d.n} ${t("word.of")} ${DAYS.length}`;
   $("#progCapRight").textContent = `${d.kmFrom}–${d.kmTo} / 495 km`;
 }
 function renderHeute(){
@@ -1980,38 +2236,38 @@ function renderHeute(){
   let h = "";
   if(PROFILE){
     const routeDef = ROUTE_DEFS[PROFILE.routeId];
-    h += `<div class="greeting"><span class="greeting-hi">Hey ${escHtml(PROFILE.name)} 👋</span><span class="greeting-route">${routeDef?routeDef.title:""}</span></div>`;
+    h += `<div class="greeting"><span class="greeting-hi">Hey ${escHtml(PROFILE.name)} 👋</span><span class="greeting-route">${routeDef?tf(routeDef.title):""}</span></div>`;
   }
 
   h += `<div class="story-btnrow">
-    <button class="story-trigger" id="storyTrigger">▶︎ Story ansehen</button>
-    <button class="story-trigger" id="videoExportBtn">🎥 Als Video exportieren</button>
+    <button class="story-trigger" id="storyTrigger">${t("story.watch")}</button>
+    <button class="story-trigger" id="videoExportBtn">${t("story.export")}</button>
   </div>`;
 
   h += `<div class="daymeta">
     <span class="daymeta-ghost">${String(d.n).padStart(2,"0")}</span>
-    <div class="daymeta-route">${d.from}<span class="arrow">→</span>${d.to}</div>
-    <div class="daymeta-stats mono">${d.km} km · +${d.up.toLocaleString('de-DE')} Hm · −${d.down.toLocaleString('de-DE')} Hm · ${d.time}</div>
-    <div class="daymeta-char">${d.character}</div>
+    <div class="daymeta-route">${tf(d.from)}<span class="arrow">→</span>${tf(d.to)}</div>
+    <div class="daymeta-stats mono">${d.km} km · +${d.up.toLocaleString(LANG==='de'?'de-DE':'en-US')} ${t("unit.hm")} · −${d.down.toLocaleString(LANG==='de'?'de-DE':'en-US')} ${t("unit.hm")} · ${tf(d.time)}</div>
+    <div class="daymeta-char">${tf(d.character)}</div>
   </div>`;
 
   h += mapHtml(activeDay);
 
-  h += `<p class="eyebrow">📈 Höhenprofil</p>
+  h += `<p class="eyebrow">${t("eyebrow.elev")}</p>
   <div class="elevcard">${elevationSvg(activeDay, {markers:true, h:150})}</div>
-  <div class="elev-note">Schematisch anhand bekannter Pass-/Checkpoint-Höhen angenähert — kein exaktes GPS-Profil. Punkte antippbar.</div>`;
+  <div class="elev-note">${t("elev.note")}</div>`;
 
-  h += `<p class="eyebrow">🌦️ Wetter heute</p><div id="weatherSlot">${weatherCardHtml(activeDay, undefined)}</div>`;
+  h += `<p class="eyebrow">${t("eyebrow.weather")}</p><div id="weatherSlot">${weatherCardHtml(activeDay, undefined)}</div>`;
 
-  h += `<p class="eyebrow"><span class="flare">⛺</span> Schlafen heute</p>`;
+  h += `<p class="eyebrow"><span class="flare">⛺</span> ${t("eyebrow.sleep").replace("⛺ ","")}</p>`;
   h += `<div class="sleep-card ${d.sleep.status}">
     <div class="sleep-head">${campBadge({status:d.sleep.status})}</div>
-    <div class="sleep-place">${d.sleep.place}</div>
-    <div class="sleep-note">${d.sleep.note}</div>
-    <div class="sleep-detail">${d.sleep.detail}</div>
+    <div class="sleep-place">${tf(d.sleep.place)}</div>
+    <div class="sleep-note">${tf(d.sleep.note)}</div>
+    <div class="sleep-detail">${tf(d.sleep.detail)}</div>
   </div>`;
 
-  h += `<p class="eyebrow">✨ Specials heute</p>` + specialsHtml(d);
+  h += `<p class="eyebrow">${t("eyebrow.specials")}</p>` + specialsHtml(d);
 
   $("#heuteBody").innerHTML = h;
   bindRowToggles();
@@ -2070,7 +2326,7 @@ function renderCP(){
 function renderResupply(){
   let h="";
   DAYS.forEach(d=>{
-    h += `<p class="eyebrow">Tag ${d.n} <span style="color:var(--mist);font-weight:600;text-transform:none;letter-spacing:0;">· ${d.from} → ${d.to}</span></p>`;
+    h += `<p class="eyebrow">${t("word.day")} ${d.n} <span style="color:var(--mist);font-weight:600;text-transform:none;letter-spacing:0;">· ${d.from} → ${d.to}</span></p>`;
     if(d.way.length){
       h += `<div class="rowlist">` + d.way.map(wid=>wayRowHtml(WAY[wid])).join("") + `</div>`;
     } else {
@@ -2082,22 +2338,22 @@ function renderResupply(){
 
 /* ======================= RENDER: SCHLAFEN ======================= */
 function renderSchlafen(){
-  $("#schlafenEyebrow").textContent = `${DAYS.length} Nächte im Überblick`;
+  $("#schlafenEyebrow").textContent = `${DAYS.length} ${t("eyebrow.schlafen")}`;
   let h="";
   DAYS.forEach(d=>{
-    h += `<p class="eyebrow">Nach Tag ${d.n}</p>
+    h += `<p class="eyebrow">${t("word.after")} ${t("word.day")} ${d.n}</p>
     <div class="sleep-card ${d.sleep.status}">
       <div class="sleep-head">${campBadge({status:d.sleep.status})}</div>
-      <div class="sleep-place">${d.sleep.place}</div>
-      <div class="sleep-note">${d.sleep.note}</div>
-      <div class="sleep-detail">${d.sleep.detail}</div>
+      <div class="sleep-place">${tf(d.sleep.place)}</div>
+      <div class="sleep-note">${tf(d.sleep.note)}</div>
+      <div class="sleep-detail">${tf(d.sleep.detail)}</div>
     </div>`;
   });
   h += `<div class="acc" id="acc-campgeneral">
-    <button class="acc-head"><b>Allgemeine Camping-Regeln</b><span class="chev">›</span></button>
+    <button class="acc-head"><b>${t("campgeneral.title")}</b><span class="chev">›</span></button>
     <div class="acc-body">
-      <p>Wildcamping ist in Italien/der Schweiz offiziell nicht erlaubt, <b>Not-Biwak wird aber toleriert</b>. Rifugio-Betten sind nicht exklusiv für Teilnehmer:innen reserviert — bei ausgebuchten Betten kann meist in der Nähe gezeltet werden.</p>
-      <p>Richtwerte Rifugio-Kosten allgemein: ca. 10 € Frühstück, ca. 20 € Abendessen, ca. 30 € Übernachtung (je nach Zimmer auch mehr). Bei spätem Ankommen/frühem Aufbruch: kurz mit dem Personal sprechen, Preise/Zeiten sind oft flexibel.</p>
+      <p>${t("campgeneral.p1")}</p>
+      <p>${t("campgeneral.p2")}</p>
     </div>
   </div>`;
   $("#schlafenBody").innerHTML = h;
@@ -2108,93 +2364,93 @@ function renderSchlafen(){
 function renderMehr(){
   const h = `
   <div class="acc open" id="acc-schedule">
-    <button class="acc-head"><span class="ico">🗓️</span><b>Zeitplan ENTREE</b><span class="chev">›</span></button>
+    <button class="acc-head"><span class="ico">🗓️</span><b>${t("mehr.schedule.title")}</b><span class="chev">›</span></button>
     <div class="acc-body">
-      ${SCHEDULE.map(s=>`<div class="schedule-row"><div class="schedule-date">${s.date}</div><div class="schedule-time mono">${s.time}</div><div class="schedule-what">${s.what}</div></div>`).join("")}
+      ${SCHEDULE.map(s=>`<div class="schedule-row"><div class="schedule-date">${tf(s.date)}</div><div class="schedule-time mono">${tf(s.time)}</div><div class="schedule-what">${tf(s.what)}</div></div>`).join("")}
     </div>
   </div>
 
   <div class="acc" id="acc-sources">
-    <button class="acc-head"><span class="ico">📄</span><b>Quellen &amp; ganze Route</b><span class="chev">›</span></button>
+    <button class="acc-head"><span class="ico">📄</span><b>${t("mehr.sources.title")}</b><span class="chev">›</span></button>
     <div class="acc-body">
-      <p style="font-size:13.5px;line-height:1.6;"><a href="${HANDBOOK_URL}" target="_blank" rel="noopener">📄 Offizielles Rider Handbook 2026 (PDF)</a></p>
-      <p style="font-size:13.5px;line-height:1.6;"><a href="${KOMOOT_FULL_URL}" target="_blank" rel="noopener">🗺️ Komoot: gesamte ENTREE-Route</a></p>
-      <p style="font-size:13.5px;line-height:1.6;"><a href="${KOMOOT_URL}" target="_blank" rel="noopener">🗺️ Komoot: Party Pace Patrol „Lotti“ (Tagesetappen)</a></p>
+      <p style="font-size:13.5px;line-height:1.6;"><a href="${HANDBOOK_URL}" target="_blank" rel="noopener">${t("mehr.sources.handbook")}</a></p>
+      <p style="font-size:13.5px;line-height:1.6;"><a href="${KOMOOT_FULL_URL}" target="_blank" rel="noopener">${t("mehr.sources.full")}</a></p>
+      <p style="font-size:13.5px;line-height:1.6;"><a href="${KOMOOT_URL}" target="_blank" rel="noopener">${t("mehr.sources.lotti")}</a></p>
     </div>
   </div>
 
   <div class="acc" id="acc-gear">
-    <button class="acc-head"><span class="ico">🎒</span><b>Pflichtausrüstung</b><span class="chev">›</span></button>
+    <button class="acc-head"><span class="ico">🎒</span><b>${t("mehr.gear.title")}</b><span class="chev">›</span></button>
     <div class="acc-body">
       <div class="gear-count" id="gearCount"></div>
       <div id="gearList"></div>
-      <div class="subtitle">Empfohlen</div>
-      <ul>${GEAR_REC.map(g=>`<li>${g}</li>`).join("")}</ul>
+      <div class="subtitle">${t("mehr.gear.recommended")}</div>
+      <ul>${GEAR_REC.map(g=>`<li>${tf(g)}</li>`).join("")}</ul>
     </div>
   </div>
 
   <div class="acc" id="acc-tracker">
-    <button class="acc-head"><span class="ico">📡</span><b>Tracker · Follow My Challenge</b><span class="chev">›</span></button>
+    <button class="acc-head"><span class="ico">📡</span><b>${t("mehr.tracker.title")}</b><span class="chev">›</span></button>
     <div class="acc-body">
       <ul>
-        <li>200 € Kaution 2 Wochen vor Event via PayPal, Rückzahlung bis 20. September.</li>
-        <li>Einschalten: Knopf oben gedrückt halten (~5 Sek.). Rot blinkt beim Start, grün/blau während Signalsuche, dann grün langsam blinkend = bereit.</li>
-        <li><b>Gute Plätze:</b> Oberrohrtasche, Trikottasche, Trinkrucksack, oben auf Satteltasche, Seitenfach Lenkertasche.</li>
-        <li><b>Vermeiden:</b> nahe Tretlager, Rahmentasche, unter Lenker, Boden einer Tasche, gleiche Tasche wie Handy.</li>
-        <li>Laden: USB-A → USB-C nutzen (Fast-Charge-Kabel evtl. inkompatibel). Volle Ladung hält ca. 6 Tage.</li>
-        <li>Langsam blinkendes rotes Licht = Akku niedrig. QR-Code auf der Rückseite für Status/Diagnose.</li>
+        <li>${t("mehr.tracker.1")}</li>
+        <li>${t("mehr.tracker.2")}</li>
+        <li>${t("mehr.tracker.3")}</li>
+        <li>${t("mehr.tracker.4")}</li>
+        <li>${t("mehr.tracker.5")}</li>
+        <li>${t("mehr.tracker.6")}</li>
       </ul>
     </div>
   </div>
 
   <div class="acc" id="acc-outta">
-    <button class="acc-head"><span class="ico">💬</span><b>Kommunikation · OUTTA-App</b><span class="chev">›</span></button>
+    <button class="acc-head"><span class="ico">💬</span><b>${t("mehr.outta.title")}</b><span class="chev">›</span></button>
     <div class="acc-body">
-      <p>Pflicht: App vor Start installieren & dem SNEAK-PEAKS-Event beitreten. Sämtliche Kommunikation während des Events (Streckenupdates, Wetterwarnungen, Nachrichten zwischen Fahrer:innen) läuft über diese App.</p>
+      <p>${t("mehr.outta.text")}</p>
     </div>
   </div>
 
   <div class="acc" id="acc-safety">
-    <button class="acc-head"><span class="ico">🛟</span><b>Sicherheit &amp; Abbruch</b><span class="chev">›</span></button>
+    <button class="acc-head"><span class="ico">🛟</span><b>${t("mehr.safety.title")}</b><span class="chev">›</span></button>
     <div class="acc-body">
-      <p><b>„Do not risk anything.“</b> Es gibt keine Notwendigkeit, Risiken einzugehen. Bei unsicherem Abschnitt: auf eine andere Person warten, gemeinsam überqueren.</p>
-      <div class="subtitle">Bei Abbruch</div>
+      <p><b>„Do not risk anything.“</b> ${t("mehr.safety.intro")}</p>
+      <div class="subtitle">${t("mehr.safety.abort")}</div>
       <ul>
-        <li>Niemals abends/nachts abbrechen — Unterschlupf suchen, ausruhen, bei Sonnenaufgang neu entscheiden.</li>
-        <li>Sofort per E-Mail oder WhatsApp Bescheid geben — sonst gilt man als vermisst.</li>
+        <li>${t("mehr.safety.a1")}</li>
+        <li>${t("mehr.safety.a2")}</li>
       </ul>
-      <div class="subtitle">Kontakt</div>
+      <div class="subtitle">${t("mehr.safety.contact")}</div>
       <p><a href="mailto:info@orbit360.cc">info@orbit360.cc</a></p>
     </div>
   </div>
 
   <div class="acc" id="acc-exit">
-    <button class="acc-head"><span class="ico">🚪</span><b>Alle Exit-Optionen</b><span class="chev">›</span></button>
+    <button class="acc-head"><span class="ico">🚪</span><b>${t("mehr.exit.title")}</b><span class="chev">›</span></button>
     <div class="acc-body">
-      ${Object.values(EXIT).map(e=>`<div class="schedule-row"><div class="schedule-time mono" style="min-width:52px">km ${e.km}</div><div class="schedule-what"><b>${e.name}</b><br>${e.text}</div></div>`).join("")}
-      <p style="margin-top:10px">Regionalzüge in Südtirol/Trentino nehmen i. d. R. Räder mit. Fahrpläne: trenitalia.com &amp; suedtirolmobil.info. Busse nehmen meist keine Räder mit.</p>
-      <p style="margin-top:10px;font-size:13.5px;"><a href="${KOMOOT_EXIT_URL}" target="_blank" rel="noopener">🗺️ Alle Exit-Routen auf Komoot</a></p>
+      ${Object.values(EXIT).map(e=>`<div class="schedule-row"><div class="schedule-time mono" style="min-width:52px">km ${e.km}</div><div class="schedule-what"><b>${e.name}</b><br>${tf(e.text)}</div></div>`).join("")}
+      <p style="margin-top:10px">${t("mehr.exit.trains")}</p>
+      <p style="margin-top:10px;font-size:13.5px;"><a href="${KOMOOT_EXIT_URL}" target="_blank" rel="noopener">${t("mehr.exit.komoot")}</a></p>
     </div>
   </div>
 
   <div class="acc" id="acc-bike">
-    <button class="acc-head"><span class="ico">🚲</span><b>Bike &amp; Ausrüstungstipps</b><span class="chev">›</span></button>
+    <button class="acc-head"><span class="ico">🚲</span><b>${t("mehr.bike.title")}</b><span class="chev">›</span></button>
     <div class="acc-body">
       <ul>
-        <li>Reifenfreiheit mind. 45 mm (ideal 50 mm), niedrige Übersetzung (vorne ~34/36, hinten 50/52).</li>
-        <li>Setup „leicht & schnell“ passt gut zu den Resupply-Punkten — aber Wetterumschwung einplanen.</li>
-        <li>Keine Extra-Schuhe fürs Hike-a-Bike — stattdessen MTB-Schuhe wählen, in denen man laufen kann.</li>
-        <li>Vorsicht bei Drainage-Kanälen quer zur Fahrbahn auf steilen Abfahrten.</li>
+        <li>${t("mehr.bike.1")}</li>
+        <li>${t("mehr.bike.2")}</li>
+        <li>${t("mehr.bike.3")}</li>
+        <li>${t("mehr.bike.4")}</li>
       </ul>
     </div>
   </div>
 
   <div class="acc" id="acc-profile">
-    <button class="acc-head"><span class="ico">👤</span><b>Dein Profil</b><span class="chev">›</span></button>
+    <button class="acc-head"><span class="ico">👤</span><b>${t("mehr.profile.title")}</b><span class="chev">›</span></button>
     <div class="acc-body">
-      <p style="font-size:13.5px;line-height:1.6;">${PROFILE ? `${escHtml(PROFILE.name)} · ${ROUTE_DEFS[PROFILE.routeId]?ROUTE_DEFS[PROFILE.routeId].title:"?"} · ${DAYS.length} Tage` : "Kein Profil gespeichert."}</p>
-      <p style="font-size:12px;color:var(--mist);margin:6px 0 12px;">Bleibt nur auf diesem Gerät gespeichert (lokaler Speicher, kein Server). „Zurücksetzen“ löscht es hier und startet das Setup neu.</p>
-      <button class="emergency-coords-btn" type="button" id="profileResetBtn" style="width:100%;">🔄 Profil zurücksetzen</button>
+      <p style="font-size:13.5px;line-height:1.6;">${PROFILE ? `${escHtml(PROFILE.name)} · ${ROUTE_DEFS[PROFILE.routeId]?tf(ROUTE_DEFS[PROFILE.routeId].title):"?"} · ${DAYS.length} ${t("word.days")}` : t("mehr.profile.none")}</p>
+      <p style="font-size:12px;color:var(--mist);margin:6px 0 12px;">${t("mehr.profile.note")}</p>
+      <button class="emergency-coords-btn" type="button" id="profileResetBtn" style="width:100%;">${t("mehr.profile.reset")}</button>
     </div>
   </div>
   `;
@@ -2203,7 +2459,7 @@ function renderMehr(){
   bindAccordions();
   const resetBtn = $("#profileResetBtn");
   if(resetBtn) resetBtn.onclick = ()=>{
-    if(confirm("Profil wirklich zurücksetzen? Name und Routenwahl gehen verloren.")){
+    if(confirm(t("mehr.profile.confirm"))){
       clearProfile();
       PROFILE = null;
       openOnboarding();
@@ -2213,7 +2469,7 @@ function renderMehr(){
 let checkedGear = new Set();
 function renderGear(){
   const wrap = $("#gearList");
-  wrap.innerHTML = GEAR_MUST.map((g,i)=>`<div class="gear-item${checkedGear.has(i)?" checked":""}" data-i="${i}"><div class="gear-box">${checkedGear.has(i)?"✓":""}</div><span>${g}</span></div>`).join("");
+  wrap.innerHTML = GEAR_MUST.map((g,i)=>`<div class="gear-item${checkedGear.has(i)?" checked":""}" data-i="${i}"><div class="gear-box">${checkedGear.has(i)?"✓":""}</div><span>${tf(g)}</span></div>`).join("");
   updateGearCount();
   $$("#gearList .gear-item").forEach(el=>{
     el.onclick=()=>{
@@ -2228,7 +2484,7 @@ function renderGear(){
 function updateGearCount(){
   const total = GEAR_MUST.length;
   const done = $$("#gearList .gear-item.checked").length;
-  $("#gearCount").textContent = `${done} von ${total} bestätigt`;
+  $("#gearCount").textContent = `${done} ${t("gear.of")} ${total} ${t("gear.confirmed")}`;
 }
 
 /* ======================= INTERAKTION ======================= */
@@ -2250,18 +2506,18 @@ function bindAccordions(){
 
 /* ======================= TAGEBUCH (alles lokal, localStorage) ======================= */
 const DIARY_QUESTIONS = [
-  {id:"moment", text:"Welcher Moment bleibt dir von heute?"},
-  {id:"oneword", text:"Heute in einem Wort — und warum?"},
-  {id:"learning", text:"Bestes Learning heute?"},
-  {id:"pain", text:"Was hat heute richtig wehgetan?"},
-  {id:"laugh", text:"Worüber hast du heute gelacht?"},
-  {id:"painlevel", text:"Schmerz-Level gerade, 1–10 — und wo?"},
-  {id:"tomorrow", text:"Ein Satz an dich selbst für morgen früh"},
-  {id:"climb", text:"Krassester Anstieg oder krasseste Abfahrt bisher?"},
-  {id:"unused", text:"Was hast du dabei, das du nicht gebraucht hast?"},
-  {id:"savior", text:"Wer oder was hat dich heute gerettet?"},
-  {id:"sensory", text:"Ein Geräusch, Geruch oder Bild, das hängen bleibt"},
-  {id:"advice", text:"Was würdest du jemandem sagen, der morgen startet?"},
+  {id:"moment", text:{de:"Welcher Moment bleibt dir von heute?", en:"Which moment from today will stay with you?"}},
+  {id:"oneword", text:{de:"Heute in einem Wort — und warum?", en:"Today in one word — and why?"}},
+  {id:"learning", text:{de:"Bestes Learning heute?", en:"Best thing you learned today?"}},
+  {id:"pain", text:{de:"Was hat heute richtig wehgetan?", en:"What really hurt today?"}},
+  {id:"laugh", text:{de:"Worüber hast du heute gelacht?", en:"What made you laugh today?"}},
+  {id:"painlevel", text:{de:"Schmerz-Level gerade, 1–10 — und wo?", en:"Pain level right now, 1–10 — and where?"}},
+  {id:"tomorrow", text:{de:"Ein Satz an dich selbst für morgen früh", en:"One sentence to yourself for tomorrow morning"}},
+  {id:"climb", text:{de:"Krassester Anstieg oder krasseste Abfahrt bisher?", en:"Craziest climb or descent so far?"}},
+  {id:"unused", text:{de:"Was hast du dabei, das du nicht gebraucht hast?", en:"What did you bring that you didn't need?"}},
+  {id:"savior", text:{de:"Wer oder was hat dich heute gerettet?", en:"Who or what saved you today?"}},
+  {id:"sensory", text:{de:"Ein Geräusch, Geruch oder Bild, das hängen bleibt", en:"A sound, smell or sight that will stick with you"}},
+  {id:"advice", text:{de:"Was würdest du jemandem sagen, der morgen startet?", en:"What would you tell someone starting tomorrow?"}},
 ];
 const DIARY_QUESTIONS_PER_DAY = 4;
 function loadDiaryEntries(){ try{ return JSON.parse(localStorage.getItem("entree_diary_entries_v1")||"[]"); }catch(e){ return []; } }
@@ -2312,7 +2568,7 @@ function nearestRouteLabel(lat, lon){
     const dist = haversineKm(lat, lon, c.lat, c.lon);
     if(dist<nearestDist){ nearestDist=dist; nearest=id; }
   });
-  return nearest ? `≈ ${nearestDist.toFixed(1)} km von ${nameOfId(nearest)}` : "";
+  return nearest ? `≈ ${nearestDist.toFixed(1)} km ${t("diary.near")} ${nameOfId(nearest)}` : "";
 }
 function captureDiaryLocation(cb){
   if(!("geolocation" in navigator)){ cb(null); return; }
@@ -2341,7 +2597,7 @@ function submitDiaryAnswer(item, answerText){
       if(it) it.answered = true;
       saveDiarySchedule(sched);
     }
-    toast("Eintrag gespeichert");
+    toast(t("diary.saved"));
     renderDiary();
     updateDiaryDot();
   });
@@ -2360,43 +2616,43 @@ function diaryMapSvg(entries){
 }
 function fmtDiaryTime(iso){
   const d = new Date(iso);
-  return d.toLocaleString("de-DE", {day:"2-digit", month:"2-digit", hour:"2-digit", minute:"2-digit"});
+  return d.toLocaleString(LANG==='de'?'de-DE':'en-US', {day:"2-digit", month:"2-digit", hour:"2-digit", minute:"2-digit"});
 }
 function renderDiary(){
   const entries = loadDiaryEntries();
   const pending = getPendingDiaryItem();
   const upcoming = getNextUpcomingDiaryItem();
 
-  let h = `<div class="daypills">` + DAYS.map(d=>`<button class="daypill${d.n===diaryDay?" active":""}" data-diaryday="${d.n}" type="button"><b>${d.n}</b><span>Tag</span></button>`).join("") + `</div>`;
+  let h = `<div class="daypills">` + DAYS.map(d=>`<button class="daypill${d.n===diaryDay?" active":""}" data-diaryday="${d.n}" type="button"><b>${d.n}</b><span>${t("word.day")}</span></button>`).join("") + `</div>`;
 
   if(pending){
     h += `<div class="diary-qcard">
-      <div class="diary-qcard-eyebrow">Frage · Tag ${diaryDay}</div>
-      <div class="diary-qcard-q">${escHtml(pending.qText)}</div>
-      <textarea class="diary-textarea" id="diaryAnswerInput" placeholder="Schreib, was dir gerade durch den Kopf geht …" maxlength="500"></textarea>
-      <div class="diary-qcard-meta">📍 Standort wird beim Speichern automatisch erfasst — optional, klappt auch ohne.</div>
+      <div class="diary-qcard-eyebrow">${t("word.question")} · ${t("word.day")} ${diaryDay}</div>
+      <div class="diary-qcard-q">${escHtml(tf(pending.qText))}</div>
+      <textarea class="diary-textarea" id="diaryAnswerInput" placeholder="${t("diary.placeholder")}" maxlength="500"></textarea>
+      <div class="diary-qcard-meta">${t("diary.locmeta")}</div>
       <div class="diary-qcard-actions">
-        <button class="ob-btn primary" id="diarySaveBtn" type="button">Speichern</button>
+        <button class="ob-btn primary" id="diarySaveBtn" type="button">${t("diary.save")}</button>
       </div>
     </div>`;
   } else {
     h += `<div class="diary-waiting">
       <div class="diary-waiting-icon">📓</div>
-      <div class="diary-waiting-text">${upcoming ? "Die nächste Frage taucht zu einem unregelmäßigen Moment im Lauf des Tages auf — schau später nochmal vorbei." : "Für Tag "+diaryDay+" sind alle Fragen beantwortet. Stark!"}</div>
-      ${upcoming ? `<button class="ob-btn ghost" id="diaryRevealBtn" type="button">Ich will jetzt schreiben</button>` : ""}
+      <div class="diary-waiting-text">${upcoming ? t("diary.waiting") : `${t("diary.for")} ${t("word.day")} ${diaryDay} ${t("diary.alldone")}`}</div>
+      ${upcoming ? `<button class="ob-btn ghost" id="diaryRevealBtn" type="button">${t("diary.writenow")}</button>` : ""}
     </div>`;
   }
 
   if(entries.some(e=>e.lat!=null)){
-    h += `<p class="eyebrow">🗺️ Deine Route-Momente</p><div class="diary-mapwrap">${diaryMapSvg(entries)}</div>`;
+    h += `<p class="eyebrow">${t("diary.moments")}</p><div class="diary-mapwrap">${diaryMapSvg(entries)}</div>`;
   }
 
-  h += `<p class="eyebrow">📖 Bisherige Einträge</p>`;
+  h += `<p class="eyebrow">${t("diary.entries")}</p>`;
   h += !entries.length
-    ? `<div class="diary-empty">Noch keine Einträge — die erste Frage kommt bald.</div>`
+    ? `<div class="diary-empty">${t("diary.noentries")}</div>`
     : entries.map(e=>`<div class="diary-entry">
-        <div class="diary-entry-top"><span class="diary-entry-day">Tag ${e.day}</span><span class="diary-entry-time">${fmtDiaryTime(e.ts)}</span></div>
-        <div class="diary-entry-q">${escHtml(e.qText)}</div>
+        <div class="diary-entry-top"><span class="diary-entry-day">${t("word.day")} ${e.day}</span><span class="diary-entry-time">${fmtDiaryTime(e.ts)}</span></div>
+        <div class="diary-entry-q">${escHtml(tf(e.qText))}</div>
         <div class="diary-entry-a">${escHtml(e.answer)}</div>
         ${e.nearLabel?`<div class="diary-entry-loc">📍 ${escHtml(e.nearLabel)}</div>`:""}
       </div>`).join("");
@@ -2412,10 +2668,10 @@ function bindDiaryEvents(){
   const saveBtn = $("#diarySaveBtn");
   if(saveBtn) saveBtn.onclick = ()=>{
     const input = $("#diaryAnswerInput");
-    if(!input.value.trim()){ toast("Schreib kurz was — oder komm später wieder."); return; }
+    if(!input.value.trim()){ toast(t("diary.emptyanswer")); return; }
     const item = getPendingDiaryItem();
     if(!item) return;
-    saveBtn.disabled = true; saveBtn.textContent = "Speichert …";
+    saveBtn.disabled = true; saveBtn.textContent = t("diary.saving");
     submitDiaryAnswer(item, input.value);
   };
   const revealBtn = $("#diaryRevealBtn");
@@ -2462,30 +2718,30 @@ function renderObProgress(){
 }
 function obWelcomeHtml(){
   return `<div class="ob-step">
-    <div class="ob-eyebrow">Willkommen</div>
-    <div class="ob-title">Dein persönliches<br><b>ENTREE Feldbuch</b></div>
-    <div class="ob-desc">Ein kurzes, einmaliges Setup — danach merkt sich die App alles auf diesem Gerät. Kein Konto, kein Server, alles bleibt bei dir.</div>
-    <input class="ob-input" id="obNameInput" type="text" placeholder="Dein Name" maxlength="30" autocomplete="given-name" value="${escHtml(obState.name)}">
-    <div class="ob-hint">Optional — nur für die Begrüßung im Dashboard.</div>
+    <div class="ob-eyebrow">${t("ob.welcome")}</div>
+    <div class="ob-title">${t("ob.welcometitle")}</div>
+    <div class="ob-desc">${t("ob.welcomedesc")}</div>
+    <input class="ob-input" id="obNameInput" type="text" placeholder="${t("ob.nameplaceholder")}" maxlength="30" autocomplete="given-name" value="${escHtml(obState.name)}">
+    <div class="ob-hint">${t("ob.namehint")}</div>
     <div class="ob-spacer"></div>
-    <button class="ob-btn primary" id="obNext1" type="button">Los geht's →</button>
+    <button class="ob-btn primary" id="obNext1" type="button">${t("ob.next")}</button>
   </div>`;
 }
 function obRouteHtml(){
   const cards = Object.values(ROUTE_DEFS).map(r=>`
     <div class="ob-routecard ${obState.routeId===r.id?"selected":""}" data-route="${r.id}" tabindex="0" role="button">
-      <div class="ob-routecard-top"><span class="ob-routecard-title">${r.title}</span><span class="ob-routecard-tag">${r.tag}</span></div>
-      <div class="ob-routecard-desc">${r.desc}</div>
-      <a class="ob-routecard-link" href="${r.komoot()}" target="_blank" rel="noopener" data-stop="1">Route auf Komoot ansehen ↗</a>
+      <div class="ob-routecard-top"><span class="ob-routecard-title">${tf(r.title)}</span><span class="ob-routecard-tag">${tf(r.tag)}</span></div>
+      <div class="ob-routecard-desc">${tf(r.desc)}</div>
+      <a class="ob-routecard-link" href="${r.komoot()}" target="_blank" rel="noopener" data-stop="1">${t("ob.komootlink")}</a>
     </div>`).join("");
   return `<div class="ob-step">
     <button class="ob-back" id="obBack2" type="button">‹</button>
-    <div class="ob-eyebrow">Schritt ${obActiveSteps().indexOf("route")+1} von ${obActiveSteps().length}</div>
-    <div class="ob-title">Welche Route<br>fährst du?</div>
-    <div class="ob-desc">Alle drei führen über dieselbe Strecke — nur Tempo und Tagesaufteilung unterscheiden sich.</div>
+    <div class="ob-eyebrow">${t("ob.step")} ${obActiveSteps().indexOf("route")+1} ${t("ob.of")} ${obActiveSteps().length}</div>
+    <div class="ob-title">${t("ob.routetitle")}</div>
+    <div class="ob-desc">${t("ob.routedesc")}</div>
     ${cards}
     <div class="ob-spacer"></div>
-    <button class="ob-btn primary" id="obNext2" type="button" ${obState.routeId?"":'disabled style="opacity:.4"'}>Weiter →</button>
+    <button class="ob-btn primary" id="obNext2" type="button" ${obState.routeId?"":'disabled style="opacity:.4"'}>${t("ob.next2")}</button>
   </div>`;
 }
 function obDaysHtml(){
@@ -2497,35 +2753,35 @@ function obDaysHtml(){
         <div class="ob-cprow-name">${cp.label}</div>
         <div class="ob-cprow-sub">km ${cp.km} · ${fmtM(cp.alt)}</div>
       </div>
-      <button class="ob-toggle ${on?"on":""}" data-cp="${id}" type="button" aria-label="Tagesende bei ${cp.label}" aria-pressed="${on}"></button>
+      <button class="ob-toggle ${on?"on":""}" data-cp="${id}" type="button" aria-label="${t("ob.dayendlabel")} ${cp.label}" aria-pressed="${on}"></button>
     </div>`;
   }).join("");
   const days = buildCustomDays([...obState.boundaries, "finish"]);
-  const summary = days.map(d=>`<div class="ob-summary-row"><span>Tag ${d.n} · ${d.from} → ${d.to}</span><b>${d.km} km</b></div>`).join("");
+  const summary = days.map(d=>`<div class="ob-summary-row"><span>${t("word.day")} ${d.n} · ${d.from} → ${d.to}</span><b>${d.km} km</b></div>`).join("");
   return `<div class="ob-step">
     <button class="ob-back" id="obBack3" type="button">‹</button>
-    <div class="ob-eyebrow">Schritt ${obActiveSteps().indexOf("days")+1} von ${obActiveSteps().length}</div>
-    <div class="ob-title">Wo endet<br>dein Tag?</div>
-    <div class="ob-desc">Wähle, an welchen Checkpoints du übernachten willst. Alle sind vorausgewählt (kürzeste Tage) — schalte welche aus, um Tage zusammenzulegen.</div>
+    <div class="ob-eyebrow">${t("ob.step")} ${obActiveSteps().indexOf("days")+1} ${t("ob.of")} ${obActiveSteps().length}</div>
+    <div class="ob-title">${t("ob.daystitle")}</div>
+    <div class="ob-desc">${t("ob.daysdesc")}</div>
     <div class="ob-cplist">${rows}</div>
-    <div class="ob-summary"><div class="ob-summary-head">${days.length} Tage geplant</div>${summary}</div>
+    <div class="ob-summary"><div class="ob-summary-head">${days.length} ${t("word.daysplanned")}</div>${summary}</div>
     <div class="ob-spacer"></div>
-    <button class="ob-btn primary" id="obNext3" type="button">Weiter →</button>
+    <button class="ob-btn primary" id="obNext3" type="button">${t("ob.next2")}</button>
   </div>`;
 }
 function obConfirmHtml(){
-  const name = obState.name.trim() || "Rider";
+  const name = obState.name.trim() || t("ob.rider");
   const routeDef = ROUTE_DEFS[obState.routeId];
   const days = previewDaysForRoute(obState.routeId, obState.boundaries);
-  const rows = days.map(d=>`<div class="ob-dayrow"><div class="ob-dayrow-route">Tag ${d.n} · ${d.from} → ${d.to}</div><div class="ob-dayrow-stats">${d.km} km · +${d.up} / −${d.down} Hm</div></div>`).join("");
+  const rows = days.map(d=>`<div class="ob-dayrow"><div class="ob-dayrow-route">${t("word.day")} ${d.n} · ${d.from} → ${d.to}</div><div class="ob-dayrow-stats">${d.km} km · +${d.up} / −${d.down} ${t("unit.hm")}</div></div>`).join("");
   return `<div class="ob-step">
     <button class="ob-back" id="obBack4" type="button">‹</button>
-    <div class="ob-eyebrow">Alles bereit</div>
+    <div class="ob-eyebrow">${t("ob.ready")}</div>
     <div class="ob-greeting-preview">Hey ${escHtml(name)} 👋</div>
-    <div class="ob-desc">${routeDef.title} · ${days.length} Tage · 495 km gesamt</div>
+    <div class="ob-desc">${tf(routeDef.title)} · ${days.length} ${t("word.days")} · 495 ${t("ob.total")}</div>
     <div class="ob-daylist">${rows}</div>
     <div class="ob-spacer"></div>
-    <button class="ob-btn primary" id="obFinish" type="button">Los geht's 🚵</button>
+    <button class="ob-btn primary" id="obFinish" type="button">${t("ob.finish")}</button>
   </div>`;
 }
 function renderOnboarding(){
@@ -2580,7 +2836,7 @@ function bindOnboardingStep(){
 }
 function finishOnboarding(){
   const profile = {
-    v:1, name:(obState.name||"").trim() || "Rider",
+    v:1, name:(obState.name||"").trim() || t("ob.rider"),
     routeId: obState.routeId,
     boundaries: ROUTE_DEFS[obState.routeId].needsDays ? [...obState.boundaries, "finish"] : []
   };
@@ -2608,6 +2864,17 @@ function closeOnboarding(){
 window.openOnboarding = openOnboarding; // fuer den "Profil zuruecksetzen"-Link im Mehr-Tab
 
 /* Init */
+setLang(LANG);
+applyStaticI18n();
+function toggleLang(){
+  setLang(LANG==="de" ? "en" : "de");
+  applyStaticI18n();
+  const activeTab = document.querySelector(".tabbtn.active");
+  if(activeTab && TAB_RENDER[activeTab.dataset.tab]) TAB_RENDER[activeTab.dataset.tab]();
+  if(document.getElementById("onboarding").classList.contains("show")) renderOnboarding();
+}
+$("#langToggle").onclick = toggleLang;
+$("#langToggleOb").onclick = toggleLang;
 if(PROFILE && PROFILE.routeId && ROUTE_DEFS[PROFILE.routeId]){
   applyRouteConfig(PROFILE.routeId, PROFILE.boundaries||[]);
   renderHeute();
