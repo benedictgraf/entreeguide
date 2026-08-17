@@ -144,6 +144,28 @@ main{flex:1; overflow-y:auto; padding:16px var(--pad) 110px; -webkit-overflow-sc
 .emergency-coords-btn{flex:1; appearance:none; background:var(--slate2); border:1px solid var(--line); border-radius:var(--r-md); color:var(--fog); font-size:13px; font-weight:700; padding:10px 8px;}
 .emergency-coords-btn:active{opacity:.7;}
 
+/* DIARY */
+.diary-qcard{border-radius:var(--r-lg); padding:18px; margin-bottom:18px; background:linear-gradient(155deg, rgba(207,255,77,.16), rgba(207,255,77,.03)); border:1px solid rgba(207,255,77,.4);}
+.diary-qcard-eyebrow{font-size:11px; font-weight:800; letter-spacing:.08em; text-transform:uppercase; color:var(--acid); margin-bottom:10px;}
+.diary-qcard-q{font-family:var(--font-display); font-size:20px; font-weight:800; line-height:1.3; margin-bottom:14px;}
+.diary-textarea{width:100%; min-height:96px; appearance:none; background:var(--slate2); border:1.5px solid var(--line); border-radius:var(--r-md); padding:13px 14px; font-size:15px; color:var(--fog); font-family:inherit; line-height:1.5; resize:vertical;}
+.diary-textarea:focus{outline:none; border-color:var(--acid);}
+.diary-qcard-meta{font-size:11.5px; color:var(--mist); margin-top:10px;}
+.diary-qcard-actions{display:flex; gap:8px; margin-top:14px;}
+.diary-waiting{border-radius:var(--r-lg); padding:22px 18px; margin-bottom:18px; background:var(--slate); border:1px solid var(--line); text-align:center;}
+.diary-waiting-icon{font-size:30px; margin-bottom:10px;}
+.diary-waiting-text{font-size:13.5px; color:var(--mist); line-height:1.6; margin-bottom:14px;}
+.diary-mapwrap{width:100%; aspect-ratio:1/1; max-width:280px; margin:0 auto 20px; display:block;}
+.diary-entry{border-bottom:1px solid var(--line); padding:14px 0;}
+.diary-entry:last-child{border-bottom:none;}
+.diary-entry-top{display:flex; justify-content:space-between; align-items:baseline; gap:8px; margin-bottom:5px;}
+.diary-entry-day{font-size:10.5px; font-weight:800; letter-spacing:.05em; text-transform:uppercase; color:var(--flare);}
+.diary-entry-time{font-size:11px; color:var(--mist); font-family:ui-monospace,monospace;}
+.diary-entry-q{font-size:13px; font-weight:700; color:var(--mist); margin-bottom:4px;}
+.diary-entry-a{font-size:14.5px; line-height:1.5;}
+.diary-entry-loc{font-size:11px; color:var(--mist); margin-top:6px;}
+.diary-empty{text-align:center; color:var(--mist); font-size:13px; padding:30px 10px;}
+
 /* CARDS */
 .card{background:var(--slate); border:1px solid var(--line); border-radius:var(--r-lg); padding:16px; margin-bottom:12px;}
 .sleep-card{border-radius:var(--r-lg); padding:16px; margin-bottom:12px; border:1px solid; position:relative;}
@@ -232,11 +254,12 @@ main{flex:1; overflow-y:auto; padding:16px var(--pad) 110px; -webkit-overflow-sc
 
 /* TAB BAR */
 nav#tabbar{position:fixed; left:0; right:0; bottom:0; z-index:20; display:flex; background:rgba(15,17,25,.92); backdrop-filter:blur(14px); border-top:1px solid var(--line); padding:6px 4px calc(env(safe-area-inset-bottom) + 6px);}
-.tabbtn{flex:1; display:flex; flex-direction:column; align-items:center; gap:2px; background:none; border:none; padding:7px 2px; border-radius:12px; color:var(--mist);}
+.tabbtn{position:relative; flex:1; display:flex; flex-direction:column; align-items:center; gap:2px; background:none; border:none; padding:7px 2px; border-radius:12px; color:var(--mist);}
 .tabbtn .ic{font-size:19px; line-height:1;}
 .tabbtn .lb{font-size:10px; font-weight:700; letter-spacing:.02em;}
 .tabbtn.active{color:var(--flare);}
 .tabbtn:active{background:var(--slate2);}
+.tabdot{position:absolute; top:3px; right:calc(50% - 20px); width:8px; height:8px; border-radius:50%; background:var(--flare); box-shadow:0 0 0 2px rgba(15,17,25,.92);}
 
 /* SHEET / MODAL */
 #backdrop{position:fixed; inset:0; background:rgba(0,0,0,.55); opacity:0; pointer-events:none; transition:opacity .2s; z-index:29;}
@@ -423,8 +446,13 @@ nav#tabbar{position:fixed; left:0; right:0; bottom:0; z-index:20; display:flex; 
     </section>
 
     <section class="view" id="view-schlafen">
-      <p class="eyebrow">5 Nächte im Überblick</p>
+      <p class="eyebrow" id="schlafenEyebrow">Nächte im Überblick</p>
       <div id="schlafenBody"></div>
+    </section>
+
+    <section class="view" id="view-diary">
+      <p class="eyebrow">Dein Etappen-Tagebuch</p>
+      <div id="diaryBody"></div>
     </section>
 
     <section class="view" id="view-mehr">
@@ -440,6 +468,7 @@ nav#tabbar{position:fixed; left:0; right:0; bottom:0; z-index:20; display:flex; 
     <button class="tabbtn" data-tab="cp"><span class="ic">📍</span><span class="lb">Checkpoints</span></button>
     <button class="tabbtn" data-tab="resupply"><span class="ic">🥖</span><span class="lb">Resupply</span></button>
     <button class="tabbtn" data-tab="schlafen"><span class="ic">⛺</span><span class="lb">Schlafen</span></button>
+    <button class="tabbtn" data-tab="diary"><span class="ic">📓</span><span class="lb">Tagebuch</span><span class="tabdot" id="diaryDot" hidden></span></button>
     <button class="tabbtn" data-tab="mehr"><span class="ic">☰</span><span class="lb">Mehr</span></button>
   </nav>
 </div>
@@ -924,6 +953,7 @@ function applyRouteConfig(routeId, boundaryCpIds){
   ELEV = elev;
   WEATHER_LOC = buildCustomWeatherLoc(DAYS);
   if(activeDay>DAYS.length) activeDay = DAYS.length;
+  if(typeof diaryDay!=="undefined" && diaryDay>DAYS.length) diaryDay = DAYS.length;
 }
 
 function buildMapGeometry(){
@@ -1972,6 +2002,7 @@ function renderResupply(){
 
 /* ======================= RENDER: SCHLAFEN ======================= */
 function renderSchlafen(){
+  $("#schlafenEyebrow").textContent = `${DAYS.length} Nächte im Überblick`;
   let h="";
   DAYS.forEach(d=>{
     h += `<p class="eyebrow">Nach Tag ${d.n}</p>
@@ -2137,11 +2168,186 @@ function bindAccordions(){
   });
 }
 
-const TAB_RENDER = {heute:renderHeute, cp:renderCP, resupply:renderResupply, schlafen:renderSchlafen, mehr:renderMehr};
+/* ======================= TAGEBUCH (alles lokal, localStorage) ======================= */
+const DIARY_QUESTIONS = [
+  {id:"moment", text:"Welcher Moment bleibt dir von heute?"},
+  {id:"oneword", text:"Heute in einem Wort — und warum?"},
+  {id:"learning", text:"Bestes Learning heute?"},
+  {id:"pain", text:"Was hat heute richtig wehgetan?"},
+  {id:"laugh", text:"Worüber hast du heute gelacht?"},
+  {id:"painlevel", text:"Schmerz-Level gerade, 1–10 — und wo?"},
+  {id:"tomorrow", text:"Ein Satz an dich selbst für morgen früh"},
+  {id:"climb", text:"Krassester Anstieg oder krasseste Abfahrt bisher?"},
+  {id:"unused", text:"Was hast du dabei, das du nicht gebraucht hast?"},
+  {id:"savior", text:"Wer oder was hat dich heute gerettet?"},
+  {id:"sensory", text:"Ein Geräusch, Geruch oder Bild, das hängen bleibt"},
+  {id:"advice", text:"Was würdest du jemandem sagen, der morgen startet?"},
+];
+const DIARY_QUESTIONS_PER_DAY = 4;
+function loadDiaryEntries(){ try{ return JSON.parse(localStorage.getItem("entree_diary_entries_v1")||"[]"); }catch(e){ return []; } }
+function saveDiaryEntries(arr){ try{ localStorage.setItem("entree_diary_entries_v1", JSON.stringify(arr)); }catch(e){} }
+function loadDiarySchedule(){ try{ return JSON.parse(localStorage.getItem("entree_diary_schedule_v1")||"{}"); }catch(e){ return {}; } }
+function saveDiarySchedule(s){ try{ localStorage.setItem("entree_diary_schedule_v1", JSON.stringify(s)); }catch(e){} }
+function loadDiaryDay(){ const n = parseInt(localStorage.getItem("entree_diary_day_v1")||"1",10); return Math.max(1, Math.min(DAYS.length, n||1)); }
+function saveDiaryDay(n){ try{ localStorage.setItem("entree_diary_day_v1", String(n)); }catch(e){} }
+let diaryDay = 1;
+function ensureDiarySchedule(day){
+  const sched = loadDiarySchedule();
+  if(sched[day]) return sched[day];
+  const pool = [...DIARY_QUESTIONS].sort(()=>Math.random()-0.5).slice(0, DIARY_QUESTIONS_PER_DAY);
+  const now = Date.now();
+  // Unregelmaessige Zeitpunkte ueber den Tag verteilt (20 Min. bis 6 Std. nach Erzeugung),
+  // keine Push-Benachrichtigung noetig - der rote Punkt am Tab zeigt, wenn eine faellig ist.
+  const items = pool.map(q=>({qId:q.id, qText:q.text, dueAt: now + (20 + Math.random()*340)*60000, answered:false}))
+    .sort((a,b)=>a.dueAt-b.dueAt);
+  sched[day] = {items, generatedAt:now};
+  saveDiarySchedule(sched);
+  return sched[day];
+}
+function getPendingDiaryItem(){
+  const sched = ensureDiarySchedule(diaryDay);
+  const now = Date.now();
+  return sched.items.find(it=>!it.answered && it.dueAt<=now) || null;
+}
+function getNextUpcomingDiaryItem(){
+  const sched = ensureDiarySchedule(diaryDay);
+  return sched.items.find(it=>!it.answered) || null;
+}
+function revealNextDiaryQuestionNow(){
+  const sched = loadDiarySchedule();
+  const day = sched[diaryDay];
+  if(!day) return;
+  const it = day.items.find(x=>!x.answered);
+  if(it){ it.dueAt = Date.now(); saveDiarySchedule(sched); renderDiary(); updateDiaryDot(); }
+}
+function updateDiaryDot(){
+  const dot = document.getElementById("diaryDot");
+  if(!dot) return;
+  dot.hidden = !getPendingDiaryItem();
+}
+function nearestRouteLabel(lat, lon){
+  let nearest=null, nearestDist=Infinity;
+  ROUTE_SEQ.forEach(id=>{
+    const c = COORDS[id]; if(!c) return;
+    const dist = haversineKm(lat, lon, c.lat, c.lon);
+    if(dist<nearestDist){ nearestDist=dist; nearest=id; }
+  });
+  return nearest ? `≈ ${nearestDist.toFixed(1)} km von ${nameOfId(nearest)}` : "";
+}
+function captureDiaryLocation(cb){
+  if(!("geolocation" in navigator)){ cb(null); return; }
+  navigator.geolocation.getCurrentPosition(
+    pos=> cb({lat:pos.coords.latitude, lon:pos.coords.longitude, acc:pos.coords.accuracy}),
+    ()=> cb(null),
+    {enableHighAccuracy:false, maximumAge:120000, timeout:6000}
+  );
+}
+function submitDiaryAnswer(item, answerText){
+  const text = answerText.trim();
+  if(!text) return;
+  captureDiaryLocation(loc=>{
+    const entries = loadDiaryEntries();
+    entries.unshift({
+      id: Date.now()+"-"+Math.random().toString(36).slice(2,7),
+      ts: new Date().toISOString(), day: diaryDay,
+      qId: item.qId, qText: item.qText, answer: text,
+      lat: loc?loc.lat:null, lon: loc?loc.lon:null, acc: loc?loc.acc:null,
+      nearLabel: loc ? nearestRouteLabel(loc.lat, loc.lon) : ""
+    });
+    saveDiaryEntries(entries);
+    const sched = loadDiarySchedule();
+    if(sched[diaryDay]){
+      const it = sched[diaryDay].items.find(x=>x.qId===item.qId && !x.answered);
+      if(it) it.answered = true;
+      saveDiarySchedule(sched);
+    }
+    toast("Eintrag gespeichert");
+    renderDiary();
+    updateDiaryDot();
+  });
+}
+function diaryMapSvg(entries){
+  const withLoc = entries.filter(e=>e.lat!=null);
+  if(!withLoc.length) return "";
+  const geom = buildMapGeometry();
+  const {proj, VBW, VBH} = geom;
+  const full = pathD(ROUTE_SEQ, proj);
+  const pins = withLoc.map(e=>{
+    const p = proj(e.lat, e.lon);
+    return `<circle cx="${p.x.toFixed(1)}" cy="${p.y.toFixed(1)}" r="6.5" fill="var(--acid)" stroke="#0B0D14" stroke-width="1.5"></circle>`;
+  }).join("");
+  return `<svg viewBox="0 0 ${VBW} ${VBH}"><rect width="${VBW}" height="${VBH}" rx="16" fill="#141824"/><path d="${full}" class="map-fullpath"/>${pins}</svg>`;
+}
+function fmtDiaryTime(iso){
+  const d = new Date(iso);
+  return d.toLocaleString("de-DE", {day:"2-digit", month:"2-digit", hour:"2-digit", minute:"2-digit"});
+}
+function renderDiary(){
+  const entries = loadDiaryEntries();
+  const pending = getPendingDiaryItem();
+  const upcoming = getNextUpcomingDiaryItem();
+
+  let h = `<div class="daypills">` + DAYS.map(d=>`<button class="daypill${d.n===diaryDay?" active":""}" data-diaryday="${d.n}" type="button"><b>${d.n}</b><span>Tag</span></button>`).join("") + `</div>`;
+
+  if(pending){
+    h += `<div class="diary-qcard">
+      <div class="diary-qcard-eyebrow">Frage · Tag ${diaryDay}</div>
+      <div class="diary-qcard-q">${escHtml(pending.qText)}</div>
+      <textarea class="diary-textarea" id="diaryAnswerInput" placeholder="Schreib, was dir gerade durch den Kopf geht …" maxlength="500"></textarea>
+      <div class="diary-qcard-meta">📍 Standort wird beim Speichern automatisch erfasst — optional, klappt auch ohne.</div>
+      <div class="diary-qcard-actions">
+        <button class="ob-btn primary" id="diarySaveBtn" type="button">Speichern</button>
+      </div>
+    </div>`;
+  } else {
+    h += `<div class="diary-waiting">
+      <div class="diary-waiting-icon">📓</div>
+      <div class="diary-waiting-text">${upcoming ? "Die nächste Frage taucht zu einem unregelmäßigen Moment im Lauf des Tages auf — schau später nochmal vorbei." : "Für Tag "+diaryDay+" sind alle Fragen beantwortet. Stark!"}</div>
+      ${upcoming ? `<button class="ob-btn ghost" id="diaryRevealBtn" type="button">Ich will jetzt schreiben</button>` : ""}
+    </div>`;
+  }
+
+  if(entries.some(e=>e.lat!=null)){
+    h += `<p class="eyebrow">🗺️ Deine Route-Momente</p><div class="diary-mapwrap">${diaryMapSvg(entries)}</div>`;
+  }
+
+  h += `<p class="eyebrow">📖 Bisherige Einträge</p>`;
+  h += !entries.length
+    ? `<div class="diary-empty">Noch keine Einträge — die erste Frage kommt bald.</div>`
+    : entries.map(e=>`<div class="diary-entry">
+        <div class="diary-entry-top"><span class="diary-entry-day">Tag ${e.day}</span><span class="diary-entry-time">${fmtDiaryTime(e.ts)}</span></div>
+        <div class="diary-entry-q">${escHtml(e.qText)}</div>
+        <div class="diary-entry-a">${escHtml(e.answer)}</div>
+        ${e.nearLabel?`<div class="diary-entry-loc">📍 ${escHtml(e.nearLabel)}</div>`:""}
+      </div>`).join("");
+
+  $("#diaryBody").innerHTML = h;
+  bindDiaryEvents();
+  updateDiaryDot();
+}
+function bindDiaryEvents(){
+  $$("#diaryBody [data-diaryday]").forEach(btn=>{
+    btn.onclick = ()=>{ diaryDay = +btn.dataset.diaryday; saveDiaryDay(diaryDay); renderDiary(); };
+  });
+  const saveBtn = $("#diarySaveBtn");
+  if(saveBtn) saveBtn.onclick = ()=>{
+    const input = $("#diaryAnswerInput");
+    if(!input.value.trim()){ toast("Schreib kurz was — oder komm später wieder."); return; }
+    const item = getPendingDiaryItem();
+    if(!item) return;
+    saveBtn.disabled = true; saveBtn.textContent = "Speichert …";
+    submitDiaryAnswer(item, input.value);
+  };
+  const revealBtn = $("#diaryRevealBtn");
+  if(revealBtn) revealBtn.onclick = ()=> revealNextDiaryQuestionNow();
+}
+
+const TAB_RENDER = {heute:renderHeute, cp:renderCP, resupply:renderResupply, schlafen:renderSchlafen, diary:renderDiary, mehr:renderMehr};
 function switchTab(name){
   $$(".tabbtn").forEach(b=>b.classList.toggle("active", b.dataset.tab===name));
   $$(".view").forEach(v=>v.classList.toggle("active", v.id==="view-"+name));
   TAB_RENDER[name]();
+  updateDiaryDot();
 }
 $$(".tabbtn").forEach(b=> b.onclick = ()=> switchTab(b.dataset.tab) );
 
@@ -2330,6 +2536,10 @@ if(PROFILE && PROFILE.routeId && ROUTE_DEFS[PROFILE.routeId]){
 } else {
   openOnboarding();
 }
+diaryDay = loadDiaryDay();
+updateDiaryDot();
+setInterval(updateDiaryDot, 60000);
+document.addEventListener("visibilitychange", ()=>{ if(!document.hidden) updateDiaryDot(); });
 
 if("serviceWorker" in navigator){
   window.addEventListener("load", ()=>{
