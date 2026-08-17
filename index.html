@@ -9,7 +9,7 @@
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <meta name="apple-mobile-web-app-title" content="ENTREE Feldbuch">
-<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Crect width='100' height='100' rx='22' fill='%230B0D14'/%3E%3Cpath d='M18 72 L40 34 L53 55 L69 24 L88 72 Z' fill='%23CFFF4D'/%3E%3Ccircle cx='71' cy='28' r='7' fill='%23FF3E96'/%3E%3C/svg%3E">
+<link rel="icon" href="icon.svg" type="image/svg+xml">
 <link rel="apple-touch-icon" href="apple-touch-icon.png">
 <link rel="manifest" href="manifest.json">
 <style>
@@ -515,7 +515,8 @@ const COMM_GROUP_URL = "";
 // Web-Einstieg für alle ohne App / falls der Invite-Link mal abläuft.
 const OUTTA_WEB_URL = "https://outta-app.com/en/outta-app/";
 const KOMOOT_URL = "https://komoot.com/de-de/collection/4519315/-party-pace-patrol-sneak-peaks_entree_5-days-with-lotti";
-const KOMOOT_JULIANA_URL = "https://www.komoot.com/de-de/collection/4519631/-party-pace-patrol-sneak-peaks_entree_6-days-with-juliana";
+// Komoot-Collection-Slug traegt noch "juliana" im URL-Text, die Pacerin fuer diesen 6-Tage-Plan heisst aber Paula.
+const KOMOOT_PAULA_URL = "https://www.komoot.com/de-de/collection/4519631/-party-pace-patrol-sneak-peaks_entree_6-days-with-juliana";
 const KOMOOT_FULL_URL = "https://www.komoot.com/de-de/collection/4526412/-sneak-peaks-2026-entree";
 const KOMOOT_EXIT_URL = "https://www.komoot.com/de-de/collection/4538266/-exit-options-sneak-peaks-2026";
 const HANDBOOK_URL = "https://drive.google.com/file/d/1prD9qHubYVJjKuWp5jfYEv8b1cFBYq4Y/view";
@@ -524,9 +525,9 @@ const ROUTE_DEFS = {
   lotti:{ id:"lotti", title:"Party Pace Patrol · Lotti", tag:"5 Tage · fertig geplant",
     desc:"Lottis fertiger Tempo-Plan — alle Etappen, Specials und Schlafplätze schon von uns vorbereitet.",
     komoot:()=>KOMOOT_URL, needsDays:false },
-  juliana:{ id:"juliana", title:"Party Pace Patrol · Juliana", tag:"6 Tage · Ziel-Tempo",
-    desc:"Etwas entspannter auf 6 Tage verteilt. Die genaue Etappe kennen wir nicht automatisch — du legst sie im nächsten Schritt selbst fest.",
-    komoot:()=>KOMOOT_JULIANA_URL, needsDays:true },
+  paula:{ id:"paula", title:"Party Pace Patrol · Paula", tag:"6 Tage · fertig geplant",
+    desc:"Paulas fertiger 6-Tage-Plan mit Zwischenstopp am Lago Federa — alle Etappen schon vorbereitet.",
+    komoot:()=>KOMOOT_PAULA_URL, needsDays:false },
   general:{ id:"general", title:"ENTREE komplett", tag:"495 km · dein Tempo",
     desc:"Die gesamte Strecke ohne Vorgabe. Du bestimmst deine eigenen Etappen im nächsten Schritt.",
     komoot:()=>KOMOOT_FULL_URL, needsDays:true },
@@ -540,9 +541,10 @@ let PROFILE = loadProfile();
 
 /* ======================= DATEN ======================= */
 // DAYS/ELEV/WEATHER_LOC sind absichtlich "let": Standardwert ist Lottis fertig
-// kuratierter 5-Tage-Plan; wenn ein Nutzer im Onboarding Juliana oder die freie
-// Gesamtroute waehlt, werden sie durch applyRouteConfig() aus den Checkpoint-
-// Rohdaten (CP/WAY/COORDS) neu zusammengesetzt - ehrlich abgeleitet, nicht erfunden.
+// kuratierter 5-Tage-Plan; waehlt ein Nutzer im Onboarding Paula (fertiger 6-Tage-Plan)
+// oder die freie Gesamtroute, werden sie durch applyRouteConfig() entsprechend
+// umgesetzt bzw. aus den Checkpoint-Rohdaten (CP/WAY/COORDS) neu zusammengesetzt -
+// ehrlich abgeleitet, nicht erfunden.
 let DAYS = [
  {n:1, from:"Ahoi Minigolf", to:"Rifugio Conseria", subtitle:"CP1 · 1.835 m", km:88.9, time:"6:18 Std.", up:3180, down:1630, kmFrom:0, kmTo:89,
   character:"Überwiegend befestigte Wege — konditionell hart, technisch aber unkompliziert.",
@@ -560,7 +562,7 @@ let DAYS = [
  {n:3, from:"Rifugio Scarpa", to:"Glittnersee", subtitle:"kein Handbook-Checkpoint", km:126, time:"9:17 Std.", up:4830, down:4400, kmFrom:182, kmTo:307,
   character:"Längster & höhenmeterreichster Tag der Route.",
   sleep:{status:"warn", place:"Glittnersee", note:"Bergsee, ca. 2.150 m — nicht im Handbook", detail:"Kein Rifugio, keine Verpflegung vor Ort. Nur Wildcamping/Notbiwak (offiziell nicht erlaubt, aber toleriert) — dafür ist die Notfalldecke/der Biwaksack Pflichtausrüstung. Fallback: Rifugio Campoforte liegt ca. 10 km weiter, gleich zu Beginn von Tag 4."},
-  way:[6,7,8,9,10,11,12],
+  way:[6,7,8,"federa",9,10,11,12],
   specials:[
     {type:"highlight", title:"Ambrizzola Pass", text:"„Unser persönliches Highlight“ — jedes Jahr Teil der Strecke. Danach der wunderschöne Lago Federa."},
     {type:"warn", title:"Forcella Ambrizzola Trail", km:"237–240", text:"Überquerung auf 2.277 m, ca. 3 km Hike-a-Bike — dafür Panoramablick über die Ampezzo-Dolomiten."}
@@ -632,6 +634,7 @@ const WAY = {
  6:{km:196, name:"Agordo", kind:"town", offer:"Supermarkt · Restaurants · Apotheke · Brunnen"},
  7:{km:223, name:"Mareson", kind:"town", offer:"Supermarkt · Restaurants · Apotheke · Brunnen"},
  8:{km:233, name:"Rifugio Città di Fiume", kind:"cp", cp:"cp3", offer:"Stempel · Essen · Getränke · Wasser · Übernachtung"},
+ federa:{km:240, name:"Lago Federa", kind:"camp", offer:"Kein Rifugio direkt am See — Rifugio Croda da Lago (Essen/Getränke/Wasser) ca. 1 km weiter"},
  9:{km:241, name:"Rifugio Croda da Lago", kind:"rifugio", offer:"Essen · Getränke · Wasser"},
  10:{km:252, name:"Cortina d'Ampezzo", kind:"town", offer:"Supermarkt · Restaurants · Apotheke · Brunnen (off-route)"},
  11:{km:276, name:"Rifugio Pederü", kind:"cp", cp:"cp4", offer:"Stempel · Essen · Getränke · Wasser"},
@@ -660,6 +663,7 @@ const COORDS = {
  6:{lat:46.2762, lon:12.0347},
  7:{lat:46.372, lon:12.132},
  8:{lat:46.44, lon:12.13},
+ federa:{lat:46.465, lon:12.095},
  9:{lat:46.47, lon:12.10},
  10:{lat:46.5405, lon:12.1357},
  11:{lat:46.615, lon:12.03},
@@ -813,12 +817,35 @@ function sliceRouteElev(fromKm, toKm){
   const mid = ROUTE_ELEV_KM.filter(p=>p[0]>fromKm && p[0]<toKm);
   return [[fromKm, elevAtKm(fromKm)], ...mid, [toKm, elevAtKm(toKm)]];
 }
-function upDownBetween(fromKm, toKm){
+function rawUpDown(fromKm, toKm){
   const pts = sliceRouteElev(fromKm, toKm);
   let up=0, down=0;
   for(let i=1;i<pts.length;i++){
     const delta = pts[i][1]-pts[i-1][1];
     if(delta>0) up+=delta; else down-=delta;
+  }
+  return {up, down};
+}
+// Die grobe Schema-Kurve (nur wenige Stuetzpunkte pro Tag) glaettet reale Rollerhuegel weg und
+// unterschaetzt Auf/Ab dadurch drastisch (im Test: ca. Faktor 2,3 fuer einen Lotti-Tag). Deshalb
+// pro Lotti-Tag ein Kalibrierungsfaktor = echter Handbook-Wert / roher Kurven-Wert - fuer beliebige
+// Tagesgrenzen wird der rohe Wert je betroffenem Lotti-Tag mit dessen Faktor hochskaliert.
+const LOTTI_DAY_CALIBRATION = LOTTI_DAYS.map(d=>{
+  const raw = rawUpDown(d.kmFrom, d.kmTo);
+  return {kmFrom:d.kmFrom, kmTo:d.kmTo, upFactor: raw.up>0 ? d.up/raw.up : 1, downFactor: raw.down>0 ? d.down/raw.down : 1};
+});
+function calibrationAt(km){
+  return LOTTI_DAY_CALIBRATION.find(c=>km>=c.kmFrom && km<=c.kmTo) || LOTTI_DAY_CALIBRATION[LOTTI_DAY_CALIBRATION.length-1];
+}
+function upDownBetween(fromKm, toKm){
+  const cuts = [fromKm, ...LOTTI_DAY_CALIBRATION.map(c=>c.kmTo).filter(k=>k>fromKm && k<toKm), toKm];
+  let up=0, down=0;
+  for(let i=1;i<cuts.length;i++){
+    const a=cuts[i-1], b=cuts[i];
+    const raw = rawUpDown(a,b);
+    const cal = calibrationAt((a+b)/2);
+    up += raw.up*cal.upFactor;
+    down += raw.down*cal.downFactor;
   }
   return {up, down};
 }
@@ -932,6 +959,48 @@ function buildCustomDays(boundaryCpIds){
   }
   return days;
 }
+// Paulas 6-Tage-Plan (echte Etappenwerte vom Nutzer, nicht geschaetzt): Tag 1/2/5/6 sind
+// dieselben Streckenabschnitte wie bei Lotti (Distanz/Hm decken sich fast exakt) und werden
+// 1:1 uebernommen. Lottis Tag 3 (Scarpa -> Glittnersee) teilt Paula stattdessen in zwei Tage
+// mit Zwischenstopp am Lago Federa - Aufstiegsmeter sind Paulas echte Werte, die Abfahrtsmeter
+// werden proportional zum bekannten Handbook-Gesamtwert von Lottis Tag 3 aufgeteilt (2.510:2.320
+// vom Auf-Verhaeltnis auf die 4.400 Hm Gesamtabfahrt), nicht frei erfunden.
+const PAULA_DAY3_DOWN = Math.round(4400 * 2510/(2510+2320));
+const PAULA_DAY4_DOWN = 4400 - PAULA_DAY3_DOWN;
+const PAULA_DAYS = [
+  {...LOTTI_DAYS[0], n:1},
+  {...LOTTI_DAYS[1], n:2},
+  {n:3, from:"Rifugio Scarpa", to:"Lago Federa", subtitle:"Bergsee, ca. 2.120 m — kein Handbook-Checkpoint", km:58, time:estimateTimeStr(58), up:2510, down:PAULA_DAY3_DOWN, kmFrom:182, kmTo:240,
+    character:"Ambrizzola Pass, dann hinunter zum Lago Federa — laut Lotti-Crew „unser persönliches Highlight“.",
+    sleep:{status:"warn", place:"Lago Federa", note:"Bergsee, ca. 2.120 m — nicht im Handbook", detail:"Kein Rifugio direkt am See. Rifugio Croda da Lago (Essen/Getränke/Wasser) liegt ca. 1 km weiter. Nur Wildcamping/Notbiwak (offiziell nicht erlaubt, aber toleriert) — Notfalldecke/Biwaksack sind Pflichtausrüstung."},
+    way:[6,7,8,"federa"],
+    specials:[
+      {type:"highlight", title:"Ambrizzola Pass", text:"„Unser persönliches Highlight“ — jedes Jahr Teil der Strecke. Danach der wunderschöne Lago Federa."},
+      {type:"warn", title:"Forcella Ambrizzola Trail", km:"237–240", text:"Überquerung auf 2.277 m, ca. 3 km Hike-a-Bike — dafür Panoramablick über die Ampezzo-Dolomiten."}
+    ]},
+  {n:4, from:"Lago Federa", to:"Glittnersee", subtitle:"Bergsee, ca. 2.150 m — kein Handbook-Checkpoint", km:67, time:estimateTimeStr(67), up:2320, down:PAULA_DAY4_DOWN, kmFrom:240, kmTo:307,
+    character:"Kürzerer Zwischentag über Cortina-Gegend und Rifugio Pederü zum Glittnersee.",
+    sleep:{...LOTTI_DAYS[2].sleep},
+    way:[9,10,11,12],
+    specials:[]},
+  {...LOTTI_DAYS[3], n:5},
+  {...LOTTI_DAYS[4], n:6},
+];
+// Tag 1/2/5/6 sind dieselben Streckenabschnitte wie bei Lotti -> deren Profil direkt uebernehmen.
+// Tag 3/4 (neuer Zwischenstopp Lago Federa) aus der durchgehenden Hoehenkurve zugeschnitten.
+const PAULA_ELEV = {
+  1: LOTTI_ELEV[1], 2: LOTTI_ELEV[2],
+  3: dayElevFromSlice(PAULA_DAYS[2].kmFrom, PAULA_DAYS[2].kmTo),
+  4: dayElevFromSlice(PAULA_DAYS[3].kmFrom, PAULA_DAYS[3].kmTo),
+  5: LOTTI_ELEV[4], 6: LOTTI_ELEV[5],
+};
+const PAULA_WEATHER_LOC = {
+  1: LOTTI_WEATHER_LOC[1], 2: LOTTI_WEATHER_LOC[2],
+  3:{lat:COORDS.federa.lat, lon:COORDS.federa.lon, label:"Lago Federa (ca.)"},
+  4: LOTTI_WEATHER_LOC[3],
+  5: LOTTI_WEATHER_LOC[4], 6: LOTTI_WEATHER_LOC[5],
+};
+
 function buildCustomWeatherLoc(days){
   const out = {};
   days.forEach(d=>{
@@ -941,10 +1010,21 @@ function buildCustomWeatherLoc(days){
   });
   return out;
 }
+// Nur die Tage-Liste einer Route, ohne ELEV/WEATHER_LOC zu setzen - fuers Onboarding-Vorschau
+// (obConfirmHtml). Dieselbe Fallunterscheidung wie applyRouteConfig, damit beide nie auseinanderlaufen.
+function previewDaysForRoute(routeId, boundaryCpIds){
+  if(routeId==="lotti") return LOTTI_DAYS;
+  if(routeId==="paula") return PAULA_DAYS;
+  return buildCustomDays([...boundaryCpIds, "finish"]);
+}
 // Zentrale Weiche: setzt DAYS/ELEV/WEATHER_LOC passend zur im Onboarding gewaehlten Route.
 function applyRouteConfig(routeId, boundaryCpIds){
   if(routeId==="lotti"){
     DAYS = LOTTI_DAYS; ELEV = LOTTI_ELEV; WEATHER_LOC = LOTTI_WEATHER_LOC;
+    return;
+  }
+  if(routeId==="paula"){
+    DAYS = PAULA_DAYS; ELEV = PAULA_ELEV; WEATHER_LOC = PAULA_WEATHER_LOC;
     return;
   }
   DAYS = buildCustomDays(boundaryCpIds);
@@ -2409,7 +2489,6 @@ function obRouteHtml(){
   </div>`;
 }
 function obDaysHtml(){
-  const targetHint = obState.routeId==="juliana" ? `<div class="ob-hint">Juliana peilt offiziell <b>6 Tage</b> an — als Richtwert, keine feste Vorgabe.</div>` : "";
   const rows = CP_ORDER.filter(id=>id!=="finish").map(id=>{
     const cp = CP[id];
     const on = obState.boundaries.includes(id);
@@ -2428,7 +2507,6 @@ function obDaysHtml(){
     <div class="ob-eyebrow">Schritt ${obActiveSteps().indexOf("days")+1} von ${obActiveSteps().length}</div>
     <div class="ob-title">Wo endet<br>dein Tag?</div>
     <div class="ob-desc">Wähle, an welchen Checkpoints du übernachten willst. Alle sind vorausgewählt (kürzeste Tage) — schalte welche aus, um Tage zusammenzulegen.</div>
-    ${targetHint}
     <div class="ob-cplist">${rows}</div>
     <div class="ob-summary"><div class="ob-summary-head">${days.length} Tage geplant</div>${summary}</div>
     <div class="ob-spacer"></div>
@@ -2438,7 +2516,7 @@ function obDaysHtml(){
 function obConfirmHtml(){
   const name = obState.name.trim() || "Rider";
   const routeDef = ROUTE_DEFS[obState.routeId];
-  const days = obState.routeId==="lotti" ? LOTTI_DAYS : buildCustomDays([...obState.boundaries, "finish"]);
+  const days = previewDaysForRoute(obState.routeId, obState.boundaries);
   const rows = days.map(d=>`<div class="ob-dayrow"><div class="ob-dayrow-route">Tag ${d.n} · ${d.from} → ${d.to}</div><div class="ob-dayrow-stats">${d.km} km · +${d.up} / −${d.down} Hm</div></div>`).join("");
   return `<div class="ob-step">
     <button class="ob-back" id="obBack4" type="button">‹</button>
