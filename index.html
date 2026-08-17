@@ -272,7 +272,7 @@ nav#tabbar{position:fixed; left:0; right:0; bottom:0; z-index:20; display:flex; 
 /* STORY-MODUS (Vollbild-Overlay) */
 #storyMode{position:fixed; inset:0; z-index:50; background:var(--ink); display:none; flex-direction:column; overflow:hidden; touch-action:none; overscroll-behavior:none;}
 #storyMode.show{display:flex;}
-#storyMode .bgstars{position:absolute; inset:0;
+#storyMode .bgstars, #onboarding .bgstars{position:absolute; inset:0;
   background-image:
     radial-gradient(1.5px 1.5px at 15% 20%, rgba(255,255,255,.4) 1px, transparent 0),
     radial-gradient(1.5px 1.5px at 75% 65%, rgba(255,255,255,.3) 1px, transparent 0),
@@ -328,6 +328,64 @@ nav#tabbar{position:fixed; left:0; right:0; bottom:0; z-index:20; display:flex; 
 
 .story-watermark{position:absolute; bottom:calc(env(safe-area-inset-bottom) + 18px); left:0; right:0; display:flex; align-items:center; justify-content:center; gap:6px; font-size:11px; font-weight:800; letter-spacing:.08em; text-transform:uppercase; color:var(--mist); z-index:2;}
 .story-watermark b{color:var(--fog);}
+
+/* ======================= ONBOARDING (Vollbild-Overlay) ======================= */
+#onboarding{position:fixed; inset:0; z-index:70; background:var(--ink); display:none; flex-direction:column; overflow:hidden;}
+#onboarding.show{display:flex;}
+#onboarding::after{content:""; position:absolute; left:-25%; right:-25%; bottom:-32%; height:62%; background:radial-gradient(ellipse at center, rgba(207,255,77,.14), transparent 65%); pointer-events:none; z-index:1;}
+.ob-progress{display:flex; gap:4px; padding:calc(env(safe-area-inset-top) + 16px) 20px 0; position:relative; z-index:6;}
+.ob-dot{flex:1; height:3px; border-radius:99px; background:rgba(255,255,255,.18);}
+.ob-dot.done{background:var(--acid);}
+.ob-dot.current{background:var(--flare);}
+.ob-wrap{position:relative; z-index:2; flex:1; overflow-y:auto; padding:28px 24px calc(env(safe-area-inset-bottom) + 28px); display:flex; flex-direction:column;}
+.ob-step{animation:obStepIn .35s ease; display:flex; flex-direction:column; min-height:100%;}
+@keyframes obStepIn{from{opacity:0; transform:translateY(10px);} to{opacity:1; transform:translateY(0);}}
+.ob-back{align-self:flex-start; appearance:none; background:rgba(255,255,255,.1); border:none; color:var(--fog); width:34px; height:34px; border-radius:50%; font-size:16px; margin-bottom:18px; display:flex; align-items:center; justify-content:center;}
+.ob-back:active{opacity:.7;}
+.ob-eyebrow{font-size:12px; font-weight:800; letter-spacing:.14em; text-transform:uppercase; color:var(--flare); margin-bottom:10px;}
+.ob-title{font-family:var(--font-display); font-size:28px; font-weight:900; line-height:1.15; margin-bottom:10px;}
+.ob-title b{color:var(--acid);}
+.ob-desc{font-size:14.5px; color:var(--mist); line-height:1.55; margin-bottom:26px;}
+.ob-spacer{flex:1;}
+.ob-input{width:100%; appearance:none; background:var(--slate2); border:1.5px solid var(--line); border-radius:var(--r-md); padding:16px 16px; font-size:20px; font-weight:700; color:var(--fog); font-family:inherit; margin-bottom:8px;}
+.ob-input:focus{outline:none; border-color:var(--acid);}
+.ob-input::placeholder{color:var(--mist); font-weight:600;}
+.ob-hint{font-size:12px; color:var(--mist); margin-bottom:20px;}
+.ob-btn{appearance:none; width:100%; padding:16px; border-radius:var(--r-md); border:1px solid var(--line); background:var(--slate2); color:var(--fog); font-size:16px; font-weight:800; font-family:inherit; display:flex; align-items:center; justify-content:center; gap:8px;}
+.ob-btn:active{opacity:.75;}
+.ob-btn.primary{background:var(--acid); color:var(--acid-ink); border-color:var(--acid);}
+.ob-btn.ghost{background:transparent; border-color:var(--line); color:var(--mist); font-weight:700; font-size:14px; padding:12px;}
+.ob-routecard{display:block; width:100%; text-align:left; appearance:none; background:var(--slate); border:1.5px solid var(--line); border-radius:var(--r-lg); padding:16px 16px; margin-bottom:12px;}
+.ob-routecard.selected{border-color:var(--acid); background:linear-gradient(155deg, rgba(207,255,77,.14), rgba(207,255,77,.03));}
+.ob-routecard:active{opacity:.85;}
+.ob-routecard-top{display:flex; justify-content:space-between; align-items:center; gap:8px; margin-bottom:6px;}
+.ob-routecard-title{font-family:var(--font-display); font-size:17px; font-weight:800;}
+.ob-routecard-tag{font-size:10.5px; font-weight:800; letter-spacing:.04em; text-transform:uppercase; color:var(--acid); background:rgba(207,255,77,.14); padding:3px 8px; border-radius:999px; white-space:nowrap;}
+.ob-routecard-desc{font-size:13px; color:var(--mist); line-height:1.5; margin-bottom:8px;}
+.ob-routecard-link{font-size:12px; font-weight:700; color:var(--info);}
+.ob-cplist{margin-bottom:18px;}
+.ob-cprow{display:flex; align-items:center; gap:12px; padding:13px 4px; border-bottom:1px solid var(--line);}
+.ob-cprow-info{flex:1; min-width:0;}
+.ob-cprow-name{font-size:14.5px; font-weight:700;}
+.ob-cprow-sub{font-size:11.5px; color:var(--mist); margin-top:2px;}
+.ob-toggle{appearance:none; width:46px; height:28px; border-radius:99px; background:var(--slate2); border:1px solid var(--line); position:relative; flex-shrink:0;}
+.ob-toggle::after{content:""; position:absolute; top:2px; left:2px; width:22px; height:22px; border-radius:50%; background:var(--mist); transition:transform .18s ease, background .18s ease;}
+.ob-toggle.on{background:rgba(207,255,77,.22); border-color:var(--acid);}
+.ob-toggle.on::after{transform:translateX(18px); background:var(--acid);}
+.ob-summary{background:var(--slate2); border-radius:var(--r-md); padding:14px; margin-bottom:20px;}
+.ob-summary-head{font-size:11px; font-weight:800; letter-spacing:.06em; text-transform:uppercase; color:var(--mist); margin-bottom:8px;}
+.ob-summary-row{display:flex; justify-content:space-between; align-items:baseline; font-size:13px; padding:4px 0;}
+.ob-summary-row b{font-family:ui-monospace,monospace; font-weight:800;}
+.ob-daylist{margin-bottom:22px;}
+.ob-dayrow{padding:12px 0; border-bottom:1px solid var(--line);}
+.ob-dayrow:last-child{border-bottom:none;}
+.ob-dayrow-route{font-size:14.5px; font-weight:700;}
+.ob-dayrow-stats{font-size:12px; color:var(--mist); margin-top:3px; font-family:ui-monospace,monospace;}
+.ob-greeting-preview{font-family:var(--font-display); font-size:24px; font-weight:900; margin-bottom:4px;}
+
+.greeting{display:flex; align-items:baseline; justify-content:space-between; margin-bottom:14px;}
+.greeting-hi{font-family:var(--font-display); font-size:19px; font-weight:800;}
+.greeting-route{font-size:11.5px; color:var(--mist); font-weight:700;}
 
 :focus-visible{outline:2px solid var(--flare); outline-offset:2px;}
 @media (prefers-reduced-motion:reduce){ *{animation-duration:.001ms !important; transition-duration:.001ms !important;} }
@@ -414,6 +472,12 @@ nav#tabbar{position:fixed; left:0; right:0; bottom:0; z-index:20; display:flex; 
   <button class="story-tapzone right" id="storyNextZone" aria-label="Nächste Karte"></button>
 </div>
 
+<div id="onboarding" aria-hidden="true">
+  <div class="bgstars"></div>
+  <div class="ob-progress" id="obProgress"></div>
+  <div class="ob-wrap" id="obWrap"></div>
+</div>
+
 <script>
 /* ======================= KONFIG ======================= */
 // TODO: Invite-/Gruppenlink der OUTTA-App eintragen (in der App: Gruppe "SNEAK PEAKS" -> Teilen -> Link kopieren).
@@ -422,12 +486,35 @@ const COMM_GROUP_URL = "";
 // Web-Einstieg für alle ohne App / falls der Invite-Link mal abläuft.
 const OUTTA_WEB_URL = "https://outta-app.com/en/outta-app/";
 const KOMOOT_URL = "https://komoot.com/de-de/collection/4519315/-party-pace-patrol-sneak-peaks_entree_5-days-with-lotti";
+const KOMOOT_JULIANA_URL = "https://www.komoot.com/de-de/collection/4519631/-party-pace-patrol-sneak-peaks_entree_6-days-with-juliana";
 const KOMOOT_FULL_URL = "https://www.komoot.com/de-de/collection/4526412/-sneak-peaks-2026-entree";
 const KOMOOT_EXIT_URL = "https://www.komoot.com/de-de/collection/4538266/-exit-options-sneak-peaks-2026";
 const HANDBOOK_URL = "https://drive.google.com/file/d/1prD9qHubYVJjKuWp5jfYEv8b1cFBYq4Y/view";
 
+const ROUTE_DEFS = {
+  lotti:{ id:"lotti", title:"Party Pace Patrol · Lotti", tag:"5 Tage · fertig geplant",
+    desc:"Lottis fertiger Tempo-Plan — alle Etappen, Specials und Schlafplätze schon von uns vorbereitet.",
+    komoot:()=>KOMOOT_URL, needsDays:false },
+  juliana:{ id:"juliana", title:"Party Pace Patrol · Juliana", tag:"6 Tage · Ziel-Tempo",
+    desc:"Etwas entspannter auf 6 Tage verteilt. Die genaue Etappe kennen wir nicht automatisch — du legst sie im nächsten Schritt selbst fest.",
+    komoot:()=>KOMOOT_JULIANA_URL, needsDays:true },
+  general:{ id:"general", title:"ENTREE komplett", tag:"495 km · dein Tempo",
+    desc:"Die gesamte Strecke ohne Vorgabe. Du bestimmst deine eigenen Etappen im nächsten Schritt.",
+    komoot:()=>KOMOOT_FULL_URL, needsDays:true },
+};
+const PROFILE_KEY = "entree_profile_v1";
+function loadProfile(){ try{ const raw = localStorage.getItem(PROFILE_KEY); return raw ? JSON.parse(raw) : null; }catch(e){ return null; } }
+function saveProfile(p){ try{ localStorage.setItem(PROFILE_KEY, JSON.stringify(p)); }catch(e){} }
+function clearProfile(){ try{ localStorage.removeItem(PROFILE_KEY); }catch(e){} }
+function escHtml(s){ return String(s).replace(/[&<>"']/g, c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c])); }
+let PROFILE = loadProfile();
+
 /* ======================= DATEN ======================= */
-const DAYS = [
+// DAYS/ELEV/WEATHER_LOC sind absichtlich "let": Standardwert ist Lottis fertig
+// kuratierter 5-Tage-Plan; wenn ein Nutzer im Onboarding Juliana oder die freie
+// Gesamtroute waehlt, werden sie durch applyRouteConfig() aus den Checkpoint-
+// Rohdaten (CP/WAY/COORDS) neu zusammengesetzt - ehrlich abgeleitet, nicht erfunden.
+let DAYS = [
  {n:1, from:"Ahoi Minigolf", to:"Rifugio Conseria", subtitle:"CP1 · 1.835 m", km:88.9, time:"6:18 Std.", up:3180, down:1630, kmFrom:0, kmTo:89,
   character:"Überwiegend befestigte Wege — konditionell hart, technisch aber unkompliziert.",
   sleep:{status:"ok", place:"Rifugio Conseria", note:"CP1 · 1.835 m", detail:"Zelten in der Nähe kostenlos. Alternativ Halbpension 62 € oder Übernachtung 30 €."},
@@ -466,6 +553,7 @@ const DAYS = [
     {type:"highlight", title:"Zielabfahrt", text:"Letzte 42 km sind reine Abfahrt (−2.000 Hm) zurück nach Bozen."}
   ]},
 ];
+const LOTTI_DAYS = DAYS; // unveraenderter Referenzplan, ueberlebt spaetere Neuzuweisungen von DAYS
 
 const CP = {
  cp1:{id:"cp1", label:"Rifugio Conseria", role:"Ende Tag 1", km:89, alt:1835,
@@ -581,13 +669,14 @@ const SCHEDULE = [
 const GEAR_MUST = ["2× Frontlicht & 2× Rücklicht","Notfall-/Rettungsdecke oder Biwaksack","Helm","Reflektierende Jacke","Mind. 2 l Wasserkapazität","Ein Paar Ersatz-Bremsbeläge","USB-C-Kabel für den Tracker"];
 const GEAR_REC = ["Erste-Hilfe-Set","Handschuhe","Daunenjacke","Wasserreinigungstabletten"];
 
-const WEATHER_LOC = {
+let WEATHER_LOC = {
  1:{lat:46.17, lon:11.58, label:"Lagorai / Rifugio Conseria (ca.)"},
  2:{lat:46.21, lon:11.92, label:"Agordino / Rifugio Scarpa (ca.)"},
  3:{lat:46.70, lon:11.78, label:"Eisacktal / Glittnersee (ca.)"},
  4:{lat:46.90, lon:11.68, label:"Pfunderer Tal / Weitenbergalm (ca.)"},
  5:{lat:46.50, lon:11.35, label:"Sarntal / Bozen (ca.)"},
 };
+const LOTTI_WEATHER_LOC = WEATHER_LOC;
 const WMO = {
  0:["☀️","Klar"],1:["🌤️","Meist klar"],2:["⛅","Wolkig"],3:["☁️","Bedeckt"],
  45:["🌫️","Nebel"],48:["🌫️","Reifnebel"],
@@ -639,7 +728,7 @@ function cpRowHtml(cp){
   return `<div class="row-wrap">
     <button class="tap" data-cp="${cp.id}">
       <span class="km mono">${cp.km}</span>
-      <div class="name">${cp.label}<div class="sub">${cp.role} · ${cp.alt} m</div></div>
+      <div class="name">${cp.label}<div class="sub">${roleForCP(cp.id)} · ${cp.alt} m</div></div>
       ${campBadge(cp.camp)}
       <span class="chev">›</span>
     </button>
@@ -655,13 +744,73 @@ function wayRowHtml(w){
 // Pfunderer Joch 2.551m laut Handbook). Passhöhen dazwischen (Manghen, San Lugano, Brocon,
 // Duran, Staulanza, Jaufenpass, St. Leonhard) sind aus allgemeiner Ortskenntnis angenähert,
 // nicht aus dem Handbook oder einem GPS-Track. Zwischen den Punkten wird linear interpoliert.
-const ELEV = {
+let ELEV = {
   1:[[0,289],[0.26,289],[0.55,750],[0.60,1097],[0.62,950],[0.85,2047],[0.90,1700],[1,1835]],
   2:[[0,1835],[0.15,1300],[0.35,1616],[0.55,900],[0.75,1100],[0.94,1085],[1,1735]],
   3:[[0,1735],[0.10,900],[0.20,1601],[0.28,1773],[0.35,1911],[0.55,2277],[0.62,1450],[0.75,1584],[0.90,1900],[1,2150]],
   4:[[0,2150],[0.30,1500],[0.55,1750],[0.80,1550],[1,1956]],
   5:[[0,1956],[0.04,2551],[0.20,948],[0.35,2094],[0.50,660],[0.70,1945],[0.73,1945],[1,289]],
 };
+const LOTTI_ELEV = ELEV;
+// Durchgehendes, an absoluten km verankertes Hoehenprofil ueber die ganze Strecke -
+// aus Lottis (bereits als schematisch offengelegten) Tagesprofilen zusammengesetzt.
+// Grundlage fuer Auf/Ab-Schaetzungen bei frei gewaehlten Tagesgrenzen (kein neuer Fakt,
+// nur eine andere Schnittstelle auf dieselben Daten).
+function buildRouteElevKm(days, elev){
+  const out = [];
+  days.forEach(d=>{
+    const span = d.kmTo-d.kmFrom;
+    (elev[d.n]||[]).forEach(([f,e])=>{
+      const km = +(d.kmFrom + f*span).toFixed(2);
+      if(!out.length || out[out.length-1][0]!==km) out.push([km, e]);
+    });
+  });
+  return out;
+}
+const ROUTE_ELEV_KM = buildRouteElevKm(LOTTI_DAYS, LOTTI_ELEV);
+function elevAtKm(km){
+  const pts = ROUTE_ELEV_KM;
+  if(km<=pts[0][0]) return pts[0][1];
+  for(let i=1;i<pts.length;i++){
+    if(km<=pts[i][0]){
+      const [k0,e0]=pts[i-1], [k1,e1]=pts[i];
+      const f = k1===k0 ? 0 : (km-k0)/(k1-k0);
+      return e0+(e1-e0)*f;
+    }
+  }
+  return pts[pts.length-1][1];
+}
+function sliceRouteElev(fromKm, toKm){
+  const mid = ROUTE_ELEV_KM.filter(p=>p[0]>fromKm && p[0]<toKm);
+  return [[fromKm, elevAtKm(fromKm)], ...mid, [toKm, elevAtKm(toKm)]];
+}
+function upDownBetween(fromKm, toKm){
+  const pts = sliceRouteElev(fromKm, toKm);
+  let up=0, down=0;
+  for(let i=1;i<pts.length;i++){
+    const delta = pts[i][1]-pts[i-1][1];
+    if(delta>0) up+=delta; else down-=delta;
+  }
+  return {up, down};
+}
+function dayElevFromSlice(fromKm, toKm){
+  const pts = sliceRouteElev(fromKm, toKm);
+  const span = (toKm-fromKm) || 1;
+  return pts.map(p=>[+(((p[0]-fromKm)/span).toFixed(4)), Math.round(p[1])]);
+}
+// Grob geschaetzte Fahrzeit fuer frei gewaehlte Tage: kalibriert auf Lottis eigenes
+// Durchschnittstempo (echte Handbook-Zeiten), nicht frei erfunden - klar als Schaetzung markiert.
+function parseHmStr(s){ const m = /(\d+):(\d+)/.exec(s||""); return m ? (+m[1] + (+m[2])/60) : null; }
+const LOTTI_AVG_KMH = (()=>{
+  let km=0, h=0;
+  LOTTI_DAYS.forEach(d=>{ const hh=parseHmStr(d.time); if(hh){ km+=d.km; h+=hh; } });
+  return h ? km/h : 12;
+})();
+function estimateTimeStr(km){
+  const hoursDec = km/LOTTI_AVG_KMH;
+  const h = Math.floor(hoursDec), m = Math.round((hoursDec-h)*60);
+  return `≈ ${h}:${String(m).padStart(2,"0")} Std. (Schätzung)`;
+}
 function elevGeometry(dayNum, W, H, pad){
   const pts = ELEV[dayNum];
   const elevs = pts.map(p=>p[1]);
@@ -705,9 +854,77 @@ function elevationSvg(dayNum, opts){
 }
 
 /* ======================= KARTE ======================= */
-const ROUTE_SEQ = ["start", ...DAYS.flatMap(d=>d.way)];
+// Immer aus LOTTI_DAYS (nicht dem ggf. neu zugewiesenen DAYS) - das ist die vollstaendige
+// physische Strecke, unabhaengig davon, wie ein Nutzer sie in Tage einteilt.
+const ROUTE_SEQ = ["start", ...LOTTI_DAYS.flatMap(d=>d.way)];
 let lastGeom = null;
 let mapState = {scale:1, tx:0, ty:0};
+
+/* ======================= ROUTEN-KONFIGURATION (Onboarding) ======================= */
+function roleForCP(cpId){
+  if(cpId==="finish") return `Ziel · Ende Tag ${DAYS.length}`;
+  for(const d of DAYS){
+    const lastWay = d.way[d.way.length-1];
+    if(lastWay!==undefined && WAY[lastWay] && WAY[lastWay].cp===cpId) return `Ende Tag ${d.n}`;
+  }
+  for(const d of DAYS){
+    if(CP[cpId].km>d.kmFrom && CP[cpId].km<d.kmTo) return `Durchfahrt Tag ${d.n}`;
+  }
+  return CP[cpId].role;
+}
+function fmtM(n){ return Math.round(n).toLocaleString("de-DE")+" m"; }
+// boundaryCpIds: geordnete Liste von Checkpoint-IDs, die je ein Tagesende markieren,
+// immer mit "finish" endend, z.B. ["cp1","cp3","cp5","finish"].
+function buildCustomDays(boundaryCpIds){
+  const boundaries = ["start", ...boundaryCpIds];
+  const days = [];
+  for(let i=0;i<boundaries.length-1;i++){
+    const fromId = boundaries[i], toId = boundaries[i+1];
+    const fromKm = fromId==="start" ? 0 : CP[fromId].km;
+    const toKm = CP[toId].km;
+    const fromName = fromId==="start" ? "Ahoi Minigolf" : CP[fromId].label;
+    const toName = CP[toId].label;
+    const {up, down} = upDownBetween(fromKm, toKm);
+    const km = +(toKm-fromKm).toFixed(1);
+    const isFinish = toId==="finish";
+    days.push({
+      n: i+1, from: fromName, to: toName,
+      subtitle: isFinish ? "Ziel · 289 m" : `${toId.toUpperCase()} · ${fmtM(CP[toId].alt)}`,
+      km, time: estimateTimeStr(km), up: Math.round(up), down: Math.round(down),
+      kmFrom: fromKm, kmTo: toKm,
+      character: `${fromName} → ${toName} · ${km} km, +${Math.round(up)} / −${Math.round(down)} Hm.`,
+      sleep: isFinish
+        ? {status:"ok", place:"Ahoi Minigolf", note:"Ziel · 289 m", detail:"Zelten kostenlos, Duschen & Toiletten vorhanden. Nach dem Zieleinlauf darfst du bis Montag bleiben."}
+        : {status:CP[toId].camp.status, place:CP[toId].label, note:`${toId.toUpperCase()} · ${fmtM(CP[toId].alt)}`,
+           detail: `${CP[toId].camp.text}.` + (CP[toId].stay && CP[toId].stay!=="—" ? ` Alternativ ${CP[toId].stay}.` : "")},
+      way: ROUTE_SEQ.filter(id=>id!=="start" && WAY[id].km>fromKm && WAY[id].km<=toKm),
+      specials: []
+    });
+  }
+  return days;
+}
+function buildCustomWeatherLoc(days){
+  const out = {};
+  days.forEach(d=>{
+    const lastWay = d.way[d.way.length-1];
+    const c = lastWay!==undefined ? COORDS[lastWay] : COORDS.start;
+    out[d.n] = {lat:c.lat, lon:c.lon, label:`${d.to} (ca.)`};
+  });
+  return out;
+}
+// Zentrale Weiche: setzt DAYS/ELEV/WEATHER_LOC passend zur im Onboarding gewaehlten Route.
+function applyRouteConfig(routeId, boundaryCpIds){
+  if(routeId==="lotti"){
+    DAYS = LOTTI_DAYS; ELEV = LOTTI_ELEV; WEATHER_LOC = LOTTI_WEATHER_LOC;
+    return;
+  }
+  DAYS = buildCustomDays(boundaryCpIds);
+  const elev = {};
+  DAYS.forEach(d=>{ elev[d.n] = dayElevFromSlice(d.kmFrom, d.kmTo); });
+  ELEV = elev;
+  WEATHER_LOC = buildCustomWeatherLoc(DAYS);
+  if(activeDay>DAYS.length) activeDay = DAYS.length;
+}
 
 function buildMapGeometry(){
   const lats = ROUTE_SEQ.map(id=>COORDS[id].lat);
@@ -1060,7 +1277,7 @@ function openPointSheet(wid){
   const w = WAY[wid];
   if(w.kind==="cp"){
     const cp = CP[w.cp];
-    showSheet("📍 " + w.name, `km ${w.km} · ${cp.role}`, cpDetailDl(cp) + distanceNote(wid));
+    showSheet("📍 " + w.name, `km ${w.km} · ${roleForCP(cp.id)}`, cpDetailDl(cp) + distanceNote(wid));
   } else {
     showSheet(stopIcon(w.kind) + " " + w.name, `km ${w.km}`, `<p style="font-size:13.5px;line-height:1.6;">${w.offer}</p>` + distanceNote(wid));
   }
@@ -1643,14 +1860,20 @@ function renderProgress(){
     t.title = cp.label;
     bar.appendChild(t);
   });
-  $("#progCapLeft").textContent = `Tag ${d.n} von 5`;
+  $("#progCapLeft").textContent = `Tag ${d.n} von ${DAYS.length}`;
   $("#progCapRight").textContent = `${d.kmFrom}–${d.kmTo} / 495 km`;
 }
 function renderHeute(){
   renderPills(); renderProgress();
   const d = DAYS[activeDay-1];
 
-  let h = `<div class="story-btnrow">
+  let h = "";
+  if(PROFILE){
+    const routeDef = ROUTE_DEFS[PROFILE.routeId];
+    h += `<div class="greeting"><span class="greeting-hi">Hey ${escHtml(PROFILE.name)} 👋</span><span class="greeting-route">${routeDef?routeDef.title:""}</span></div>`;
+  }
+
+  h += `<div class="story-btnrow">
     <button class="story-trigger" id="storyTrigger">▶︎ Story ansehen</button>
     <button class="story-trigger" id="videoExportBtn">🎥 Als Video exportieren</button>
   </div>`;
@@ -1854,10 +2077,27 @@ function renderMehr(){
       </ul>
     </div>
   </div>
+
+  <div class="acc" id="acc-profile">
+    <button class="acc-head"><span class="ico">👤</span><b>Dein Profil</b><span class="chev">›</span></button>
+    <div class="acc-body">
+      <p style="font-size:13.5px;line-height:1.6;">${PROFILE ? `${escHtml(PROFILE.name)} · ${ROUTE_DEFS[PROFILE.routeId]?ROUTE_DEFS[PROFILE.routeId].title:"?"} · ${DAYS.length} Tage` : "Kein Profil gespeichert."}</p>
+      <p style="font-size:12px;color:var(--mist);margin:6px 0 12px;">Bleibt nur auf diesem Gerät gespeichert (lokaler Speicher, kein Server). „Zurücksetzen“ löscht es hier und startet das Setup neu.</p>
+      <button class="emergency-coords-btn" type="button" id="profileResetBtn" style="width:100%;">🔄 Profil zurücksetzen</button>
+    </div>
+  </div>
   `;
   $("#mehrBody").innerHTML = h;
   renderGear();
   bindAccordions();
+  const resetBtn = $("#profileResetBtn");
+  if(resetBtn) resetBtn.onclick = ()=>{
+    if(confirm("Profil wirklich zurücksetzen? Name und Routenwahl gehen verloren.")){
+      clearProfile();
+      PROFILE = null;
+      openOnboarding();
+    }
+  };
 }
 let checkedGear = new Set();
 function renderGear(){
@@ -1923,8 +2163,173 @@ storyEl.addEventListener("pointerup", ()=> resumeStoryTimer());
 storyEl.addEventListener("pointercancel", ()=> resumeStoryTimer());
 storyEl.addEventListener("touchmove", (e)=>{ e.preventDefault(); }, {passive:false});
 
+/* ======================= ONBOARDING ======================= */
+const OB_STEPS_BASE = ["welcome","route","days","confirm"];
+function obActiveSteps(){
+  return OB_STEPS_BASE.filter(s=> s!=="days" || (obState.routeId && ROUTE_DEFS[obState.routeId].needsDays));
+}
+let obState = {step:"welcome", name:"", routeId:null, boundaries:[]};
+function renderObProgress(){
+  const steps = obActiveSteps();
+  const idx = steps.indexOf(obState.step);
+  $("#obProgress").innerHTML = steps.map((s,i)=>`<div class="ob-dot ${i<idx?"done":i===idx?"current":""}"></div>`).join("");
+}
+function obWelcomeHtml(){
+  return `<div class="ob-step">
+    <div class="ob-eyebrow">Willkommen</div>
+    <div class="ob-title">Dein persönliches<br><b>ENTREE Feldbuch</b></div>
+    <div class="ob-desc">Ein kurzes, einmaliges Setup — danach merkt sich die App alles auf diesem Gerät. Kein Konto, kein Server, alles bleibt bei dir.</div>
+    <input class="ob-input" id="obNameInput" type="text" placeholder="Dein Name" maxlength="30" autocomplete="given-name" value="${escHtml(obState.name)}">
+    <div class="ob-hint">Optional — nur für die Begrüßung im Dashboard.</div>
+    <div class="ob-spacer"></div>
+    <button class="ob-btn primary" id="obNext1" type="button">Los geht's →</button>
+  </div>`;
+}
+function obRouteHtml(){
+  const cards = Object.values(ROUTE_DEFS).map(r=>`
+    <div class="ob-routecard ${obState.routeId===r.id?"selected":""}" data-route="${r.id}" tabindex="0" role="button">
+      <div class="ob-routecard-top"><span class="ob-routecard-title">${r.title}</span><span class="ob-routecard-tag">${r.tag}</span></div>
+      <div class="ob-routecard-desc">${r.desc}</div>
+      <a class="ob-routecard-link" href="${r.komoot()}" target="_blank" rel="noopener" data-stop="1">Route auf Komoot ansehen ↗</a>
+    </div>`).join("");
+  return `<div class="ob-step">
+    <button class="ob-back" id="obBack2" type="button">‹</button>
+    <div class="ob-eyebrow">Schritt ${obActiveSteps().indexOf("route")+1} von ${obActiveSteps().length}</div>
+    <div class="ob-title">Welche Route<br>fährst du?</div>
+    <div class="ob-desc">Alle drei führen über dieselbe Strecke — nur Tempo und Tagesaufteilung unterscheiden sich.</div>
+    ${cards}
+    <div class="ob-spacer"></div>
+    <button class="ob-btn primary" id="obNext2" type="button" ${obState.routeId?"":'disabled style="opacity:.4"'}>Weiter →</button>
+  </div>`;
+}
+function obDaysHtml(){
+  const targetHint = obState.routeId==="juliana" ? `<div class="ob-hint">Juliana peilt offiziell <b>6 Tage</b> an — als Richtwert, keine feste Vorgabe.</div>` : "";
+  const rows = CP_ORDER.filter(id=>id!=="finish").map(id=>{
+    const cp = CP[id];
+    const on = obState.boundaries.includes(id);
+    return `<div class="ob-cprow">
+      <div class="ob-cprow-info">
+        <div class="ob-cprow-name">${cp.label}</div>
+        <div class="ob-cprow-sub">km ${cp.km} · ${fmtM(cp.alt)}</div>
+      </div>
+      <button class="ob-toggle ${on?"on":""}" data-cp="${id}" type="button" aria-label="Tagesende bei ${cp.label}" aria-pressed="${on}"></button>
+    </div>`;
+  }).join("");
+  const days = buildCustomDays([...obState.boundaries, "finish"]);
+  const summary = days.map(d=>`<div class="ob-summary-row"><span>Tag ${d.n} · ${d.from} → ${d.to}</span><b>${d.km} km</b></div>`).join("");
+  return `<div class="ob-step">
+    <button class="ob-back" id="obBack3" type="button">‹</button>
+    <div class="ob-eyebrow">Schritt ${obActiveSteps().indexOf("days")+1} von ${obActiveSteps().length}</div>
+    <div class="ob-title">Wo endet<br>dein Tag?</div>
+    <div class="ob-desc">Wähle, an welchen Checkpoints du übernachten willst. Alle sind vorausgewählt (kürzeste Tage) — schalte welche aus, um Tage zusammenzulegen.</div>
+    ${targetHint}
+    <div class="ob-cplist">${rows}</div>
+    <div class="ob-summary"><div class="ob-summary-head">${days.length} Tage geplant</div>${summary}</div>
+    <div class="ob-spacer"></div>
+    <button class="ob-btn primary" id="obNext3" type="button">Weiter →</button>
+  </div>`;
+}
+function obConfirmHtml(){
+  const name = obState.name.trim() || "Rider";
+  const routeDef = ROUTE_DEFS[obState.routeId];
+  const days = obState.routeId==="lotti" ? LOTTI_DAYS : buildCustomDays([...obState.boundaries, "finish"]);
+  const rows = days.map(d=>`<div class="ob-dayrow"><div class="ob-dayrow-route">Tag ${d.n} · ${d.from} → ${d.to}</div><div class="ob-dayrow-stats">${d.km} km · +${d.up} / −${d.down} Hm</div></div>`).join("");
+  return `<div class="ob-step">
+    <button class="ob-back" id="obBack4" type="button">‹</button>
+    <div class="ob-eyebrow">Alles bereit</div>
+    <div class="ob-greeting-preview">Hey ${escHtml(name)} 👋</div>
+    <div class="ob-desc">${routeDef.title} · ${days.length} Tage · 495 km gesamt</div>
+    <div class="ob-daylist">${rows}</div>
+    <div class="ob-spacer"></div>
+    <button class="ob-btn primary" id="obFinish" type="button">Los geht's 🚵</button>
+  </div>`;
+}
+function renderOnboarding(){
+  renderObProgress();
+  const wrap = $("#obWrap");
+  wrap.innerHTML = obState.step==="welcome" ? obWelcomeHtml()
+    : obState.step==="route" ? obRouteHtml()
+    : obState.step==="days" ? obDaysHtml()
+    : obConfirmHtml();
+  wrap.scrollTop = 0;
+  bindOnboardingStep();
+}
+function obGoto(step){ obState.step = step; renderOnboarding(); }
+function bindOnboardingStep(){
+  if(obState.step==="welcome"){
+    const input = $("#obNameInput");
+    input.oninput = ()=>{ obState.name = input.value; };
+    input.onkeydown = (e)=>{ if(e.key==="Enter") obGoto("route"); };
+    $("#obNext1").onclick = ()=> obGoto("route");
+    setTimeout(()=>input.focus(), 300);
+  } else if(obState.step==="route"){
+    $("#obBack2").onclick = ()=> obGoto("welcome");
+    $$(".ob-routecard").forEach(card=>{
+      card.onclick = (e)=>{
+        if(e.target.closest("[data-stop]")) return;
+        obState.routeId = card.dataset.route;
+        if(!ROUTE_DEFS[obState.routeId].needsDays) obState.boundaries = [];
+        else if(!obState.boundaries.length) obState.boundaries = CP_ORDER.filter(id=>id!=="finish");
+        renderOnboarding();
+      };
+    });
+    $("#obNext2").onclick = ()=>{
+      if(!obState.routeId) return;
+      obGoto(ROUTE_DEFS[obState.routeId].needsDays ? "days" : "confirm");
+    };
+  } else if(obState.step==="days"){
+    $("#obBack3").onclick = ()=> obGoto("route");
+    $$(".ob-toggle").forEach(btn=>{
+      btn.onclick = ()=>{
+        const id = btn.dataset.cp;
+        const i = obState.boundaries.indexOf(id);
+        if(i>=0) obState.boundaries.splice(i,1); else obState.boundaries.push(id);
+        obState.boundaries.sort((a,b)=>CP[a].km-CP[b].km);
+        renderOnboarding();
+      };
+    });
+    $("#obNext3").onclick = ()=> obGoto("confirm");
+  } else if(obState.step==="confirm"){
+    $("#obBack4").onclick = ()=> obGoto(ROUTE_DEFS[obState.routeId].needsDays ? "days" : "route");
+    $("#obFinish").onclick = ()=> finishOnboarding();
+  }
+}
+function finishOnboarding(){
+  const profile = {
+    v:1, name:(obState.name||"").trim() || "Rider",
+    routeId: obState.routeId,
+    boundaries: ROUTE_DEFS[obState.routeId].needsDays ? [...obState.boundaries, "finish"] : []
+  };
+  saveProfile(profile);
+  PROFILE = profile;
+  applyRouteConfig(profile.routeId, profile.boundaries);
+  activeDay = 1;
+  closeOnboarding();
+  switchTab("heute");
+}
+function openOnboarding(){
+  obState = {step:"welcome", name:(PROFILE&&PROFILE.name)||"", routeId:(PROFILE&&PROFILE.routeId)||null, boundaries:(PROFILE&&PROFILE.boundaries&&PROFILE.boundaries.filter(id=>id!=="finish"))||[]};
+  document.documentElement.style.overflow = "hidden";
+  document.body.style.overflow = "hidden";
+  $("#onboarding").classList.add("show");
+  $("#onboarding").setAttribute("aria-hidden","false");
+  renderOnboarding();
+}
+function closeOnboarding(){
+  document.documentElement.style.overflow = "";
+  document.body.style.overflow = "";
+  $("#onboarding").classList.remove("show");
+  $("#onboarding").setAttribute("aria-hidden","true");
+}
+window.openOnboarding = openOnboarding; // fuer den "Profil zuruecksetzen"-Link im Mehr-Tab
+
 /* Init */
-renderHeute();
+if(PROFILE && PROFILE.routeId && ROUTE_DEFS[PROFILE.routeId]){
+  applyRouteConfig(PROFILE.routeId, PROFILE.boundaries||[]);
+  renderHeute();
+} else {
+  openOnboarding();
+}
 
 if("serviceWorker" in navigator){
   window.addEventListener("load", ()=>{
