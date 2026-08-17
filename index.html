@@ -94,6 +94,8 @@ main{flex:1; overflow-y:auto; padding:16px var(--pad) 110px; -webkit-overflow-sc
 .daymeta-stats{font-size:12.5px; color:var(--mist); margin-top:3px; position:relative; z-index:1;}
 .daymeta-char{font-size:12px; color:var(--mist); margin-top:5px; line-height:1.5; position:relative; z-index:1;}
 .daymeta-ghost{position:absolute; right:-4px; top:-14px; font-family:var(--font-display); font-size:74px; font-weight:900; letter-spacing:-.04em; color:var(--acid); opacity:.13; pointer-events:none; z-index:0; line-height:1;}
+.daymeta-editend{position:relative; z-index:1; appearance:none; background:none; border:none; color:var(--info); font-size:12px; font-weight:700; padding:0; margin-top:10px;}
+.daymeta-editend:active{opacity:.7;}
 
 /* KARTE */
 .mapwrap{position:relative; width:100%; border-radius:var(--r-lg); overflow:hidden; margin-bottom:10px; border:1px solid var(--line); background:var(--slate); touch-action:none;}
@@ -751,6 +753,17 @@ const I18N = {
   "em.iossettings": {de:"Standortzugriff abgelehnt — in den iPhone-Einstellungen für diesen Browser erlauben", en:"Location access denied — allow it for this browser in iPhone Settings"},
   "em.lat": {de:"BREITE", en:"LATITUDE"},
   "em.lon": {de:"LÄNGE", en:"LONGITUDE"},
+  "override.trigger": {de:"✏️ Ende der Etappe ändern", en:"✏️ Change end of stage"},
+  "override.title": {de:"Ende der Etappe ändern", en:"Change end of stage"},
+  "override.gpslabel": {de:"📍 Deine Position jetzt", en:"📍 Your position now"},
+  "override.namelabel": {de:"Wie heißt der Ort? (z. B. Name der Unterkunft)", en:"What's the place called? (e.g. name of the accommodation)"},
+  "override.nameplaceholder": {de:"z. B. Affittacamere da Mario", en:"e.g. Hotel Bellavista"},
+  "override.save": {de:"Speichern", en:"Save"},
+  "override.needname": {de:"Bitte einen Namen eintragen", en:"Please enter a name"},
+  "override.needgps": {de:"Noch keine Position erfasst — kurz warten oder erneut versuchen", en:"No position yet — wait a moment or try again"},
+  "override.invalidkm": {de:"Diese Position liegt vor dem Start der heutigen Etappe — bitte GPS aktualisieren.", en:"This position is before the start of today's stage — please refresh GPS."},
+  "override.pastnext": {de:"Diese Position liegt schon hinter dem geplanten Ende des nächsten Tages. Bitte zuerst den nächsten Tag anpassen.", en:"This position is already past the planned end of the next day. Please adjust the next day first."},
+  "override.saved": {de:"Etappenende angepasst", en:"Stage end updated"},
   "cp.food": {de:"Essen", en:"Food"},
   "cp.hours": {de:"Öffnung", en:"Hours"},
   "cp.camping": {de:"Camping", en:"Camping"},
@@ -1269,28 +1282,132 @@ function buildCustomWeatherLoc(days){
   });
   return out;
 }
-// Nur die Tage-Liste einer Route, ohne ELEV/WEATHER_LOC zu setzen - fuers Onboarding-Vorschau
-// (obConfirmHtml). Dieselbe Fallunterscheidung wie applyRouteConfig, damit beide nie auseinanderlaufen.
-function previewDaysForRoute(routeId, boundaryCpIds){
-  if(routeId==="lotti") return LOTTI_DAYS;
-  if(routeId==="paula") return PAULA_DAYS;
-  return buildCustomDays([...boundaryCpIds, "finish"]);
-}
-// Zentrale Weiche: setzt DAYS/ELEV/WEATHER_LOC passend zur im Onboarding gewaehlten Route.
-function applyRouteConfig(routeId, boundaryCpIds){
-  if(routeId==="lotti"){
-    DAYS = LOTTI_DAYS; ELEV = LOTTI_ELEV; WEATHER_LOC = LOTTI_WEATHER_LOC;
-    return;
-  }
-  if(routeId==="paula"){
-    DAYS = PAULA_DAYS; ELEV = PAULA_ELEV; WEATHER_LOC = PAULA_WEATHER_LOC;
-    return;
-  }
-  DAYS = buildCustomDays(boundaryCpIds);
+// Basis-Tagesliste einer Route (Lotti/Paula/eigene), noch ohne manuelle Anpassungen unterwegs.
+function baseRouteConfig(routeId, boundaryCpIds){
+  if(routeId==="lotti") return {days:LOTTI_DAYS, elev:LOTTI_ELEV, weatherLoc:LOTTI_WEATHER_LOC};
+  if(routeId==="paula") return {days:PAULA_DAYS, elev:PAULA_ELEV, weatherLoc:PAULA_WEATHER_LOC};
+  const days = buildCustomDays([...boundaryCpIds, "finish"]);
   const elev = {};
-  DAYS.forEach(d=>{ elev[d.n] = dayElevFromSlice(d.kmFrom, d.kmTo); });
-  ELEV = elev;
-  WEATHER_LOC = buildCustomWeatherLoc(DAYS);
+  days.forEach(d=>{ elev[d.n] = dayElevFromSlice(d.kmFrom, d.kmTo); });
+  return {days, elev, weatherLoc: buildCustomWeatherLoc(days)};
+}
+// Nur die Tage-Liste einer Route, ohne ELEV/WEATHER_LOC zu setzen - fuers Onboarding-Vorschau (obConfirmHtml).
+function previewDaysForRoute(routeId, boundaryCpIds){
+  return baseRouteConfig(routeId, boundaryCpIds).days;
+}
+
+const ROUTE_TOTAL_KM = 495; // physische Gesamtstrecke, unabhaengig von der gewaehlten Tagesaufteilung
+// Projiziert eine GPS-Position auf das naechstgelegene Segment der Streckenlinie und interpoliert
+// die km-Position linear entlang dieses Segments. Wichtig: NICHT auf den naechsten bekannten
+// Streckenpunkt runden (das waere auf laengeren Etappen ohne Zwischenpunkte, z.B. Malga
+// Kirchsteiger km461 -> Ziel km495, viel zu grob und wuerde Positionen dazwischen unmoeglich machen).
+function snapKmToRoute(lat, lon){
+  const cosLat = Math.cos(lat*Math.PI/180);
+  const kmPerDegLat = 111.32, kmPerDegLon = 111.32*cosLat;
+  const toXY = (la,lo) => ({x:lo*kmPerDegLon, y:la*kmPerDegLat});
+  const seq = ROUTE_SEQ.filter(id=>id==="start" || WAY[id]);
+  const pts = seq.map(id=>{
+    const c = id==="start" ? COORDS.start : COORDS[id];
+    const km = id==="start" ? 0 : WAY[id].km;
+    return {...toXY(c.lat,c.lon), km};
+  });
+  const target = toXY(lat, lon);
+  let bestKm = 0, bestDist = Infinity;
+  for(let i=1;i<pts.length;i++){
+    const a=pts[i-1], b=pts[i];
+    const abx=b.x-a.x, aby=b.y-a.y;
+    const lenSq = abx*abx+aby*aby;
+    let f = lenSq>0 ? ((target.x-a.x)*abx + (target.y-a.y)*aby)/lenSq : 0;
+    f = Math.max(0, Math.min(1, f));
+    const dist = Math.hypot(target.x-(a.x+abx*f), target.y-(a.y+aby*f));
+    if(dist<bestDist){ bestDist=dist; bestKm = a.km + (b.km-a.km)*f; }
+  }
+  return Math.round(bestKm*10)/10;
+}
+// Wendet manuelle Tagesende-Anpassungen (GPS+Name) auf die Basis-Tagesliste an. Betrifft nur den
+// veraenderten Tag (neues Ende) und den direkt folgenden Tag (neuer Start) - alle anderen Tage
+// bleiben unveraendert. Wird der zu diesem Zeitpunkt LETZTE Tag angepasst und das Ziel (495 km) ist
+// damit noch nicht erreicht, wird automatisch ein weiterer Tag bis zum Ziel angehaengt - das kann
+// sich durch wiederholtes Anpassen des jeweils neuen letzten Tages beliebig oft wiederholen.
+function applyDayOverrides(baseDays, overrides){
+  let days = baseDays.map(d=>({...d, sleep:{...d.sleep}}));
+  const sorted = [...overrides].sort((a,b)=>a.dayIndex-b.dayIndex);
+  sorted.forEach(o=>{
+    const d = days[o.dayIndex];
+    if(!d) return;
+    const {up, down} = upDownBetween(d.kmFrom, o.km);
+    const km = +(o.km-d.kmFrom).toFixed(1);
+    d.to = o.name; d.kmTo = o.km; d.km = km;
+    d.up = Math.round(up); d.down = Math.round(down);
+    d.time = estimateTimeStr(km);
+    d.subtitle = {de:"Eigener Stopp", en:"Custom stop"};
+    d.character = {
+      de: `${d.from} → ${o.name} · ${km} km, +${d.up} / −${d.down} Hm.`,
+      en: `${d.from} → ${o.name} · ${km} km, +${d.up} / −${d.down} m elevation.`
+    };
+    d.sleep = {
+      status:"warn", place:o.name,
+      note:{de:"Eigener Stopp — nicht im Handbook", en:"Custom stop — not in the handbook"},
+      detail:{de:"Von dir eingetragen. Details zu Verpflegung/Übernachtung sind der App nicht bekannt.", en:"Entered by you. Food/lodging details aren't known to the app."}
+    };
+    d.way = ROUTE_SEQ.filter(id=>id!=="start" && WAY[id] && WAY[id].km>d.kmFrom && WAY[id].km<=o.km);
+    d.specials = [];
+    d.customEnd = {lat:o.lat, lon:o.lon, name:o.name};
+
+    const next = days[o.dayIndex+1];
+    if(next){
+      const nd = upDownBetween(o.km, next.kmTo);
+      const nkm = +(next.kmTo-o.km).toFixed(1);
+      next.from = o.name; next.kmFrom = o.km; next.km = nkm;
+      next.up = Math.round(nd.up); next.down = Math.round(nd.down);
+      next.time = estimateTimeStr(nkm);
+      next.way = ROUTE_SEQ.filter(id=>id!=="start" && WAY[id] && WAY[id].km>o.km && WAY[id].km<=next.kmTo);
+    } else if(o.km < ROUTE_TOTAL_KM - 0.5){
+      const {up:fup, down:fdown} = upDownBetween(o.km, ROUTE_TOTAL_KM);
+      const fkm = +(ROUTE_TOTAL_KM-o.km).toFixed(1);
+      const finishName = "Ahoi Minigolf";
+      days.push({
+        n: days.length+1, from:o.name, to:finishName,
+        subtitle:{de:"Ziel · 289 m", en:"Finish · 289 m"},
+        km:fkm, time:estimateTimeStr(fkm), up:Math.round(fup), down:Math.round(fdown),
+        kmFrom:o.km, kmTo:ROUTE_TOTAL_KM,
+        character:{
+          de:`${o.name} → ${finishName} · ${fkm} km, +${Math.round(fup)} / −${Math.round(fdown)} Hm.`,
+          en:`${o.name} → ${finishName} · ${fkm} km, +${Math.round(fup)} / −${Math.round(fdown)} m elevation.`
+        },
+        sleep:{status:"ok", place:finishName, note:{de:"Ziel · 289 m", en:"Finish · 289 m"},
+          detail:{de:"Zelten kostenlos, Duschen & Toiletten vorhanden. Nach dem Zieleinlauf darfst du bis Montag bleiben.", en:"Free camping, showers & toilets available. You can stay until Monday after finishing."}},
+        way: ROUTE_SEQ.filter(id=>id!=="start" && WAY[id] && WAY[id].km>o.km && WAY[id].km<=ROUTE_TOTAL_KM),
+        specials:[]
+      });
+    }
+  });
+  return days;
+}
+function weatherLocForDays(days){
+  const out = {};
+  days.forEach(d=>{
+    if(d.customEnd){ out[d.n] = {lat:d.customEnd.lat, lon:d.customEnd.lon, label:`${d.customEnd.name} (custom)`}; return; }
+    const lastWay = d.way[d.way.length-1];
+    const c = lastWay!==undefined ? COORDS[lastWay] : COORDS.start;
+    out[d.n] = {lat:c.lat, lon:c.lon, label:`${tf(d.to)} (ca.)`};
+  });
+  return out;
+}
+// Zentrale Weiche: setzt DAYS/ELEV/WEATHER_LOC passend zur gewaehlten Route, danach werden
+// unterwegs gespeicherte Tagesende-Anpassungen (PROFILE.overrides) darauf angewendet.
+function applyRouteConfig(routeId, boundaryCpIds){
+  const base = baseRouteConfig(routeId, boundaryCpIds);
+  let days = base.days, elev = base.elev, weatherLoc = base.weatherLoc;
+  const overrides = (PROFILE && PROFILE.overrides) || [];
+  if(overrides.length){
+    days = applyDayOverrides(days, overrides);
+    const newElev = {};
+    days.forEach(d=>{ newElev[d.n] = dayElevFromSlice(d.kmFrom, d.kmTo); });
+    elev = newElev;
+    weatherLoc = weatherLocForDays(days);
+  }
+  DAYS = days; ELEV = elev; WEATHER_LOC = weatherLoc;
   if(activeDay>DAYS.length) activeDay = DAYS.length;
   if(typeof diaryDay!=="undefined" && diaryDay>DAYS.length) diaryDay = DAYS.length;
 }
@@ -1611,6 +1728,76 @@ function copyEmergencyCoords(){
   } else {
     toast(t("em.copynotsupported"));
   }
+}
+/* ---- Etappenende unterwegs anpassen (GPS + eigener Name) ---- */
+let dayEndPos = null;
+function startDayEndGPS(forceRestart){
+  if(!("geolocation" in navigator)){ renderDayEndCoords(null, t("gps.notsupported")); return; }
+  renderDayEndCoords(null, t("gps.searching"));
+  navigator.geolocation.getCurrentPosition(
+    pos=>{
+      dayEndPos = {lat:pos.coords.latitude, lon:pos.coords.longitude, acc:pos.coords.accuracy};
+      renderDayEndCoords(dayEndPos);
+    },
+    err=>{
+      const msg = err.code===1 ? t("em.iossettings") : err.code===2 ? t("gps.unavailable") : t("gps.timeout");
+      renderDayEndCoords(null, msg);
+    },
+    {enableHighAccuracy:true, maximumAge: forceRestart?0:5000, timeout:20000}
+  );
+}
+function renderDayEndCoords(pos, msg){
+  const el = document.getElementById("deCoordsBody");
+  if(!el) return;
+  if(!pos){
+    el.innerHTML = `<div style="font-size:14px;font-weight:600;color:var(--mist);">${msg||t("gps.searching")}</div>`;
+    return;
+  }
+  el.innerHTML = `
+    <div class="emergency-coords-row"><span class="emergency-coords-tag">${t("em.lat")}</span><span class="emergency-coords-val" style="font-size:22px;">${pos.lat.toFixed(5)}</span></div>
+    <div class="emergency-coords-row"><span class="emergency-coords-tag">${t("em.lon")}</span><span class="emergency-coords-val" style="font-size:22px;">${pos.lon.toFixed(5)}</span></div>
+    <div class="emergency-coords-acc">${t("em.accuracy")}${Math.round(pos.acc||0)} ${t("em.accuracysuffix")}</div>
+  `;
+}
+function openDayEndSheet(dayIdx){
+  dayEndPos = null;
+  const d = DAYS[dayIdx];
+  const body = `
+    <div class="emergency-coords">
+      <div class="emergency-coords-label">${t("override.gpslabel")}</div>
+      <div id="deCoordsBody"><div style="font-size:14px;font-weight:600;color:var(--mist);">${t("gps.searching")}</div></div>
+      <div class="emergency-coords-actions">
+        <button class="emergency-coords-btn" type="button" id="deRefreshBtn">${t("em.refresh")}</button>
+      </div>
+    </div>
+    <div class="subtitle" style="font-weight:700;margin-bottom:6px;">${t("override.namelabel")}</div>
+    <input class="ob-input" id="deNameInput" type="text" placeholder="${t("override.nameplaceholder")}" maxlength="60" style="margin-bottom:16px;">
+    <button class="ob-btn primary" type="button" id="deSaveBtn" style="width:100%;">${t("override.save")}</button>
+  `;
+  showSheet(`✏️ ${t("override.title")}`, `${t("word.day")} ${d.n} · ${d.from} → ${d.to}`, body);
+  startDayEndGPS();
+  $("#deRefreshBtn").onclick = ()=> startDayEndGPS(true);
+  $("#deSaveBtn").onclick = ()=> saveDayEndOverride(dayIdx);
+}
+function saveDayEndOverride(dayIdx){
+  const nameInput = $("#deNameInput");
+  const name = nameInput ? nameInput.value.trim() : "";
+  if(!name){ toast(t("override.needname")); return; }
+  if(!dayEndPos){ toast(t("override.needgps")); return; }
+  const d = DAYS[dayIdx];
+  if(!d || !PROFILE) return;
+  const km = snapKmToRoute(dayEndPos.lat, dayEndPos.lon);
+  if(km<=d.kmFrom){ toast(t("override.invalidkm")); return; }
+  const next = DAYS[dayIdx+1];
+  if(next && km>=next.kmTo){ toast(t("override.pastnext")); return; }
+  const overrides = (PROFILE.overrides || []).filter(o=>o.dayIndex!==dayIdx);
+  overrides.push({dayIndex:dayIdx, name, km, lat:dayEndPos.lat, lon:dayEndPos.lon});
+  PROFILE.overrides = overrides;
+  saveProfile(PROFILE);
+  applyRouteConfig(PROFILE.routeId, PROFILE.boundaries||[]);
+  closeSheet();
+  toast(t("override.saved"));
+  renderHeute();
 }
 function openEmergencySheet(){
   const body = `
@@ -2253,6 +2440,7 @@ function renderHeute(){
     <div class="daymeta-route">${tf(d.from)}<span class="arrow">→</span>${tf(d.to)}</div>
     <div class="daymeta-stats mono">${d.km} km · +${d.up.toLocaleString(LANG==='de'?'de-DE':'en-US')} ${t("unit.hm")} · −${d.down.toLocaleString(LANG==='de'?'de-DE':'en-US')} ${t("unit.hm")} · ${tf(d.time)}</div>
     <div class="daymeta-char">${tf(d.character)}</div>
+    <button class="daymeta-editend" type="button" id="dayEndEditBtn">${t("override.trigger")}</button>
   </div>`;
 
   h += mapHtml(activeDay);
@@ -2284,6 +2472,8 @@ function bindMap(){
   if(st) st.onclick = openStoryMode;
   const ve = document.getElementById("videoExportBtn");
   if(ve) ve.onclick = ()=> startVideoExport();
+  const de = document.getElementById("dayEndEditBtn");
+  if(de) de.onclick = ()=> openDayEndSheet(activeDay-1);
   if(!svg) return;
   let moved = false, downXY = null;
   svg.addEventListener("pointerdown", (e)=>{ moved=false; downXY={x:e.clientX, y:e.clientY}; });
