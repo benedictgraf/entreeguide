@@ -80,25 +80,25 @@ main{flex:1; overflow-y:auto; padding:16px var(--pad) 110px; -webkit-overflow-sc
 .tick.warn{background:var(--warn);}
 .tick.no{background:var(--bad);}
 .progress-caption{display:flex; justify-content:space-between; font-size:12px; color:var(--mist); margin-bottom:14px;}
-.daypills{display:flex; gap:6px; margin-bottom:16px;}
+.daypills{display:flex; gap:6px; margin-bottom:22px;}
 .daypill{flex:1 1 0; min-width:0; padding:9px 4px 8px; text-align:center; background:var(--slate); border:1px solid var(--line); border-radius:var(--r-sm); transition:background .15s,border-color .15s,color .15s;}
 .daypill b{display:block; font-size:14px; font-weight:800;}
 .daypill span{display:block; font-size:10.5px; color:var(--mist); margin-top:1px;}
 .daypill.active{background:var(--acid); border-color:var(--acid); color:var(--acid-ink);}
 .daypill.active span{color:var(--acid-ink); opacity:.7;}
 
-/* TAGES-HERO-CARD (im Stil der Sleep-Tonight-Kachel) */
-.daymeta{position:relative; border-radius:var(--r-lg); padding:16px; margin-bottom:12px; overflow:hidden; background:linear-gradient(155deg,rgba(207,255,77,.14),rgba(207,255,77,.03)); border:1px solid rgba(207,255,77,.35);}
-.daymeta-greeting{font-size:11.5px; color:var(--mist); font-weight:700; margin-bottom:6px;}
-.daymeta-route{font-family:var(--font-display); font-size:19px; font-weight:800; letter-spacing:-.01em;}
+/* TAGES-KOPF (kein Kartenhintergrund - ruhiger durch großzügigeres Spacing) */
+.daymeta{margin-bottom:22px;}
+.daymeta-greeting{font-size:11.5px; color:var(--mist); font-weight:700; margin-bottom:10px;}
+.daymeta-route{font-family:var(--font-display); font-size:19px; font-weight:800; letter-spacing:-.01em; margin-bottom:8px;}
 .daymeta-route .arrow{color:var(--flare); margin:0 5px;}
-.daymeta-stats{font-size:12.5px; color:var(--mist); margin:3px 0 10px;}
-.daymeta-char{font-size:13.5px; line-height:1.55;}
-.daymeta-editend{appearance:none; background:none; border:none; color:var(--info); font-size:12px; font-weight:700; padding:0; margin-top:10px;}
+.daymeta-stats{font-size:12.5px; color:var(--mist); margin-bottom:10px;}
+.daymeta-char{font-size:13.5px; line-height:1.6; margin-bottom:12px;}
+.daymeta-editend{appearance:none; background:none; border:none; color:var(--info); font-size:12px; font-weight:700; padding:0;}
 .daymeta-editend:active{opacity:.7;}
 
 /* KARTE */
-.mapwrap{position:relative; width:100%; border-radius:var(--r-lg); overflow:hidden; margin-bottom:10px; border:1px solid var(--line); background:var(--slate); touch-action:none;}
+.mapwrap{position:relative; width:100%; border-radius:var(--r-lg); overflow:hidden; margin:22px 0 10px; border:1px solid var(--line); background:var(--slate); touch-action:none;}
 .routemap{width:100%; height:100%; display:block;}
 .map-fullpath{fill:none; stroke:var(--mist); stroke-width:2.4; stroke-linecap:round; stroke-linejoin:round; opacity:.38;}
 .map-activepath-halo{fill:none; stroke:var(--flare); stroke-width:11; stroke-linecap:round; stroke-linejoin:round; opacity:.22;}
@@ -172,18 +172,6 @@ main{flex:1; overflow-y:auto; padding:16px var(--pad) 110px; -webkit-overflow-sc
 
 /* CARDS */
 .card{background:var(--slate); border:1px solid var(--line); border-radius:var(--r-lg); padding:16px; margin-bottom:12px;}
-.sleep-card{border-radius:var(--r-lg); padding:16px; margin-bottom:12px; border:1px solid; position:relative;}
-.sleep-card.ok{background:linear-gradient(155deg,rgba(207,255,77,.14),rgba(207,255,77,.03)); border-color:rgba(207,255,77,.35);}
-.sleep-card.warn{background:linear-gradient(155deg,rgba(255,138,76,.16),rgba(255,138,76,.03)); border-color:rgba(255,138,76,.4);}
-.sleep-head{display:flex; align-items:center; gap:8px; font-size:12px; font-weight:800; letter-spacing:.08em; text-transform:uppercase; color:var(--mist); margin-bottom:8px;}
-.sleep-place{font-family:var(--font-display); font-size:19px; font-weight:800; margin-bottom:4px;}
-.sleep-note{font-size:12.5px; color:var(--mist); margin-bottom:10px;}
-.sleep-detail{font-size:13.5px; line-height:1.55;}
-.badge{display:inline-flex; align-items:center; gap:5px; font-size:11px; font-weight:800; letter-spacing:.04em; text-transform:uppercase; padding:4px 10px; border-radius:999px; white-space:nowrap;}
-.badge.ok{background:rgba(207,255,77,.18); color:var(--acid);}
-.badge.warn{background:rgba(255,138,76,.2); color:var(--warn);}
-.badge.no{background:rgba(255,92,92,.18); color:var(--bad);}
-.badge.neutral{background:var(--slate2); color:var(--mist);}
 
 /* WETTER */
 .weather-card{background:var(--slate); border:1px solid var(--line); border-radius:var(--r-lg); padding:16px; margin-bottom:12px;}
@@ -208,9 +196,9 @@ main{flex:1; overflow-y:auto; padding:16px var(--pad) 110px; -webkit-overflow-sc
 .rowlist{background:var(--slate); border:1px solid var(--line); border-radius:var(--r-lg); overflow:hidden; margin-bottom:12px;}
 .row{display:flex; align-items:center; gap:12px; padding:13px 14px; border-bottom:1px solid var(--line);}
 .row:last-child{border-bottom:none;}
-.row .km{font-size:12.5px; color:var(--mist); min-width:40px;}
-.row .name{flex:1; font-size:14.5px; font-weight:600;}
-.row .sub{font-size:12px; color:var(--mist); margin-top:1px; font-weight:400;}
+.km{font-size:12.5px; color:var(--mist); min-width:40px;}
+.name{flex:1; font-size:14.5px; font-weight:600;}
+.sub{font-size:12px; color:var(--mist); margin-top:1px; font-weight:400;}
 .chev{color:var(--mist); font-size:13px; transition:transform .2s; flex-shrink:0;}
 .tap.open .chev{transform:rotate(90deg); color:var(--acid);}
 .row-detail{display:none; padding:0 14px 16px; font-size:13.5px; line-height:1.6; color:var(--fog);}
@@ -218,7 +206,14 @@ main{flex:1; overflow-y:auto; padding:16px var(--pad) 110px; -webkit-overflow-sc
 .row-detail dl{margin:10px 0 0; display:grid; grid-template-columns:auto 1fr; gap:6px 10px; font-size:13px;}
 .row-detail dt{color:var(--mist);}
 .row-detail dd{margin:0;}
-.tap{background:none; border:none; width:100%; text-align:left; padding:0; display:flex; align-items:center; gap:12px; padding:13px 14px; cursor:pointer;}
+.tap{background:none; border:none; width:100%; text-align:left; display:flex; align-items:flex-start; gap:12px; padding:13px 14px; cursor:pointer;}
+.tap .km{margin-top:2px;}
+.tapmain{flex:1; min-width:0;}
+.flagrow{display:flex; gap:6px; flex-wrap:wrap; margin-top:8px;}
+.flag{display:inline-flex; align-items:center; gap:4px; font-size:10.5px; font-weight:700; padding:3px 8px; border-radius:999px; white-space:nowrap;}
+.flag.ok{background:rgba(207,255,77,.14); color:var(--acid);}
+.flag.warn{background:rgba(255,138,76,.16); color:var(--warn);}
+.flag.no{background:rgba(255,92,92,.14); color:var(--bad);}
 
 /* SPECIALS */
 .callout{border-left:3px solid var(--warn); background:var(--slate); border-radius:0 var(--r-md) var(--r-md) 0; padding:12px 14px; margin-bottom:10px;}
@@ -411,8 +406,6 @@ nav#tabbar{position:fixed; left:0; right:0; bottom:0; z-index:20; display:flex; 
 .ob-dayrow-stats{font-size:12px; color:var(--mist); margin-top:3px; font-family:ui-monospace,monospace;}
 .ob-greeting-preview{font-family:var(--font-display); font-size:24px; font-weight:900; margin-bottom:4px;}
 
-.daymeta-greeting{font-size:11.5px; color:var(--mist); font-weight:700; margin-bottom:6px; position:relative; z-index:1;}
-
 :focus-visible{outline:2px solid var(--flare); outline-offset:2px;}
 @media (prefers-reduced-motion:reduce){ *{animation-duration:.001ms !important; transition-duration:.001ms !important;} }
 </style>
@@ -439,18 +432,14 @@ nav#tabbar{position:fixed; left:0; right:0; bottom:0; z-index:20; display:flex; 
     </section>
 
     <section class="view" id="view-cp">
-      <p class="eyebrow" data-i18n="eyebrow.cp">6 Checkpoints + Ziel · der Reihe nach</p>
+      <p class="eyebrow" data-i18n="eyebrow.cp">Checkpoints &amp; Schlafmöglichkeiten · der Reihe nach</p>
       <div class="rowlist" id="cpList"></div>
+      <div id="cpExtra"></div>
     </section>
 
     <section class="view" id="view-resupply">
       <p class="eyebrow" data-i18n="eyebrow.resupply">Alle Stationen · der Reihe nach</p>
       <div id="resupplyBody"></div>
-    </section>
-
-    <section class="view" id="view-schlafen">
-      <p class="eyebrow" id="schlafenEyebrow">Nächte im Überblick</p>
-      <div id="schlafenBody"></div>
     </section>
 
     <section class="view" id="view-diary">
@@ -470,7 +459,6 @@ nav#tabbar{position:fixed; left:0; right:0; bottom:0; z-index:20; display:flex; 
     <button class="tabbtn active" data-tab="heute"><span class="ic">🚵</span><span class="lb" data-i18n="tab.heute">Heute</span></button>
     <button class="tabbtn" data-tab="cp"><span class="ic">📍</span><span class="lb" data-i18n="tab.cp">Checkpoints</span></button>
     <button class="tabbtn" data-tab="resupply"><span class="ic">🥖</span><span class="lb" data-i18n="tab.resupply">Resupply</span></button>
-    <button class="tabbtn" data-tab="schlafen"><span class="ic">⛺</span><span class="lb" data-i18n="tab.schlafen">Schlafen</span></button>
     <button class="tabbtn" data-tab="diary"><span class="ic">📓</span><span class="lb" data-i18n="tab.diary">Tagebuch</span><span class="tabdot" id="diaryDot" hidden></span></button>
     <button class="tabbtn" data-tab="mehr"><span class="ic">☰</span><span class="lb" data-i18n="tab.mehr">Mehr</span></button>
   </nav>
@@ -579,15 +567,13 @@ const I18N = {
   "tab.heute": {de:"Heute", en:"Today"},
   "tab.cp": {de:"Checkpoints", en:"Checkpoints"},
   "tab.resupply": {de:"Resupply", en:"Resupply"},
-  "tab.schlafen": {de:"Schlafen", en:"Sleep"},
   "tab.diary": {de:"Tagebuch", en:"Diary"},
   "tab.mehr": {de:"Mehr", en:"More"},
   "qb.emergency": {de:"Notfall", en:"Emergency"},
   "qb.community": {de:"Community", en:"Community"},
   "qb.komoot": {de:"Komoot-Route", en:"Komoot route"},
-  "eyebrow.cp": {de:"6 Checkpoints + Ziel · der Reihe nach", en:"6 checkpoints + finish · in order"},
+  "eyebrow.cp": {de:"Checkpoints & Schlafmöglichkeiten · der Reihe nach", en:"Checkpoints & overnight stops · in order"},
   "eyebrow.resupply": {de:"Alle Stationen · der Reihe nach", en:"All stops · in order"},
-  "eyebrow.schlafen": {de:"Nächte im Überblick", en:"Nights at a glance"},
   "eyebrow.diary": {de:"Dein Etappen-Tagebuch", en:"Your stage diary"},
   "eyebrow.mehr": {de:"Zeitplan & Vorbereitung", en:"Schedule & preparation"},
   "eyebrow.elev": {de:"📈 Höhenprofil", en:"📈 Elevation profile"},
@@ -621,13 +607,11 @@ const I18N = {
   "role.finish": {de:"Ziel · Ende Tag {n}", en:"Finish · End of Day {n}"},
   "word.passthrough": {de:"Durchfahrt", en:"Pass-through"},
   "word.daysplanned": {de:"Tage geplant", en:"days planned"},
-  "word.after": {de:"Nach", en:"After"},
+  "flag.sleep": {de:"Schlafmöglichkeit", en:"Overnight stop"},
+  "flag.camp": {de:"Camping", en:"Camping"},
   "campgeneral.title": {de:"Allgemeine Camping-Regeln", en:"General camping rules"},
   "campgeneral.p1": {de:"Wildcamping ist in Italien/der Schweiz offiziell nicht erlaubt, <b>Not-Biwak wird aber toleriert</b>. Rifugio-Betten sind nicht exklusiv für Teilnehmer:innen reserviert — bei ausgebuchten Betten kann meist in der Nähe gezeltet werden.", en:"Wild camping is officially not allowed in Italy/Switzerland, but <b>emergency bivouacking is tolerated</b>. Rifugio beds aren't reserved exclusively for participants — if beds are full you can usually camp nearby."},
   "campgeneral.p2": {de:"Richtwerte Rifugio-Kosten allgemein: ca. 10 € Frühstück, ca. 20 € Abendessen, ca. 30 € Übernachtung (je nach Zimmer auch mehr). Bei spätem Ankommen/frühem Aufbruch: kurz mit dem Personal sprechen, Preise/Zeiten sind oft flexibel.", en:"Rough rifugio price guide: approx. €10 breakfast, approx. €20 dinner, approx. €30 overnight (can be more depending on the room). Arriving late/leaving early: just talk to the staff, prices/times are often flexible."},
-  "badge.ok": {de:"Camping möglich", en:"Camping possible"},
-  "badge.warn": {de:"Eingeschränkt", en:"Restricted"},
-  "badge.no": {de:"Nicht erlaubt", en:"Not allowed"},
   "ob.welcome": {de:"Willkommen", en:"Welcome"},
   "ob.welcometitle": {de:"Dein persönliches<br><b>ENTREE Feldbuch</b>", en:"Your personal<br><b>ENTREE field book</b>"},
   "ob.welcomedesc": {de:"Ein kurzes, einmaliges Setup — danach merkt sich die App alles auf diesem Gerät. Kein Konto, kein Server, alles bleibt bei dir.", en:"A short, one-time setup — after that the app remembers everything on this device. No account, no server, everything stays with you."},
@@ -887,7 +871,7 @@ const WAY = {
  9:{km:241, name:"Rifugio Croda da Lago", kind:"rifugio", offer:{de:"Essen · Getränke · Wasser", en:"Food · drinks · water"}},
  10:{km:252, name:"Cortina d'Ampezzo", kind:"town", offer:{de:"Supermarkt · Restaurants · Apotheke · Brunnen (off-route)", en:"Supermarket · restaurants · pharmacy · water fountain (off-route)"}},
  11:{km:276, name:"Rifugio Pederü", kind:"cp", cp:"cp4", offer:{de:"Stempel · Essen · Getränke · Wasser", en:"Stamp · food · drinks · water"}},
- 12:{km:307, name:"Glittnersee", kind:"camp", offer:{de:"Tagesziel Tag 3 (Komoot) — kein Handbook-Eintrag, siehe Schlafen", en:"Day 3 target (Komoot) — not in the handbook, see Sleep tab"}},
+ 12:{km:307, name:"Glittnersee", kind:"camp", offer:{de:"Tagesziel Tag 3 (Komoot) — kein Handbook-Eintrag, siehe Checkpoints", en:"Day 3 target (Komoot) — not in the handbook, see Checkpoints tab"}},
  13:{km:317, name:"Rifugio Campoforte", kind:"rifugio", offer:{de:"Essen · Getränke · Wasser", en:"Food · drinks · water"}},
  14:{km:334, name:"Mühlbach", kind:"town", offer:{de:"Supermarkt · Restaurants · Apotheke · Brunnen", en:"Supermarket · restaurants · pharmacy · water fountain"}},
  15:{km:340, name:"Niedervintl", kind:"town", offer:{de:"Supermarkt · Restaurants · Apotheke · Brunnen", en:"Supermarket · restaurants · pharmacy · water fountain"}},
@@ -989,11 +973,6 @@ function wmo(code){ return WMO[code] || ["❓",{de:"–",en:"–"}]; }
 /* ======================= HELPERS ======================= */
 const $ = s => document.querySelector(s);
 const $$ = s => Array.from(document.querySelectorAll(s));
-function campBadge(camp){
-  const label = camp.status==="ok"?t("badge.ok"):camp.status==="warn"?t("badge.warn"):t("badge.no");
-  const icon = camp.status==="ok"?"✓":camp.status==="warn"?"△":"✕";
-  return `<span class="badge ${camp.status}">${icon} ${label}</span>`;
-}
 function stopIcon(kind){ return {town:"🏘️", rifugio:"🍽️", cp:"📍", finish:"🏁", camp:"⛺"}[kind]||"·"; }
 function stopColorClass(w){
   if(w.kind==="cp") return CP[w.cp].camp.status;
@@ -1020,15 +999,55 @@ function cpDetailDl(cp){
     <dt>${t("cp.contact")}</dt><dd><a href="tel:${cp.tel}">${cp.telShow}</a> · <a href="https://${cp.web}" target="_blank" rel="noopener">${cp.web}</a></dd>
   </dl>`;
 }
+// Ein CP ist eine Schlafmoeglichkeit fuer die AKTUELL gewaehlte Route, wenn er als letzter
+// Wegpunkt eines Tages auftaucht (also Tagesende ist) - Durchfahrts-CPs matchen hier nicht.
+function isCpWay(w, cpId){
+  // "finish" hat in WAY kind:"finish" statt eines .cp-Feldes - Sonderfall noetig.
+  return cpId==="finish" ? w.kind==="finish" : w.cp===cpId;
+}
+function cpSleepDay(cpId){
+  return DAYS.find(d=>{
+    const lastWay = d.way[d.way.length-1];
+    return lastWay!==undefined && WAY[lastWay] && isCpWay(WAY[lastWay], cpId);
+  });
+}
+function flagRowHtml(isSleepStop, campStatus){
+  const sIcon = isSleepStop ? "☑️" : "❌";
+  const cIcon = campStatus==="ok" ? "☑️" : campStatus==="warn" ? "⚠️" : "❌";
+  return `<div class="flagrow">
+    <span class="flag ${isSleepStop?"ok":"no"}">${sIcon} ${t("flag.sleep")}</span>
+    <span class="flag ${campStatus}">${cIcon} ${t("flag.camp")}</span>
+  </div>`;
+}
 function cpRowHtml(cp){
+  const sleepDay = cpSleepDay(cp.id);
   return `<div class="row-wrap">
     <button class="tap" data-cp="${cp.id}">
       <span class="km mono">${cp.km}</span>
-      <div class="name">${cp.label}<div class="sub">${roleForCP(cp.id)} · ${cp.alt} m</div></div>
-      ${campBadge(cp.camp)}
+      <div class="tapmain">
+        <div class="name">${cp.label}</div>
+        <div class="sub">${roleForCP(cp.id)} · ${cp.alt} m</div>
+        ${flagRowHtml(!!sleepDay, cp.camp.status)}
+      </div>
       <span class="chev">›</span>
     </button>
     <div class="row-detail">${cpDetailDl(cp)}</div>
+  </div>`;
+}
+// Naechte, die auf keinen offiziellen Checkpoint fallen (Wildcamp wie Glittnersee/Lago Federa,
+// oder ein per Etappenende-Override eingetragener eigener Stopp).
+function wildStopRowHtml(day){
+  return `<div class="row-wrap">
+    <button class="tap" data-wild="${day.n}">
+      <span class="km mono">${day.kmTo}</span>
+      <div class="tapmain">
+        <div class="name">${tf(day.sleep.place)}</div>
+        <div class="sub">${tf(day.sleep.note)}</div>
+        ${flagRowHtml(true, day.sleep.status)}
+      </div>
+      <span class="chev">›</span>
+    </button>
+    <div class="row-detail"><p>${tf(day.sleep.detail)}</p></div>
   </div>`;
 }
 function wayRowHtml(w){
@@ -2506,11 +2525,28 @@ function bindMap(){
 }
 
 /* ======================= RENDER: CHECKPOINTS ======================= */
+// Checkpoints + Schlafmoeglichkeiten in EINER Liste, nach km sortiert: alle offiziellen CPs
+// (auch reine Durchfahrten) plus die Naechte, die auf keinen CP fallen (Wildcamp/eigener Stopp).
+// So bleibt die vollstaendige Streckenreihenfolge sichtbar, ohne Naechte auszulassen, die nicht
+// an einem offiziellen Checkpoint liegen.
 function renderCP(){
-  let h="";
-  CP_ORDER.forEach(id=>{ h+=cpRowHtml(CP[id]); });
-  $("#cpList").innerHTML = h;
+  const cpStops = CP_ORDER.map(id=>({km:CP[id].km, html:cpRowHtml(CP[id])}));
+  const wildStops = DAYS.filter(d=>{
+    const lastWay = d.way[d.way.length-1];
+    if(lastWay===undefined || !WAY[lastWay]) return true;
+    return !CP_ORDER.some(id=>isCpWay(WAY[lastWay], id));
+  }).map(d=>({km:d.kmTo, html:wildStopRowHtml(d)}));
+  const rows = [...cpStops, ...wildStops].sort((a,b)=>a.km-b.km).map(s=>s.html).join("");
+  $("#cpList").innerHTML = rows;
+  $("#cpExtra").innerHTML = `<div class="acc" id="acc-campgeneral">
+    <button class="acc-head"><b>${t("campgeneral.title")}</b><span class="chev">›</span></button>
+    <div class="acc-body">
+      <p>${t("campgeneral.p1")}</p>
+      <p>${t("campgeneral.p2")}</p>
+    </div>
+  </div>`;
   bindRowToggles();
+  bindAccordions();
 }
 
 /* ======================= RENDER: RESUPPLY ======================= */
@@ -2525,30 +2561,6 @@ function renderResupply(){
     }
   });
   $("#resupplyBody").innerHTML = h;
-}
-
-/* ======================= RENDER: SCHLAFEN ======================= */
-function renderSchlafen(){
-  $("#schlafenEyebrow").textContent = `${DAYS.length} ${t("eyebrow.schlafen")}`;
-  let h="";
-  DAYS.forEach(d=>{
-    h += `<p class="eyebrow">${t("word.after")} ${t("word.day")} ${d.n}</p>
-    <div class="sleep-card ${d.sleep.status}">
-      <div class="sleep-head">${campBadge({status:d.sleep.status})}</div>
-      <div class="sleep-place">${tf(d.sleep.place)}</div>
-      <div class="sleep-note">${tf(d.sleep.note)}</div>
-      <div class="sleep-detail">${tf(d.sleep.detail)}</div>
-    </div>`;
-  });
-  h += `<div class="acc" id="acc-campgeneral">
-    <button class="acc-head"><b>${t("campgeneral.title")}</b><span class="chev">›</span></button>
-    <div class="acc-body">
-      <p>${t("campgeneral.p1")}</p>
-      <p>${t("campgeneral.p2")}</p>
-    </div>
-  </div>`;
-  $("#schlafenBody").innerHTML = h;
-  bindAccordions();
 }
 
 /* ======================= RENDER: MEHR ======================= */
@@ -2680,7 +2692,7 @@ function updateGearCount(){
 
 /* ======================= INTERAKTION ======================= */
 function bindRowToggles(){
-  $$(".tap[data-cp]").forEach(btn=>{
+  $$(".tap[data-cp], .tap[data-wild]").forEach(btn=>{
     btn.onclick=()=>{
       const detail = btn.closest(".row-wrap").querySelector(".row-detail");
       const isOpen = detail.classList.contains("open");
@@ -3020,7 +3032,7 @@ function bindDiaryEvents(){
   if(exportBtn) exportBtn.onclick = ()=> exportDiaryImage();
 }
 
-const TAB_RENDER = {heute:renderHeute, cp:renderCP, resupply:renderResupply, schlafen:renderSchlafen, diary:renderDiary, mehr:renderMehr};
+const TAB_RENDER = {heute:renderHeute, cp:renderCP, resupply:renderResupply, diary:renderDiary, mehr:renderMehr};
 function switchTab(name){
   $$(".tabbtn").forEach(b=>b.classList.toggle("active", b.dataset.tab===name));
   $$(".view").forEach(v=>v.classList.toggle("active", v.id==="view-"+name));
