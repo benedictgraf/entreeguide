@@ -87,14 +87,14 @@ main{flex:1; overflow-y:auto; padding:16px var(--pad) 110px; -webkit-overflow-sc
 .daypill.active{background:var(--acid); border-color:var(--acid); color:var(--acid-ink);}
 .daypill.active span{color:var(--acid-ink); opacity:.7;}
 
-/* KOMPAKTE TAGES-META (statt große Stat-Kachel) */
-.daymeta{position:relative; padding:2px 2px 14px; border-bottom:1px solid var(--line); margin-bottom:14px; overflow:hidden;}
-.daymeta-route{font-family:var(--font-display); font-size:19px; font-weight:800; letter-spacing:-.01em; position:relative; z-index:1; padding-right:64px;}
+/* TAGES-HERO-CARD (im Stil der Sleep-Tonight-Kachel) */
+.daymeta{position:relative; border-radius:var(--r-lg); padding:16px; margin-bottom:12px; overflow:hidden; background:linear-gradient(155deg,rgba(207,255,77,.14),rgba(207,255,77,.03)); border:1px solid rgba(207,255,77,.35);}
+.daymeta-greeting{font-size:11.5px; color:var(--mist); font-weight:700; margin-bottom:6px;}
+.daymeta-route{font-family:var(--font-display); font-size:19px; font-weight:800; letter-spacing:-.01em;}
 .daymeta-route .arrow{color:var(--flare); margin:0 5px;}
-.daymeta-stats{font-size:12.5px; color:var(--mist); margin-top:3px; position:relative; z-index:1;}
-.daymeta-char{font-size:12px; color:var(--mist); margin-top:5px; line-height:1.5; position:relative; z-index:1;}
-.daymeta-ghost{position:absolute; right:-4px; top:-14px; font-family:var(--font-display); font-size:74px; font-weight:900; letter-spacing:-.04em; color:var(--acid); opacity:.13; pointer-events:none; z-index:0; line-height:1;}
-.daymeta-editend{position:relative; z-index:1; appearance:none; background:none; border:none; color:var(--info); font-size:12px; font-weight:700; padding:0; margin-top:10px;}
+.daymeta-stats{font-size:12.5px; color:var(--mist); margin:3px 0 10px;}
+.daymeta-char{font-size:13.5px; line-height:1.55;}
+.daymeta-editend{appearance:none; background:none; border:none; color:var(--info); font-size:12px; font-weight:700; padding:0; margin-top:10px;}
 .daymeta-editend:active{opacity:.7;}
 
 /* KARTE */
@@ -2427,7 +2427,6 @@ function renderHeute(){
   const routeDef = PROFILE ? ROUTE_DEFS[PROFILE.routeId] : null;
 
   h += `<div class="daymeta">
-    <span class="daymeta-ghost">${String(d.n).padStart(2,"0")}</span>
     ${PROFILE ? `<div class="daymeta-greeting">Hey ${escHtml(PROFILE.name)} 👋${routeDef?` · ${tf(routeDef.title)}`:""}</div>` : ""}
     <div class="daymeta-route">${tf(d.from)}<span class="arrow">→</span>${tf(d.to)}</div>
     <div class="daymeta-stats mono">${d.km} km · +${d.up.toLocaleString(LANG==='de'?'de-DE':'en-US')} ${t("unit.hm")} · −${d.down.toLocaleString(LANG==='de'?'de-DE':'en-US')} ${t("unit.hm")} · ${tf(d.time)}</div>
@@ -2435,12 +2434,13 @@ function renderHeute(){
     <button class="daymeta-editend" type="button" id="dayEndEditBtn">${t("override.trigger")}</button>
   </div>`;
 
-  h += `<p class="eyebrow"><span class="flare">⛺</span> ${t("eyebrow.sleep").replace("⛺ ","")}</p>`;
-  h += `<div class="sleep-card ${d.sleep.status}">
-    <div class="sleep-head">${campBadge({status:d.sleep.status})}</div>
-    <div class="sleep-place">${tf(d.sleep.place)}</div>
-    <div class="sleep-note">${tf(d.sleep.note)}</div>
-    <div class="sleep-detail">${tf(d.sleep.detail)}</div>
+  const sleepIcon = d.sleep.status==="ok" ? "⛺" : "⚠️";
+  const sleepCls = d.sleep.status==="ok" ? "special-hi" : "";
+  h += `<p class="eyebrow">${t("eyebrow.sleep")}</p>`;
+  h += `<div class="callout ${sleepCls}">
+    <div class="ctitle">${sleepIcon} ${tf(d.sleep.place)}</div>
+    <div class="ckm">${tf(d.sleep.note)}</div>
+    <p>${tf(d.sleep.detail)}</p>
   </div>`;
 
   h += `<p class="eyebrow">${t("eyebrow.specials")}</p>` + specialsHtml(d);
