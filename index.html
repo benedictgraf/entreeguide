@@ -607,7 +607,7 @@ const I18N = {
   "role.finish": {de:"Ziel · Ende Tag {n}", en:"Finish · End of Day {n}"},
   "word.passthrough": {de:"Durchfahrt", en:"Pass-through"},
   "word.daysplanned": {de:"Tage geplant", en:"days planned"},
-  "flag.sleep": {de:"Schlafmöglichkeit", en:"Overnight stop"},
+  "flag.bed": {de:"Bett", en:"Bed"},
   "flag.camp": {de:"Camping", en:"Camping"},
   "campgeneral.title": {de:"Allgemeine Camping-Regeln", en:"General camping rules"},
   "campgeneral.p1": {de:"Wildcamping ist in Italien/der Schweiz offiziell nicht erlaubt, <b>Not-Biwak wird aber toleriert</b>. Rifugio-Betten sind nicht exklusiv für Teilnehmer:innen reserviert — bei ausgebuchten Betten kann meist in der Nähe gezeltet werden.", en:"Wild camping is officially not allowed in Italy/Switzerland, but <b>emergency bivouacking is tolerated</b>. Rifugio beds aren't reserved exclusively for participants — if beds are full you can usually camp nearby."},
@@ -1005,29 +1005,28 @@ function isCpWay(w, cpId){
   // "finish" hat in WAY kind:"finish" statt eines .cp-Feldes - Sonderfall noetig.
   return cpId==="finish" ? w.kind==="finish" : w.cp===cpId;
 }
-function cpSleepDay(cpId){
-  return DAYS.find(d=>{
-    const lastWay = d.way[d.way.length-1];
-    return lastWay!==undefined && WAY[lastWay] && isCpWay(WAY[lastWay], cpId);
-  });
-}
-function flagRowHtml(isSleepStop, campStatus){
-  const sIcon = isSleepStop ? "☑️" : "❌";
-  const cIcon = campStatus==="ok" ? "☑️" : campStatus==="warn" ? "⚠️" : "❌";
+// Ob es am CP ein echtes Bett/Zimmer gibt (Handbook nutzt "—" als Sentinel fuer "keins") -
+// bewusst UNABHAENGIG davon, ob der CP in der gewaehlten Route Tagesende oder Durchfahrt ist.
+// Das war vorher vermischt (Flag zeigte "Schlafmoeglichkeit" = Tagesende) und dadurch an
+// mehreren Stellen sachlich falsch, z.B. Weitenbergalm/Ziel (Tagesende, aber kein Bett - nur
+// Camping) oder Rifugio Pederue (Durchfahrt, aber echter Schlafsaal vorhanden).
+function cpHasBed(cp){ return cp.stay.de!=="—"; }
+function flagRowHtml(bedOk, campStatus){
+  const bMark = bedOk ? "☑️" : "❌";
+  const cMark = campStatus==="ok" ? "☑️" : campStatus==="warn" ? "⚠️" : "❌";
   return `<div class="flagrow">
-    <span class="flag ${isSleepStop?"ok":"no"}">${sIcon} ${t("flag.sleep")}</span>
-    <span class="flag ${campStatus}">${cIcon} ${t("flag.camp")}</span>
+    <span class="flag ${bedOk?"ok":"no"}">🛏️ ${t("flag.bed")} ${bMark}</span>
+    <span class="flag ${campStatus}">⛺ ${t("flag.camp")} ${cMark}</span>
   </div>`;
 }
 function cpRowHtml(cp){
-  const sleepDay = cpSleepDay(cp.id);
   return `<div class="row-wrap">
     <button class="tap" data-cp="${cp.id}">
       <span class="km mono">${cp.km}</span>
       <div class="tapmain">
         <div class="name">${cp.label}</div>
         <div class="sub">${roleForCP(cp.id)} · ${cp.alt} m</div>
-        ${flagRowHtml(!!sleepDay, cp.camp.status)}
+        ${flagRowHtml(cpHasBed(cp), cp.camp.status)}
       </div>
       <span class="chev">›</span>
     </button>
@@ -1035,7 +1034,7 @@ function cpRowHtml(cp){
   </div>`;
 }
 // Naechte, die auf keinen offiziellen Checkpoint fallen (Wildcamp wie Glittnersee/Lago Federa,
-// oder ein per Etappenende-Override eingetragener eigener Stopp).
+// oder ein per Etappenende-Override eingetragener eigener Stopp) - haben nie ein echtes Bett.
 function wildStopRowHtml(day){
   return `<div class="row-wrap">
     <button class="tap" data-wild="${day.n}">
@@ -1043,7 +1042,7 @@ function wildStopRowHtml(day){
       <div class="tapmain">
         <div class="name">${tf(day.sleep.place)}</div>
         <div class="sub">${tf(day.sleep.note)}</div>
-        ${flagRowHtml(true, day.sleep.status)}
+        ${flagRowHtml(false, day.sleep.status)}
       </div>
       <span class="chev">›</span>
     </button>

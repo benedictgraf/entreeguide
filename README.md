@@ -1,93 +1,89 @@
-# 🏔️ ENTREE Feldbuch — SNEAK PEAKS 2026
+# 🏔️ ENTREE Field Book — SNEAK PEAKS 2026
 
-Dein persönlicher, offline-fähiger Begleiter für die **ENTREE-Route** des SNEAK PEAKS Bikepacking-Events 2026 (Start/Ziel Bozen, 30. August, ~495 km, 5–7 Tagesetappen je nach Tempo).
+Your personal, offline-capable companion for the **ENTREE route** of the SNEAK PEAKS 2026 bikepacking event (start/finish Bolzano, August 30, ~495 km, 5–7 daily stages depending on pace).
 
-Keine Anmeldung, kein Server, keine Werbung — alles läuft direkt auf deinem Handy und funktioniert auch komplett ohne Netz.
+No sign-up, no server, no ads — everything runs directly on your phone and works completely without a connection.
 
 <p align="center">
-  <img src="screenshots/03-heute-dashboard.png" width="260" alt="Dashboard mit Karte">
-  <img src="screenshots/08-story-mode.png" width="260" alt="Story-Modus">
-  <img src="screenshots/06-diary-question.png" width="260" alt="Tagebuch">
+  <img src="screenshots/03-heute-dashboard.png" width="260" alt="Dashboard with map">
+  <img src="screenshots/08-story-mode.png" width="260" alt="Story mode">
+  <img src="screenshots/06-diary-question.png" width="260" alt="Diary">
 </p>
 
 ---
 
-## Was kann die App?
+## What can the app do?
 
-**Für dich als Fahrer:in ist das dein digitales Feldbuch** — statt zwischen PDFs, Komoot und Notizen hin- und herzuspringen, hast du alles Wichtige an einem Ort, auch tief in den Dolomiten ganz ohne Empfang.
+**As a rider, this is your digital field book** — instead of jumping between PDFs, Komoot and notes, you have everything important in one place, even deep in the Dolomites with zero signal.
 
-### 📍 Heute — dein Tagesüberblick
+### 📍 Today — your daily overview
 
-Karte, Höhenprofil, Wetter und Schlafmöglichkeit für die aktuelle Etappe auf einen Blick. Die Karte lässt sich zoomen und zeigt (mit Standortfreigabe) deine eigene Position live auf der Strecke.
+Route, distance, elevation, tonight's sleep spot and any warnings for the day, all at a glance — followed by the map, elevation profile and weather. The map zooms and shows your own live position on the route (with location access).
 
-<p align="center"><img src="screenshots/03-heute-dashboard.png" width="280" alt="Heute-Tab"></p>
+<p align="center"><img src="screenshots/03-heute-dashboard.png" width="280" alt="Today tab"></p>
 
-### 🗺️ Checkpoints & Resupply
+Riding more or less than planned? Tap "Change end of stage" to log your actual GPS position and a name for where you stopped — the app reshuffles the remaining days automatically, and adds an extra day at the end if you haven't reached the finish yet.
 
-Alle offiziellen Checkpoints und Verpflegungsstationen der Route — mit Öffnungszeiten, Essen, Preisen, Camping-Möglichkeiten und Kontaktdaten. Antippen für Details, inklusive direktem Anruf-Link.
+### 🗺️ Checkpoints & overnight stops
 
-<p align="center"><img src="screenshots/04-checkpoints.png" width="280" alt="Checkpoints-Tab"></p>
+Every official checkpoint plus every night's stop, in one list ordered by route kilometer — including wild-camp nights that aren't official checkpoints (like Glittnersee or Lago Federa). Each row shows two things at a glance, no need to tap: whether there's an actual **bed** available, and whether **camping** is allowed there. Tap for full details — opening hours, food, prices, and a direct call link.
 
-### ⛺ Schlafen
+<p align="center"><img src="screenshots/04-checkpoints.png" width="280" alt="Checkpoints tab"></p>
 
-Für jede Nacht siehst du sofort: gibt's ein Bett, ist Camping erlaubt, oder wird's ein Wildbiwak? Ehrlich markiert, auch wenn's mal ungemütlich wird.
+### 📓 Diary
 
-<p align="center"><img src="screenshots/05-schlafen.png" width="280" alt="Schlafen-Tab"></p>
+The app asks short, spontaneous questions spread out over your ride ("What moment will you remember from today?", "Pain level right now?" ...) — perfect for quick video-diary moments. Answers are saved together with location and time, and later visible on a small map of your tour. You can export the whole diary as one long image in the app's own visual style.
 
-### 📓 Tagebuch
+<p align="center"><img src="screenshots/06-diary-question.png" width="280" alt="Diary tab"></p>
 
-Die App stellt dir übers Tempo verteilt kurze, spontane Fragen ("Welcher Moment bleibt dir von heute?", "Schmerz-Level gerade?"...) — ideal für kurze Video-Tagebuch-Momente. Antworten werden zusammen mit Ort und Zeitpunkt gespeichert und später auf einer kleinen Karte deiner Tour sichtbar.
+### ▶️ Story mode & video export
 
-<p align="center"><img src="screenshots/06-diary-question.png" width="280" alt="Tagebuch-Tab"></p>
+Every day gets a short animated summary right inside the app — and a one-tap export as a ready-made portrait video (1080×1920), perfect as an intro for Instagram/YouTube Shorts. Everything renders directly on your device, nothing gets uploaded.
 
-### ▶️ Story-Modus & Video-Export
+<p align="center"><img src="screenshots/08-story-mode.png" width="280" alt="Story mode"></p>
 
-Für jeden Tag gibt's eine kleine animierte Zusammenfassung direkt in der App — und einen Ein-Klick-Export als fertiges Hochformat-Video (1080×1920), perfekt als Intro für Instagram/YouTube Shorts. Alles wird direkt auf deinem Gerät gerendert, nichts wird hochgeladen.
+### 🆘 Emergency
 
-<p align="center"><img src="screenshots/08-story-mode.png" width="280" alt="Story-Modus"></p>
+One tap shows your exact GPS coordinates large on the screen — to read out over the phone in an emergency — plus the mandatory-gear checklist and emergency contacts.
 
-### 🆘 Notfall
+<p align="center"><img src="screenshots/07-emergency.png" width="280" alt="Emergency view"></p>
 
-Ein Tap zeigt deine exakten GPS-Koordinaten groß auf dem Bildschirm — zum Vorlesen am Telefon im Ernstfall — plus die Pflichtausrüstungs-Checkliste und Notfallkontakte.
+### ☰ More
 
-<p align="center"><img src="screenshots/07-emergency.png" width="280" alt="Notfall-Ansicht"></p>
+Schedule, mandatory and recommended gear (with a checklist), tracker instructions, safety notes, every bail-out option along the route, and bike tips.
 
-### ☰ Mehr
-
-Zeitplan, Pflicht- und empfohlene Ausrüstung (mit Abhak-Liste), Tracker-Anleitung, Sicherheitshinweise, alle Ausstiegsoptionen entlang der Strecke und Bike-Tipps.
-
-<p align="center"><img src="screenshots/09-mehr.png" width="280" alt="Mehr-Tab"></p>
+<p align="center"><img src="screenshots/09-mehr.png" width="280" alt="More tab"></p>
 
 ---
 
-## Einmaliges Setup — dann läuft's von allein
+## One-time setup — then it just runs
 
-Beim ersten Öffnen fragt dich die App kurz nach deinem Namen und deiner Route:
+The first time you open it, the app briefly asks for your name and your route:
 
-- **Party Pace Patrol · Lotti** — Lottis fertiger 5-Tage-Plan, alles schon vorbereitet
-- **Party Pace Patrol · Paula** — Paulas fertiger 6-Tage-Plan mit Zwischenstopp am Lago Federa
-- **ENTREE komplett** — die ganze Strecke, du legst deine eigenen Etappen fest
+- **Party Pace Patrol · Lotti** — Lotti's finished 5-day plan, everything prepared
+- **Party Pace Patrol · Paula** — Paula's finished 6-day plan with a stop at Lago Federa
+- **ENTREE complete** — the full route, you set your own daily stages
 
-<p align="center"><img src="screenshots/01-onboarding-welcome.png" width="230" alt="Willkommens-Screen"> <img src="screenshots/02-onboarding-route.png" width="230" alt="Routenwahl"></p>
+<p align="center"><img src="screenshots/01-onboarding-welcome.png" width="230" alt="Welcome screen"> <img src="screenshots/02-onboarding-route.png" width="230" alt="Route selection"></p>
 
-Danach merkt sich die App alles **nur auf deinem Gerät** (kein Konto, kein Server) — du musst das Setup nie wieder durchlaufen.
+After that, the app remembers everything **only on your device** (no account, no server) — you never have to go through setup again.
 
-## Auf dem iPhone installieren (empfohlen)
+## Installing on iPhone (recommended)
 
-1. Die App-URL in **Safari** öffnen (nicht Chrome — auf dem iPhone gilt hier immer Safaris Engine).
-2. Teilen-Symbol antippen → **„Zum Home-Bildschirm"**.
-3. Fertig — sie startet ab jetzt wie eine echte App, ohne Browser-Leiste, und funktioniert offline.
+1. Open the app URL in **Safari** (not Chrome — on iPhone, Safari's engine always applies here).
+2. Tap the share icon → "Add to Home Screen".
+3. Done — from now on it starts like a real app, with no browser bar, and works offline.
 
-## Sprache
+## Language
 
-Oben rechts kann jederzeit zwischen **Deutsch und Englisch** umgeschaltet werden (`DE`/`EN`-Button) — auch direkt im Setup, für Teilnehmer:innen, die kein Deutsch sprechen.
+The `DE`/`EN` button in the top right switches between **German and English** at any time — including directly during setup, for participants who don't speak German.
 
-## Wichtig zu wissen
+## Good to know
 
-- Nur die Wettervorhersage braucht kurz Empfang zum Aktualisieren — alles andere funktioniert offline.
-- Karte und Höhenprofil sind **schematisch** (Luftlinie bzw. angenähert aus bekannten Pass-/Checkpoint-Höhen), keine exakten GPS-Tracks. Für die tatsächliche Navigation gilt die Komoot-Route.
-- Diese App ersetzt keine Rechtsberatung, keine Notfallausrüstung und keine eigene Streckenkenntnis — im Zweifel zählt immer das offizielle Rider Handbook.
+- Only the weather forecast needs a brief connection to refresh — everything else works offline.
+- The map and elevation profile are **schematic** (straight-line distances resp. approximated from known pass/checkpoint elevations), not exact GPS tracks. For actual navigation, the Komoot route is authoritative.
+- This app is not a substitute for legal advice, emergency equipment, or your own route knowledge — when in doubt, the official rider handbook always takes precedence.
 
 ---
 
-*Kein offizielles SNEAK-PEAKS-Produkt — ein privates Fahrer:innen-Tool, gebaut fürs eigene Team.*
+*Not an official SNEAK PEAKS product — a private rider tool, built for our own team.*
