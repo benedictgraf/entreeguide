@@ -696,6 +696,10 @@ const I18N = {
   "diary.emptyanswer": {de:"Schreib kurz was — oder komm später wieder.", en:"Write a quick note — or come back later."},
   "diary.saved": {de:"Eintrag gespeichert", en:"Entry saved"},
   "diary.near": {de:"von", en:"from"},
+  "diary.exportbtn": {de:"📤 Als Bild exportieren", en:"📤 Export as image"},
+  "diary.exportsub": {de:"Dein Tagebuch wird direkt auf deinem Gerät gerendert — kein Upload, kein Internet nötig.", en:"Your diary is rendered directly on your device — no upload, no internet needed."},
+  "diary.entriescount": {de:"Einträge", en:"entries"},
+  "diary.exportsave": {de:"Bild speichern", en:"Save image"},
   "wx.noconnection": {de:"📡 Keine Verbindung — Wetterdaten nicht verfügbar.<br>Wird automatisch nachgeladen, sobald du wieder Empfang hast.", en:"📡 No connection — weather data not available.<br>Will reload automatically once you're back online."},
   "wx.loading": {de:"Lade Wettervorhersage…", en:"Loading weather forecast…"},
   "wx.stale": {de:"Offline — zeige letzten bekannten Stand.", en:"Offline — showing last known state."},
@@ -2618,6 +2622,152 @@ function fmtDiaryTime(iso){
   const d = new Date(iso);
   return d.toLocaleString(LANG==='de'?'de-DE':'en-US', {day:"2-digit", month:"2-digit", hour:"2-digit", minute:"2-digit"});
 }
+
+/* ======================= TAGEBUCH-EXPORT (ein langes Bild, Canvas) ======================= */
+// Layout wird zuerst "trocken" mit einem loesgeloesten Canvas-Context durchgerechnet (Zeilenumbrueche
+// pro Eintrag), damit wir die Gesamthoehe kennen, bevor der eigentliche Export-Canvas erzeugt wird.
+function diaryExportLayout(ctx, entries, W){
+  const padX = 74;
+  const contentW = W - padX*2;
+  const rows = [];
+  let y = 0;
+  entries.forEach(e=>{
+    ctx.font = "800 26px -apple-system, sans-serif";
+    const qLines = wrapText(ctx, tf(e.qText), contentW);
+    ctx.font = "800 34px "+FD;
+    const aLines = wrapText(ctx, e.answer, contentW);
+    const qH = qLines.length*34;
+    const aH = aLines.length*44;
+    const locH = e.nearLabel ? 30 : 0;
+    const h = 44 + 10 + qH + 18 + aH + (locH ? 16+locH : 0) + 48;
+    rows.push({e, qLines, aLines, y, h});
+    y += h;
+  });
+  return {rows, height:y, padX, contentW};
+}
+function drawDiaryBg(ctx, W, H){
+  ctx.fillStyle = "#0B0D14"; ctx.fillRect(0,0,W,H);
+  let seed = 7;
+  const rand = ()=>{ seed=(seed*16807)%2147483647; return seed/2147483647; };
+  const count = Math.max(50, Math.round(H/1920*90));
+  for(let i=0;i<count;i++){
+    const x = rand()*W, yy = rand()*H, r = rand()*2+0.6, a = rand()*0.35+0.08;
+    ctx.globalAlpha = a; ctx.fillStyle = "#fff";
+    ctx.beginPath(); ctx.arc(x,yy,r,0,Math.PI*2); ctx.fill();
+  }
+  ctx.globalAlpha = 1;
+  const g1 = ctx.createRadialGradient(W/2,0,0,W/2,0,H*0.22);
+  g1.addColorStop(0,"rgba(255,62,150,.20)"); g1.addColorStop(1,"rgba(255,62,150,0)");
+  ctx.fillStyle = g1; ctx.fillRect(0,0,W,H*0.22);
+  const g2 = ctx.createRadialGradient(W/2,H,0,W/2,H,H*0.22);
+  g2.addColorStop(0,"rgba(207,255,77,.16)"); g2.addColorStop(1,"rgba(207,255,77,0)");
+  ctx.fillStyle = g2; ctx.fillRect(0,H*0.78,W,H*0.22);
+}
+function drawDiaryMap(ctx, entries, x, y, w, h){
+  const withLoc = entries.filter(e=>e.lat!=null);
+  ctx.fillStyle = "#141824";
+  ctx.beginPath();
+  if(ctx.roundRect) ctx.roundRect(x,y,w,h,24); else ctx.rect(x,y,w,h);
+  ctx.fill();
+  const geom = buildMapGeometry();
+  const boxPad = 34;
+  const sc = Math.min((w-boxPad*2)/geom.VBW, (h-boxPad*2)/geom.VBH);
+  const ox = x + (w-geom.VBW*sc)/2, oy = y + (h-geom.VBH*sc)/2;
+  const P = (lat,lon) => { const p = geom.proj(lat,lon); return {x:ox+p.x*sc, y:oy+p.y*sc}; };
+  ctx.strokeStyle = "rgba(148,152,168,.4)"; ctx.lineWidth = 3; ctx.lineJoin="round"; ctx.lineCap="round";
+  ctx.beginPath();
+  ROUTE_SEQ.forEach((id,i)=>{ const c=COORDS[id]; const p=P(c.lat,c.lon); i?ctx.lineTo(p.x,p.y):ctx.moveTo(p.x,p.y); });
+  ctx.stroke();
+  withLoc.forEach(e=>{
+    const p = P(e.lat, e.lon);
+    ctx.fillStyle = "#CFFF4D"; ctx.strokeStyle = "#0B0D14"; ctx.lineWidth = 2.5;
+    ctx.beginPath(); ctx.arc(p.x,p.y,9,0,Math.PI*2); ctx.fill(); ctx.stroke();
+  });
+}
+async function exportDiaryImage(){
+  if(exportRunning) return;
+  const entries = [...loadDiaryEntries()].reverse(); // chronologisch, aeltester Eintrag zuerst
+  if(!entries.length){ toast(t("diary.noentries")); return; }
+  exportRunning = true; exportAbort = false;
+  const overlay = $("#videoExport");
+  overlay.classList.add("show"); overlay.setAttribute("aria-hidden","false");
+  $("#exportActions").innerHTML = `<button class="export-btn" id="exportCancel">${t("export.cancel")}</button>`;
+  $("#exportCancel").onclick = ()=>{ exportAbort = true; exportRunning = false; closeVideoExport(); };
+  $("#exportStatus").textContent = t("export.rendering");
+  $("#exportSub").textContent = t("diary.exportsub");
+  await new Promise(r=>setTimeout(r, 30)); // Overlay einmal sichtbar rendern lassen, bevor der Hauptthread blockt
+
+  const W = 1080;
+  const measureCanvas = document.createElement("canvas");
+  const layout = diaryExportLayout(measureCanvas.getContext("2d"), entries, W);
+  const hasMap = entries.some(e=>e.lat!=null);
+  const headerH = 300, mapH = hasMap ? 640 : 40, footerH = 170;
+  const H = headerH + mapH + layout.height + footerH;
+
+  if(exportAbort){ exportRunning = false; return; }
+  const canvas = $("#exportCanvas");
+  canvas.width = W; canvas.height = H;
+  const ctx = canvas.getContext("2d");
+  drawDiaryBg(ctx, W, H);
+
+  ctx.textAlign = "center";
+  ctx.font = "800 30px -apple-system, sans-serif"; ctx.fillStyle = "#FF3E96";
+  ctx.fillText(("SNEAK PEAKS · ENTREE").toUpperCase().split("").join("  "), W/2, 96);
+  ctx.font = "900 60px "+FD; ctx.fillStyle = "#EDEBE3";
+  const riderName = (PROFILE && PROFILE.name) || t("ob.rider");
+  const title = LANG==="de" ? `${riderName}s Tagebuch` : `${riderName}'s Diary`;
+  ctx.fillText(title, W/2, 172);
+  ctx.font = "700 28px ui-monospace, monospace"; ctx.fillStyle = "#9498A8";
+  const dLabel = iso => new Date(iso).toLocaleDateString(LANG==='de'?'de-DE':'en-US', {day:"2-digit", month:"2-digit"});
+  const range = entries.length>1 ? `${dLabel(entries[0].ts)} – ${dLabel(entries[entries.length-1].ts)}` : dLabel(entries[0].ts);
+  ctx.fillText(`${entries.length} ${t("diary.entriescount")} · ${range}`, W/2, 224);
+
+  let y = headerH;
+  if(hasMap){
+    drawDiaryMap(ctx, entries, 74, y, W-148, mapH-40);
+    y += mapH;
+  } else {
+    y += mapH;
+  }
+
+  layout.rows.forEach(row=>{
+    const ry = y + row.y;
+    let ly = ry + 34;
+    ctx.textAlign = "left";
+    ctx.font = "800 22px ui-monospace, monospace"; ctx.fillStyle = "#FF3E96";
+    ctx.fillText(`${t("word.day")} ${row.e.day} · ${fmtDiaryTime(row.e.ts)}`, layout.padX, ly);
+    ly += 44;
+    ctx.font = "700 26px -apple-system, sans-serif"; ctx.fillStyle = "#9498A8";
+    row.qLines.forEach(line=>{ ctx.fillText(line, layout.padX, ly); ly += 34; });
+    ly += 4;
+    ctx.font = "800 34px "+FD; ctx.fillStyle = "#EDEBE3";
+    row.aLines.forEach(line=>{ ctx.fillText(line, layout.padX, ly); ly += 44; });
+    if(row.e.nearLabel){
+      ly += 12;
+      ctx.font = "600 24px -apple-system, sans-serif"; ctx.fillStyle = "#9498A8";
+      ctx.fillText(`📍 ${row.e.nearLabel}`, layout.padX, ly);
+    }
+    ctx.strokeStyle = "rgba(255,255,255,.12)"; ctx.lineWidth = 2;
+    ctx.beginPath(); ctx.moveTo(layout.padX, ry+row.h-24); ctx.lineTo(W-layout.padX, ry+row.h-24); ctx.stroke();
+  });
+
+  ctx.textAlign = "center";
+  ctx.font = "800 26px -apple-system, sans-serif"; ctx.fillStyle = "rgba(148,152,168,.9)";
+  ctx.fillText("S N E A K   P E A K S   ·   E N T R E E", W/2, H-80);
+
+  if(exportAbort){ exportRunning = false; return; }
+  canvas.toBlob(blob=>{
+    exportRunning = false;
+    if(exportAbort || !blob){ if(!blob) toast(t("video.noformat")); closeVideoExport(); return; }
+    const url = URL.createObjectURL(blob);
+    $("#exportStatus").textContent = t("video.done") + " " + (blob.size/1024/1024).toFixed(1) + " MB";
+    $("#exportSub").textContent = "";
+    $("#exportActions").innerHTML = `
+      <a class="export-btn primary" id="exportSave" href="${url}" download="entree_tagebuch.png">${t("diary.exportsave")}</a>
+      <button class="export-btn" id="exportClose2">${t("sheet.close")}</button>`;
+    $("#exportClose2").onclick = closeVideoExport;
+  }, "image/png");
+}
 function renderDiary(){
   const entries = loadDiaryEntries();
   const pending = getPendingDiaryItem();
@@ -2648,6 +2798,9 @@ function renderDiary(){
   }
 
   h += `<p class="eyebrow">${t("diary.entries")}</p>`;
+  if(entries.length){
+    h += `<button class="story-trigger" id="diaryExportBtn" type="button" style="width:100%;margin-bottom:14px;">${t("diary.exportbtn")}</button>`;
+  }
   h += !entries.length
     ? `<div class="diary-empty">${t("diary.noentries")}</div>`
     : entries.map(e=>`<div class="diary-entry">
@@ -2676,6 +2829,8 @@ function bindDiaryEvents(){
   };
   const revealBtn = $("#diaryRevealBtn");
   if(revealBtn) revealBtn.onclick = ()=> revealNextDiaryQuestionNow();
+  const exportBtn = $("#diaryExportBtn");
+  if(exportBtn) exportBtn.onclick = ()=> exportDiaryImage();
 }
 
 const TAB_RENDER = {heute:renderHeute, cp:renderCP, resupply:renderResupply, schlafen:renderSchlafen, diary:renderDiary, mehr:renderMehr};
