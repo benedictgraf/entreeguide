@@ -80,8 +80,8 @@ main{flex:1; overflow-y:auto; padding:16px var(--pad) 110px; -webkit-overflow-sc
 .tick.ok{background:var(--acid);}
 .tick.warn{background:var(--warn);}
 .tick.no{background:var(--bad);}
-.progress-caption{display:flex; justify-content:space-between; font-size:12px; color:var(--mist); margin-bottom:14px;}
-.daypills{display:flex; gap:6px; margin-bottom:28px;}
+.progress-caption{display:flex; justify-content:space-between; font-size:12px; color:var(--mist); margin-bottom:28px;}
+.daypills{display:flex; gap:6px; margin-bottom:10px;}
 .daypill{flex:1 1 0; min-width:0; padding:9px 4px 8px; text-align:center; background:var(--slate); border:1px solid var(--line); border-radius:var(--r-sm); transition:background .15s,border-color .15s,color .15s;}
 .daypill b{display:block; font-size:14px; font-weight:800;}
 .daypill span{display:block; font-size:10.5px; color:var(--mist); margin-top:1px;}
@@ -89,7 +89,7 @@ main{flex:1; overflow-y:auto; padding:16px var(--pad) 110px; -webkit-overflow-sc
 .daypill.active span{color:var(--acid-ink); opacity:.7;}
 
 /* TAGES-KOPF (kein Kartenhintergrund - ruhiger durch großzügigeres Spacing) */
-.daymeta{margin-bottom:28px;}
+.daymeta{margin-bottom:40px;}
 .daymeta-greeting{font-size:11.5px; color:var(--mist); font-weight:700; margin-bottom:10px;}
 .daymeta-route{font-family:var(--font-display); font-size:19px; font-weight:800; letter-spacing:-.01em; margin-bottom:8px;}
 .daymeta-route .arrow{color:var(--flare); margin:0 5px;}
@@ -108,12 +108,10 @@ main{flex:1; overflow-y:auto; padding:16px var(--pad) 110px; -webkit-overflow-sc
 .carousel-dots .dot.active{background:var(--acid); width:8px; height:8px;}
 .tile-label{font-size:13px; font-weight:700; color:var(--fog); margin-bottom:8px;}
 
-/* KARTE */
-.minimapwrap{position:relative; display:block; width:100%; appearance:none; padding:0; text-align:left; border-radius:var(--r-lg); overflow:hidden; border:1px solid var(--line); background:var(--slate);}
-.minimapwrap svg{width:100%; height:100%; display:block;}
-.minimap-hint{position:absolute; right:10px; bottom:10px; display:flex; align-items:center; gap:4px; font-size:10px; font-weight:700; color:var(--mist); background:rgba(11,13,20,.6); padding:4px 9px; border-radius:999px;}
-.minimapwrap:active{opacity:.85;}
-.mapwrap{position:relative; width:100%; border-radius:var(--r-lg); overflow:hidden; margin:0 0 10px; border:1px solid var(--line); background:var(--slate); touch-action:none;}
+/* KARTE (Tages-Kachel im Karussell: Kontext ausgegraut, heutiger Abschnitt hervorgehoben,
+   Punkte direkt antippbar - kein Zoom/Pan/GPS mehr noetig, da keine separate Vollbild-Ansicht
+   mehr existiert und ein Drag-Gestus mit dem Karussell-Swipe kollidieren wuerde) */
+.routetile{position:relative; width:100%; aspect-ratio:400/200; border-radius:var(--r-lg); overflow:hidden; border:1px solid var(--line); background:var(--slate);}
 .routemap{width:100%; height:100%; display:block;}
 .map-fullpath{fill:none; stroke:var(--mist); stroke-width:2.4; stroke-linecap:round; stroke-linejoin:round; opacity:.38;}
 .map-activepath-halo{fill:none; stroke:var(--flare); stroke-width:11; stroke-linecap:round; stroke-linejoin:round; opacity:.22;}
@@ -124,34 +122,13 @@ main{flex:1; overflow-y:auto; padding:16px var(--pad) 110px; -webkit-overflow-sc
 .map-dot-visual.no{fill:var(--bad);}
 .map-dot-visual.info{fill:var(--info);}
 .map-hit{fill:transparent; cursor:pointer;}
-.map-compass{position:absolute; top:10px; right:12px; font-size:10.5px; font-weight:800; color:var(--mist); background:rgba(11,13,20,.55); padding:3px 8px; border-radius:999px; letter-spacing:.04em;}
-.map-note{position:absolute; left:12px; bottom:10px; font-size:10px; font-weight:700; color:var(--mist); background:rgba(11,13,20,.55); padding:3px 8px; border-radius:999px;}
-.legend{display:flex; flex-wrap:wrap; gap:9px; font-size:10.5px; color:var(--mist); margin:0 0 18px;}
-.legend span{display:inline-flex; align-items:center; gap:4px;}
-.legend i{width:8px; height:8px; border-radius:50%; display:inline-block; flex-shrink:0;}
 
-.elevcard{background:var(--slate); border:1px solid var(--line); border-radius:var(--r-lg); padding:10px 6px; margin-bottom:6px; overflow:hidden;}
+.elevcard{background:var(--slate); border:1px solid var(--line); border-radius:var(--r-lg); padding:10px 6px; margin-bottom:6px; overflow:hidden; height:170px;}
 .elev-note{font-size:10.5px; color:var(--mist); margin:0 0 18px; line-height:1.5;}
 
 .story-mapwrap{width:100%; max-width:260px; aspect-ratio:1/1.25; margin-bottom:18px;}
 .story-mapwrap svg{width:100%; height:100%; display:block;}
 .story-elevwrap{width:100%; max-width:320px; margin-bottom:16px;}
-
-.map-controls{position:absolute; right:10px; bottom:10px; display:flex; flex-direction:column; gap:7px; z-index:2;}
-.mapctl{width:36px; height:36px; border-radius:50%; background:rgba(22,25,35,.88); border:1px solid var(--line); color:var(--fog); font-size:17px; font-weight:800; display:flex; align-items:center; justify-content:center; backdrop-filter:blur(4px); line-height:1;}
-.mapctl:active{background:var(--slate2);}
-.mapctl#gpsBtn{font-size:15px;}
-.mapctl#gpsBtn.active{background:var(--flare); color:#2B0A1C; border-color:var(--flare);}
-.mapctl#mapReset{display:none; font-size:14px;}
-.gps-pulse{fill:var(--flare); opacity:.45; transform-box:fill-box; transform-origin:center; animation:gpsPulse 1.8s ease-out infinite;}
-.gps-dot{fill:#fff; stroke:var(--flare); stroke-width:2.2;}
-@keyframes gpsPulse{0%{transform:scale(.4); opacity:.55;} 100%{transform:scale(2.4); opacity:0;}}
-#gpsReadout{display:none; background:var(--slate2); border-radius:var(--r-md); padding:11px 13px; margin-bottom:14px;}
-#gpsReadout.show{display:block;}
-.gps-row{display:flex; justify-content:space-between; align-items:center; gap:10px; font-size:12.5px; padding:4px 0;}
-.gps-row span{color:var(--mist);}
-.gps-row b{font-size:13px; text-align:right;}
-.gps-note{font-size:10px; color:var(--mist); margin-top:7px; line-height:1.5; border-top:1px solid var(--line); padding-top:7px;}
 
 .emergency-coords{margin:0 0 16px; padding:16px; border-radius:var(--r-lg); background:linear-gradient(155deg, rgba(255,62,150,.16), rgba(255,62,150,.03)); border:1px solid rgba(255,62,150,.4);}
 .emergency-coords-label{font-size:11px; font-weight:800; letter-spacing:.06em; text-transform:uppercase; color:var(--flare); margin-bottom:10px;}
@@ -197,14 +174,13 @@ main{flex:1; overflow-y:auto; padding:16px var(--pad) 110px; -webkit-overflow-sc
 .wx-desc{font-size:12.5px; color:var(--mist); margin-top:3px;}
 .wx-refresh{width:34px; height:34px; border-radius:50%; background:var(--slate2); border:1px solid var(--line); font-size:15px; flex-shrink:0;}
 .wx-refresh:active{opacity:.6;}
-.wx-days{display:flex; gap:6px; margin-bottom:10px;}
-.wx-day{flex:1; background:var(--slate2); border-radius:var(--r-sm); padding:8px 4px; text-align:center; display:flex; flex-direction:column; gap:3px;}
-.wx-day .lb{font-size:10.5px; color:var(--mist);}
-.wx-day .ic{font-size:16px;}
-.wx-day .tp{font-size:11.5px; color:var(--fog);}
-.wx-day .pr{font-size:10.5px; color:var(--info);}
-.wx-meta{font-size:11px; color:var(--mist);}
-.wx-note{font-size:10.5px; color:var(--mist); margin-top:8px; line-height:1.5; border-top:1px solid var(--line); padding-top:8px;}
+.wx-hours{display:flex; gap:6px; overflow-x:auto; -webkit-overflow-scrolling:touch; scrollbar-width:none;}
+.wx-hours::-webkit-scrollbar{display:none;}
+.wx-hour{flex:0 0 50px; background:var(--slate2); border-radius:var(--r-sm); padding:8px 4px; text-align:center; display:flex; flex-direction:column; gap:3px;}
+.wx-hour .lb{font-size:10px; color:var(--mist);}
+.wx-hour .ic{font-size:15px;}
+.wx-hour .tp{font-size:11px; color:var(--fog);}
+.wx-hour .pr{font-size:9.5px; color:var(--info);}
 .wx-loading, .wx-error{font-size:13px; color:var(--mist); text-align:center; padding:18px 4px; line-height:1.5;}
 
 /* LIST ROWS (Checkpoints/Resupply Tabs) */
@@ -274,16 +250,6 @@ nav#tabbar{position:fixed; left:0; right:0; bottom:0; z-index:20; display:flex; 
 .tabbtn.active{color:var(--flare);}
 .tabbtn:active{background:var(--slate2);}
 .tabdot{position:absolute; top:3px; right:calc(50% - 20px); width:8px; height:8px; border-radius:50%; background:var(--flare); box-shadow:0 0 0 2px rgba(15,17,25,.92);}
-
-/* KARTEN-OVERLAY (Vollbild-Erkundung, unterhalb von Sheet/Backdrop damit ein Punkt-Sheet
-   darueber liegt statt die Karte zu ersetzen) */
-#mapOverlay{position:fixed; inset:0; z-index:25; background:var(--ink); display:none; flex-direction:column; overflow-y:auto; -webkit-overflow-scrolling:touch;}
-#mapOverlay.show{display:flex;}
-#mapOverlayHead{position:sticky; top:0; z-index:1; display:flex; align-items:center; justify-content:space-between; gap:12px; padding:calc(env(safe-area-inset-top) + 14px) var(--pad) 12px; background:var(--ink);}
-#mapOverlayTitle{font-family:var(--font-display); font-size:16px; font-weight:800;}
-#mapOverlayClose{width:34px; height:34px; flex-shrink:0; border-radius:50%; background:var(--slate2); border:1px solid var(--line); color:var(--fog); font-size:15px;}
-#mapOverlayClose:active{opacity:.7;}
-#mapOverlayBody{padding:0 var(--pad) calc(env(safe-area-inset-bottom) + 24px);}
 
 /* SHEET / MODAL */
 #backdrop{position:fixed; inset:0; background:rgba(0,0,0,.55); opacity:0; pointer-events:none; transition:opacity .2s; z-index:29;}
@@ -450,9 +416,9 @@ nav#tabbar{position:fixed; left:0; right:0; bottom:0; z-index:20; display:flex; 
   <main id="content">
 
     <section class="view active" id="view-heute">
+      <div class="daypills" id="dayPills"></div>
       <div class="progress" id="progressBar"></div>
       <div class="progress-caption"><span id="progCapLeft">Tag 1 von 5</span><span id="progCapRight">0 / 495 km</span></div>
-      <div class="daypills" id="dayPills"></div>
       <div id="heuteBody"></div>
     </section>
 
@@ -487,14 +453,6 @@ nav#tabbar{position:fixed; left:0; right:0; bottom:0; z-index:20; display:flex; 
     <button class="tabbtn" data-tab="diary"><span class="ic">📓</span><span class="lb" data-i18n="tab.diary">Tagebuch</span><span class="tabdot" id="diaryDot" hidden></span></button>
     <button class="tabbtn" data-tab="mehr"><span class="ic">☰</span><span class="lb" data-i18n="tab.mehr">Mehr</span></button>
   </nav>
-</div>
-
-<div id="mapOverlay" aria-hidden="true">
-  <div id="mapOverlayHead">
-    <div id="mapOverlayTitle"></div>
-    <button id="mapOverlayClose" type="button" aria-label="Close">✕</button>
-  </div>
-  <div id="mapOverlayBody"></div>
 </div>
 
 <div id="backdrop"></div>
@@ -624,10 +582,6 @@ const I18N = {
   "gps.unavailable": {de:"Position nicht verfügbar", en:"Position unavailable"},
   "gps.timeout": {de:"Zeitüberschreitung beim GPS-Fix", en:"GPS fix timed out"},
   "gps.notsupported": {de:"GPS auf diesem Gerät nicht verfügbar", en:"GPS not available on this device"},
-  "gps.nearest": {de:"📍 Nächster Punkt in der Nähe", en:"📍 Nearest point nearby"},
-  "gps.until": {de:"🏁 Bis", en:"🏁 To"},
-  "gps.note": {de:"Luftlinie, nicht Streckenkilometer — auf Serpentinen kann die tatsächliche Restdistanz deutlich länger sein. GPS-Genauigkeit: ±", en:"Straight-line distance, not route km — on switchbacks the real remaining distance can be much longer. GPS accuracy: ±"},
-  "distancenote": {de:"km Luftlinie von deiner aktuellen Position.", en:"km straight-line from your current position."},
   "export.rendering": {de:"Rendere Video …", en:"Rendering video …"},
   "export.sub": {de:"Das Intro wird direkt auf deinem Gerät gerendert — kein Upload, kein Internet nötig.", en:"The intro is rendered directly on your device — no upload, no internet needed."},
   "export.cancel": {de:"Abbrechen", en:"Cancel"},
@@ -720,12 +674,6 @@ const I18N = {
   "wx.noconnection": {de:"📡 Keine Verbindung — Wetterdaten nicht verfügbar.<br>Wird automatisch nachgeladen, sobald du wieder Empfang hast.", en:"📡 No connection — weather data not available.<br>Will reload automatically once you're back online."},
   "wx.loading": {de:"Lade Wettervorhersage…", en:"Loading weather forecast…"},
   "wx.stale": {de:"Offline — zeige letzten bekannten Stand.", en:"Offline — showing last known state."},
-  "wx.wind": {de:"Wind", en:"Wind"},
-  "wx.today": {de:"Heute", en:"Today"},
-  "wx.tomorrow": {de:"Morgen", en:"Tomorrow"},
-  "wx.asof": {de:"Stand", en:"As of"},
-  "wx.time": {de:"Uhr", en:""},
-  "wx.note": {de:"Ungefähre Region, keine exakte GPS-Position der Route. Bei kritischen Passagen zusätzlich lokale Quellen prüfen (z. B. Bergwetter Südtirol, Meteotrentino).", en:"Approximate region, not an exact GPS position on the route. For critical sections, also check local sources (e.g. Bergwetter Südtirol, Meteotrentino)."},
   "wx.updated": {de:"Wetter aktualisiert", en:"Weather updated"},
   "video.notsupported": {de:"Video-Export wird von diesem Browser nicht unterstützt", en:"Video export isn't supported by this browser"},
   "video.noformat": {de:"Kein unterstütztes Videoformat gefunden", en:"No supported video format found"},
@@ -736,18 +684,7 @@ const I18N = {
   "video.ready": {de:"Bereit für CapCut, Schnitt-App oder direkt in die Story.", en:"Ready for CapCut, an editing app, or straight into your story."},
   "video.save": {de:"Video speichern", en:"Save video"},
   "map.route": {de:"Route", en:"Route"},
-  "map.expand": {de:"Antippen zum Erkunden", en:"Tap to explore"},
-  "map.zoomin": {de:"Vergrößern", en:"Zoom in"},
-  "map.zoomout": {de:"Verkleinern", en:"Zoom out"},
-  "map.reset": {de:"Ganze Route zeigen", en:"Show whole route"},
-  "map.ownpos": {de:"Eigene Position", en:"My position"},
-  "map.schematic": {de:"schematisch", en:"schematic"},
-  "legend.startfinish": {de:"Start/Ziel", en:"Start/finish"},
-  "legend.campok": {de:"Camping ok", en:"Camping ok"},
-  "legend.restricted": {de:"eingeschränkt", en:"restricted"},
-  "legend.notallowed": {de:"nicht erlaubt", en:"not allowed"},
-  "legend.resupply": {de:"Resupply", en:"Resupply"},
-  "legend.tapdetails": {de:"· antippen für Details", en:"· tap for details"},
+  "map.tapnote": {de:"Schematisch — restliche Route ausgegraut. Punkte antippbar.", en:"Schematic — rest of the route greyed out. Points are tappable."},
   "gear.confirmed": {de:"bestätigt", en:"confirmed"},
   "gear.of": {de:"von", en:"of"},
   "unit.hm": {de:"Hm", en:"m elev."},
@@ -770,8 +707,8 @@ const I18N = {
   "em.iossettings": {de:"Standortzugriff abgelehnt — in den iPhone-Einstellungen für diesen Browser erlauben", en:"Location access denied — allow it for this browser in iPhone Settings"},
   "em.lat": {de:"BREITE", en:"LATITUDE"},
   "em.lon": {de:"LÄNGE", en:"LONGITUDE"},
-  "override.trigger": {de:"✏️ Ende der Etappe ändern", en:"✏️ Change end of stage"},
-  "override.title": {de:"Ende der Etappe ändern", en:"Change end of stage"},
+  "override.trigger": {de:"✏️ Ende der heutigen Etappe anpassen", en:"✏️ Adjust end of today's stage"},
+  "override.title": {de:"Ende der heutigen Etappe anpassen", en:"Adjust end of today's stage"},
   "override.gpslabel": {de:"📍 Deine Position jetzt", en:"📍 Your position now"},
   "override.namelabel": {de:"Wie heißt der Ort? (z. B. Name der Unterkunft)", en:"What's the place called? (e.g. name of the accommodation)"},
   "override.nameplaceholder": {de:"z. B. Affittacamere da Mario", en:"e.g. Hotel Bellavista"},
@@ -805,8 +742,6 @@ const I18N = {
 };
 function applyStaticI18n(){
   document.querySelectorAll("[data-i18n]").forEach(el=>{ el.textContent = t(el.dataset.i18n); });
-  const mc = document.getElementById("mapOverlayClose");
-  if(mc) mc.setAttribute("aria-label", t("sheet.close"));
 }
 
 /* ======================= DATEN ======================= */
@@ -1232,8 +1167,6 @@ function elevationSvg(dayNum, opts){
 // Immer aus LOTTI_DAYS (nicht dem ggf. neu zugewiesenen DAYS) - das ist die vollstaendige
 // physische Strecke, unabhaengig davon, wie ein Nutzer sie in Tage einteilt.
 const ROUTE_SEQ = ["start", ...LOTTI_DAYS.flatMap(d=>d.way)];
-let lastGeom = null;
-let mapState = {scale:1, tx:0, ty:0};
 
 /* ======================= ROUTEN-KONFIGURATION (Onboarding) ======================= */
 function roleForCP(cpId){
@@ -1493,108 +1426,61 @@ function activeSeqForDay(dayNum){
   const prevLast = dayNum===1 ? "start" : DAYS[dayNum-2].way[DAYS[dayNum-2].way.length-1];
   return [prevLast, ...d.way];
 }
-function mapHtml(dayNum){
-  const geom = buildMapGeometry();
-  lastGeom = geom;
-  mapState = {scale:1, tx:0, ty:0};
-  const {VBW, VBH, proj} = geom;
+// Karten-Kachel: heutiger Abschnitt hervorgehoben, Rest der Gesamtroute ausgegraut als
+// Kontext (nicht nur der heutige Ausschnitt fuer sich - das wirkte kontextlos). Fixe
+// VBW/VBH (nicht von der Tagesgeometrie abhaengig) statt echter Geo-Ratio, damit die Kachel
+// im Karussell IMMER dieselbe Hoehe wie die Hoehenprofil-Kachel hat. Keine Zoom/Pan/GPS-
+// Steuerung mehr - ein Drag-Gestus wuerde mit dem Karussell-Swipe kollidieren, und ohne
+// separate Vollbild-Ansicht braucht es sie auch nicht: Punkte sind direkt antippbar.
+function routeTileHtml(dayNum){
   const activeSeq = activeSeqForDay(dayNum);
   const activeIds = new Set(activeSeq.map(String));
-
-  const full = pathD(ROUTE_SEQ, proj);
-  const active = pathD(activeSeq, proj);
-
-  const dots = ROUTE_SEQ.map(id=>{
-    const c = COORDS[id];
-    const p = proj(c.lat, c.lon);
-    const isActive = activeIds.has(String(id));
-    let cls;
-    if(id==="start") cls="ok";
-    else cls = stopColorClass(WAY[id]);
-    const r = isActive ? (id==="start"?9:8) : (id==="start"?6:4.5);
-    const op = isActive ? 1 : .4;
-    return `<circle class="map-hit" cx="${p.x.toFixed(1)}" cy="${p.y.toFixed(1)}" r="15" data-wid="${id}"></circle>
-      <circle class="map-dot-visual ${cls}" cx="${p.x.toFixed(1)}" cy="${p.y.toFixed(1)}" r="${r}" style="opacity:${op}" data-wid="${id}"></circle>`;
-  }).join("");
-
-  return `<div class="mapwrap" style="aspect-ratio:${VBW}/${VBH}">
-    <svg viewBox="0 0 ${VBW} ${VBH}" class="routemap" id="routeMapSvg" preserveAspectRatio="xMidYMid meet">
-      <defs><linearGradient id="mapbg" x1="0" y1="0" x2="1" y2="1">
-        <stop offset="0%" stop-color="#141824"/><stop offset="100%" stop-color="#1B2130"/>
-      </linearGradient></defs>
-      <rect x="0" y="0" width="${VBW}" height="${VBH}" rx="16" fill="url(#mapbg)"/>
-      <g id="mapZoomGroup">
-        <path d="${full}" class="map-fullpath"/>
-        <path d="${active}" class="map-activepath-halo"/>
-        <path d="${active}" class="map-activepath"/>
-        ${dots}
-      </g>
-    </svg>
-    <div class="map-compass">N ↑</div>
-    <div class="map-note">${t("map.schematic")}</div>
-    <div class="map-controls">
-      <button class="mapctl" id="zoomIn" aria-label="${t("map.zoomin")}">+</button>
-      <button class="mapctl" id="zoomOut" aria-label="${t("map.zoomout")}">−</button>
-      <button class="mapctl" id="mapReset" aria-label="${t("map.reset")}">⤢</button>
-      <button class="mapctl" id="gpsBtn" aria-label="${t("map.ownpos")}">📍</button>
-    </div>
-  </div>
-  <div id="gpsReadout"></div>
-  <div class="legend">
-    <span><i style="background:var(--fog)"></i>${t("legend.startfinish")}</span>
-    <span><i style="background:var(--acid)"></i>${t("legend.campok")}</span>
-    <span><i style="background:var(--warn)"></i>${t("legend.restricted")}</span>
-    <span><i style="background:var(--bad)"></i>${t("legend.notallowed")}</span>
-    <span><i style="background:var(--info)"></i>${t("legend.resupply")}</span>
-    <span>${t("legend.tapdetails")}</span>
-  </div>`;
-}
-// Kompakte Vorschau nur des HEUTIGEN Abschnitts (gestriger Endpunkt -> heutige Wegpunkte),
-// ohne Zoom/Pan/GPS - reine Vorschau, antippen oeffnet die volle Karte im Overlay.
-function miniMapHtml(dayNum){
-  const activeSeq = activeSeqForDay(dayNum);
   const lats = activeSeq.map(id=>COORDS[id].lat);
   const lons = activeSeq.map(id=>COORDS[id].lon);
   const latMin=Math.min(...lats), latMax=Math.max(...lats);
   const lonMin=Math.min(...lons), lonMax=Math.max(...lons);
   const midLat=(latMin+latMax)/2;
   const cosF=Math.cos(midLat*Math.PI/180);
-  const VBW=400;
+  const VBW=400, VBH=200, PAD=30;
   const latSpan=(latMax-latMin)||0.01;
   const lonSpanC=((lonMax-lonMin)*cosF)||0.01;
-  const VBH=clampNum(Math.round(VBW*(latSpan/lonSpanC)), 160, 320);
-  const PAD=36;
-  const proj = (lat,lon) => ({
-    x: PAD + (lon-lonMin)*cosF/lonSpanC*(VBW-2*PAD),
-    y: PAD + (latMax-lat)/latSpan*(VBH-2*PAD)
-  });
+  const scale = Math.min((VBW-2*PAD)/lonSpanC, (VBH-2*PAD)/latSpan);
+  const cx=(lonMin+lonMax)/2, cy=(latMin+latMax)/2;
+  const proj = (lat,lon) => ({ x: VBW/2 + (lon-cx)*cosF*scale, y: VBH/2 - (lat-cy)*scale });
+
+  const full = pathD(ROUTE_SEQ, proj);
   const active = pathD(activeSeq, proj);
-  const dots = activeSeq.map(id=>{
+  const dots = ROUTE_SEQ.map(id=>{
     const c = COORDS[id];
     const p = proj(c.lat, c.lon);
+    const isActive = activeIds.has(String(id));
     const cls = id==="start" ? "ok" : stopColorClass(WAY[id]);
-    const isEnd = id===activeSeq[0] || id===activeSeq[activeSeq.length-1];
-    return `<circle class="map-dot-visual ${cls}" cx="${p.x.toFixed(1)}" cy="${p.y.toFixed(1)}" r="${isEnd?8:5}"></circle>`;
+    const r = isActive ? (id==="start"?8:6) : (id==="start"?5:3.5);
+    const op = isActive ? 1 : .4;
+    return `<circle class="map-hit" cx="${p.x.toFixed(1)}" cy="${p.y.toFixed(1)}" r="13" data-wid="${id}"></circle>
+      <circle class="map-dot-visual ${cls}" cx="${p.x.toFixed(1)}" cy="${p.y.toFixed(1)}" r="${r}" style="opacity:${op}" data-wid="${id}"></circle>`;
   }).join("");
+
   return `<p class="tile-label">${t("map.route")}</p>
-  <button type="button" class="minimapwrap" id="miniMapBtn" style="aspect-ratio:${VBW}/${VBH}">
-    <svg viewBox="0 0 ${VBW} ${VBH}" preserveAspectRatio="xMidYMid meet">
-      <defs><linearGradient id="minimapbg" x1="0" y1="0" x2="1" y2="1">
+  <div class="routetile">
+    <svg viewBox="0 0 ${VBW} ${VBH}" class="routemap" id="routeTileSvg" preserveAspectRatio="xMidYMid meet">
+      <defs><linearGradient id="rtbg" x1="0" y1="0" x2="1" y2="1">
         <stop offset="0%" stop-color="#141824"/><stop offset="100%" stop-color="#1B2130"/>
       </linearGradient></defs>
-      <rect x="0" y="0" width="${VBW}" height="${VBH}" rx="16" fill="url(#minimapbg)"/>
+      <rect x="0" y="0" width="${VBW}" height="${VBH}" rx="16" fill="url(#rtbg)"/>
+      <path d="${full}" class="map-fullpath"/>
       <path d="${active}" class="map-activepath-halo"/>
       <path d="${active}" class="map-activepath"/>
       ${dots}
     </svg>
-    <div class="minimap-hint">⤢ ${t("map.expand")}</div>
-  </button>`;
+  </div>
+  <div class="elev-note">${t("map.tapnote")}</div>`;
 }
-// Karte (heute-Vorschau) + Hoehenprofil als ein Swipe-Paar - beide sind Tages-Kontext,
-// brauchen aber unterschiedlich viel Platz, daher zwei Karussell-Slides statt gestapelt.
+// Karte + Hoehenprofil als ein Swipe-Paar - beide sind Tages-Kontext, brauchen aber
+// unterschiedlich viel Platz, daher zwei Karussell-Slides statt gestapelt.
 function mapElevHtml(dayNum){
   return `<div class="carousel" id="mapElevCarousel">
-    <div>${miniMapHtml(dayNum)}</div>
+    <div>${routeTileHtml(dayNum)}</div>
     <div>
       <p class="eyebrow">${t("eyebrow.elev")}</p>
       <div class="elevcard">${elevationSvg(dayNum, {markers:true, h:150})}</div>
@@ -1604,177 +1490,13 @@ function mapElevHtml(dayNum){
   <div class="carousel-dots" data-for="mapElevCarousel"><span class="dot active"></span><span class="dot"></span></div>`;
 }
 
-/* ---- Zoom/Pan ---- */
-function clampNum(v,min,max){ return Math.max(min, Math.min(max, v)); }
-function clampPan(){
-  if(!lastGeom) return;
-  const {VBW,VBH} = lastGeom;
-  const minTx = VBW*(1-mapState.scale), maxTx = 0;
-  const minTy = VBH*(1-mapState.scale), maxTy = 0;
-  mapState.tx = clampNum(mapState.tx, minTx, maxTx);
-  mapState.ty = clampNum(mapState.ty, minTy, maxTy);
-}
-function applyMapTransform(){
-  const g = document.getElementById("mapZoomGroup");
-  if(g) g.setAttribute("transform", `translate(${mapState.tx},${mapState.ty}) scale(${mapState.scale})`);
-  const resetBtn = document.getElementById("mapReset");
-  if(resetBtn) resetBtn.style.display = mapState.scale>1.02 ? "flex" : "none";
-}
-function setZoomAt(newScale, px, py){
-  newScale = clampNum(newScale, 1, 5);
-  const ratio = newScale/mapState.scale;
-  mapState.tx = px*(1-ratio) + mapState.tx*ratio;
-  mapState.ty = py*(1-ratio) + mapState.ty*ratio;
-  mapState.scale = newScale;
-  clampPan();
-  applyMapTransform();
-}
-function zoomBy(factor, px, py){ setZoomAt(mapState.scale*factor, px, py); }
-function resetZoom(){ mapState = {scale:1, tx:0, ty:0}; applyMapTransform(); }
-function toSvgPointSafe(svg, clientX, clientY){
-  try{
-    const ctm = svg.getScreenCTM();
-    if(!ctm) return {x:clientX, y:clientY};
-    const pt = svg.createSVGPoint();
-    pt.x = clientX; pt.y = clientY;
-    const loc = pt.matrixTransform(ctm.inverse());
-    return {x:loc.x, y:loc.y};
-  }catch(e){ return {x:clientX, y:clientY}; }
-}
-function bindMapGestures(svg){
-  const pointers = new Map();
-  let dragLast = null;
-  let pinchStartDist = 0, pinchStartScale = 1;
-
-  svg.addEventListener("pointerdown", e=>{
-    pointers.set(e.pointerId, {x:e.clientX, y:e.clientY});
-    if(pointers.size===1){
-      dragLast = toSvgPointSafe(svg, e.clientX, e.clientY);
-    } else if(pointers.size===2){
-      const pts=[...pointers.values()];
-      pinchStartDist = Math.hypot(pts[0].x-pts[1].x, pts[0].y-pts[1].y) || 1;
-      pinchStartScale = mapState.scale;
-      dragLast = null;
-    }
-    try{ svg.setPointerCapture(e.pointerId); }catch(e2){}
-  });
-  svg.addEventListener("pointermove", e=>{
-    if(!pointers.has(e.pointerId)) return;
-    pointers.set(e.pointerId, {x:e.clientX, y:e.clientY});
-    if(pointers.size===2){
-      const pts=[...pointers.values()];
-      const d = Math.hypot(pts[0].x-pts[1].x, pts[0].y-pts[1].y) || 1;
-      const midX=(pts[0].x+pts[1].x)/2, midY=(pts[0].y+pts[1].y)/2;
-      const mid = toSvgPointSafe(svg, midX, midY);
-      setZoomAt(pinchStartScale*(d/pinchStartDist), mid.x, mid.y);
-    } else if(pointers.size===1 && dragLast && mapState.scale>1.01){
-      const cur = toSvgPointSafe(svg, e.clientX, e.clientY);
-      mapState.tx += (cur.x - dragLast.x);
-      mapState.ty += (cur.y - dragLast.y);
-      dragLast = cur;
-      clampPan(); applyMapTransform();
-    }
-  });
-  function endPointer(e){
-    pointers.delete(e.pointerId);
-    if(pointers.size<2) pinchStartDist=0;
-    if(pointers.size===0) dragLast=null;
-    else if(pointers.size===1){
-      const [p] = [...pointers.values()];
-      dragLast = toSvgPointSafe(svg, p.x, p.y);
-    }
-  }
-  svg.addEventListener("pointerup", endPointer);
-  svg.addEventListener("pointercancel", endPointer);
-  svg.addEventListener("pointerleave", endPointer);
-}
-
-/* ---- GPS ---- */
-let gpsWatchId = null;
-let lastPos = null;
 function haversineKm(lat1,lon1,lat2,lon2){
   const R=6371, toRad=d=>d*Math.PI/180;
   const dLat=toRad(lat2-lat1), dLon=toRad(lon2-lon1);
   const a = Math.sin(dLat/2)**2 + Math.cos(toRad(lat1))*Math.cos(toRad(lat2))*Math.sin(dLon/2)**2;
   return R*2*Math.atan2(Math.sqrt(a), Math.sqrt(1-a));
 }
-function startGPS(){
-  if(!("geolocation" in navigator)){ toast(t("gps.notsupported")); return; }
-  gpsWatchId = navigator.geolocation.watchPosition(
-    pos=>{
-      lastPos = {lat:pos.coords.latitude, lon:pos.coords.longitude, acc:pos.coords.accuracy};
-      updateGpsUI(true);
-    },
-    err=>{
-      const msg = err.code===1 ? t("gps.denied") : err.code===2 ? t("gps.unavailable") : t("gps.timeout");
-      toast(msg);
-      if(err.code===1) stopGPS();
-    },
-    {enableHighAccuracy:true, maximumAge:8000, timeout:20000}
-  );
-  updateGpsButtonState(true);
-}
-function stopGPS(){
-  if(gpsWatchId!==null && "geolocation" in navigator){ navigator.geolocation.clearWatch(gpsWatchId); }
-  gpsWatchId = null;
-  lastPos = null;
-  updateGpsButtonState(false);
-  updateGpsUI(false);
-}
-function toggleGPS(){ gpsWatchId!==null ? stopGPS() : startGPS(); }
-function updateGpsButtonState(active){
-  const btn = document.getElementById("gpsBtn");
-  if(btn) btn.classList.toggle("active", active);
-}
 function nameOfId(id){ return id==="start" ? "Ahoi Minigolf" : (WAY[id] ? WAY[id].name : "?"); }
-function updateGpsUI(show){
-  const g = document.getElementById("mapZoomGroup");
-  let marker = document.getElementById("gpsMarker");
-  if(!show || !lastPos || !g){
-    if(marker) marker.remove();
-    renderGpsReadout();
-    return;
-  }
-  const {proj, VBW, VBH} = lastGeom;
-  const raw = proj(lastPos.lat, lastPos.lon);
-  const p = {x:clampNum(raw.x, 6, VBW-6), y:clampNum(raw.y, 6, VBH-6)};
-  if(!marker){
-    marker = document.createElementNS("http://www.w3.org/2000/svg","g");
-    marker.id = "gpsMarker";
-    marker.innerHTML = `<circle class="gps-pulse" r="9"></circle><circle class="gps-dot" r="5"></circle>`;
-    g.appendChild(marker);
-  }
-  marker.setAttribute("transform", `translate(${p.x},${p.y})`);
-  renderGpsReadout();
-}
-function renderGpsReadout(){
-  const el = document.getElementById("gpsReadout");
-  if(!el) return;
-  if(!lastPos){ el.classList.remove("show"); el.innerHTML=""; return; }
-  el.classList.add("show");
-  const d = DAYS[activeDay-1];
-  const prevLast = activeDay===1 ? "start" : DAYS[activeDay-2].way[DAYS[activeDay-2].way.length-1];
-  const seq = [prevLast, ...d.way];
-  let nearest=null, nearestDist=Infinity;
-  seq.forEach(id=>{
-    const c = COORDS[id];
-    const dist = haversineKm(lastPos.lat, lastPos.lon, c.lat, c.lon);
-    if(dist<nearestDist){ nearestDist=dist; nearest=id; }
-  });
-  const endId = seq[seq.length-1];
-  const endDist = haversineKm(lastPos.lat, lastPos.lon, COORDS[endId].lat, COORDS[endId].lon);
-  el.innerHTML = `
-    <div class="gps-row"><span>${t("gps.nearest")}</span><b class="mono">${nameOfId(nearest)} · ${nearestDist.toFixed(1)} km</b></div>
-    <div class="gps-row"><span>${t("gps.until")} ${nameOfId(endId)}</span><b class="mono">${endDist.toFixed(1)} km</b></div>
-    <div class="gps-note">${t("gps.note")}${Math.round(lastPos.acc||0)} m</div>
-  `;
-}
-function distanceNote(id){
-  if(!lastPos) return "";
-  const c = COORDS[id];
-  const dist = haversineKm(lastPos.lat, lastPos.lon, c.lat, c.lon);
-  return `<p style="font-size:12.5px;color:var(--mist);margin-top:10px;border-top:1px solid var(--line);padding-top:10px;">📍 ≈ ${dist.toFixed(1)} ${t("distancenote")}</p>`;
-}
 
 /* ======================= SHEET (generisch: Notfall + Karten-Punkte) ======================= */
 function showSheet(title, sub, bodyHtml){
@@ -1938,15 +1660,15 @@ function openEmergencySheet(){
 function openPointSheet(wid){
   if(wid==="start"){
     showSheet(t("start.title"), t("start.sub").replace("{n}", DAYS.length),
-      `<p style="font-size:13.5px;line-height:1.6;">${t("start.detail")}</p>` + distanceNote(wid));
+      `<p style="font-size:13.5px;line-height:1.6;">${t("start.detail")}</p>`);
     return;
   }
   const w = WAY[wid];
   if(w.kind==="cp"){
     const cp = CP[w.cp];
-    showSheet("📍 " + w.name, `km ${w.km} · ${roleForCP(cp.id)}`, cpDetailDl(cp) + distanceNote(wid));
+    showSheet("📍 " + w.name, `km ${w.km} · ${roleForCP(cp.id)}`, cpDetailDl(cp));
   } else {
-    showSheet(stopIcon(w.kind) + " " + w.name, `km ${w.km}`, `<p style="font-size:13.5px;line-height:1.6;">${tf(w.offer)}</p>` + distanceNote(wid));
+    showSheet(stopIcon(w.kind) + " " + w.name, `km ${w.km}`, `<p style="font-size:13.5px;line-height:1.6;">${tf(w.offer)}</p>`);
   }
 }
 
@@ -1973,9 +1695,14 @@ function specialsHtml(day){
 
 /* ======================= WETTER ======================= */
 let weatherCache = {};
+// Stuendliche statt tageweiser Vorhersage - genauer fuer eine mehrstuendige Etappe als ein
+// einzelner Tageswert. Bezieht sich auf EINEN Punkt der Tagesroute (WEATHER_LOC), nicht auf
+// den vollen Streckenverlauf - waere echte Positions-Korrelation gewuenscht, braeuchte es
+// mehrere Abfragen je Streckenabschnitt plus eine Pace-Schaetzung, das ist hier (noch) nicht
+// eingebaut.
 async function fetchWeather(dayNum){
   const loc = WEATHER_LOC[dayNum];
-  const url = `https://api.open-meteo.com/v1/forecast?latitude=${loc.lat}&longitude=${loc.lon}&current=temperature_2m,precipitation,weather_code,wind_speed_10m&daily=weather_code,temperature_2m_max,temperature_2m_min,precipitation_sum,precipitation_probability_max,wind_speed_10m_max&timezone=auto&forecast_days=3`;
+  const url = `https://api.open-meteo.com/v1/forecast?latitude=${loc.lat}&longitude=${loc.lon}&current=temperature_2m,weather_code&hourly=temperature_2m,precipitation_probability,weather_code&timezone=auto&forecast_days=2`;
   const res = await fetch(url);
   if(!res.ok) throw new Error("HTTP "+res.status);
   const data = await res.json();
@@ -1983,9 +1710,7 @@ async function fetchWeather(dayNum){
   return weatherCache[dayNum];
 }
 function weatherCardHtml(dayNum, state){
-  const loc = WEATHER_LOC[dayNum];
   const c = weatherCache[dayNum];
-  const locale = LANG==='de'?'de-DE':'en-US';
   if(!c && state==="error"){
     return `<div class="weather-card"><div class="wx-error">${t("wx.noconnection")}</div></div>`;
   }
@@ -1993,27 +1718,27 @@ function weatherCardHtml(dayNum, state){
     return `<div class="weather-card"><div class="wx-loading">${t("wx.loading")}</div></div>`;
   }
   const cur = c.data.current;
-  const daily = c.data.daily;
+  const hourly = c.data.hourly;
   const [curIcon, curLabel] = wmo(cur.weather_code);
-  const stamp = new Date(c.ts).toLocaleTimeString(locale,{hour:'2-digit',minute:'2-digit'});
-  const stale = state==="error" ? `<div class="wx-error" style="margin-top:8px; padding:8px 4px;">${t("wx.stale")}</div>` : "";
-  const days = daily.time.map((tm,i)=>{
-    const [ic] = wmo(daily.weather_code[i]);
-    const dLabel = i===0?t("wx.today"):i===1?t("wx.tomorrow"):new Date(tm).toLocaleDateString(locale,{weekday:'short'});
-    return `<div class="wx-day"><span class="lb">${dLabel}</span><span class="ic">${ic}</span><span class="tp mono">${Math.round(daily.temperature_2m_max[i])}°/${Math.round(daily.temperature_2m_min[i])}°</span><span class="pr mono">💧${daily.precipitation_probability_max[i]}%</span></div>`;
+  const stale = state==="error" ? `<div class="wx-error" style="margin-top:6px; padding:6px 4px;">${t("wx.stale")}</div>` : "";
+  let startIdx = hourly.time.findIndex(tm => tm >= cur.time);
+  if(startIdx<0) startIdx = 0;
+  const hours = hourly.time.slice(startIdx, startIdx+6).map((tm,i)=>{
+    const idx = startIdx+i;
+    const [ic] = wmo(hourly.weather_code[idx]);
+    const hLabel = String(new Date(tm).getHours()).padStart(2,"0")+":00";
+    return `<div class="wx-hour"><span class="lb">${hLabel}</span><span class="ic">${ic}</span><span class="tp mono">${Math.round(hourly.temperature_2m[idx])}°</span><span class="pr mono">💧${hourly.precipitation_probability[idx]}%</span></div>`;
   }).join("");
   return `<div class="weather-card">
     <div class="wx-head">
       <div>
         <div class="wx-now"><span class="wx-icon">${curIcon}</span><b class="mono">${Math.round(cur.temperature_2m)}°C</b></div>
-        <div class="wx-desc">${tf(curLabel)} · ${t("wx.wind")} ${Math.round(cur.wind_speed_10m)} km/h</div>
+        <div class="wx-desc">${tf(curLabel)}</div>
       </div>
       <button class="wx-refresh" id="wxRefresh">🔄</button>
     </div>
-    <div class="wx-days">${days}</div>
-    <div class="wx-meta">${t("wx.asof")} ${stamp}${t("wx.time")?" "+t("wx.time"):""} · ${loc.label}</div>
+    <div class="wx-hours">${hours}</div>
     ${stale}
-    <div class="wx-note">${t("wx.note")}</div>
   </div>`;
 }
 function renderWeatherInPlace(dayNum, state){
@@ -2564,9 +2289,9 @@ function renderHeute(){
 
   h += `<p class="eyebrow">${t("eyebrow.specials")}</p>` + specialsHtml(d);
 
-  h += mapElevHtml(activeDay);
-
   h += `<p class="eyebrow">${t("eyebrow.weather")}</p><div id="weatherSlot">${weatherCardHtml(activeDay, undefined)}</div>`;
+
+  h += mapElevHtml(activeDay);
 
   h += `<div class="story-btnrow">
     <button class="story-trigger" id="storyTrigger">${t("story.watch")}</button>
@@ -2587,8 +2312,13 @@ function bindMap(){
   const de = document.getElementById("dayEndEditBtn");
   if(de) de.onclick = ()=> openDayEndSheet(activeDay-1);
 
-  const mb = document.getElementById("miniMapBtn");
-  if(mb) mb.onclick = openMapOverlay;
+  const rt = document.getElementById("routeTileSvg");
+  if(rt){
+    rt.addEventListener("click", (e)=>{
+      const el = e.target.closest("[data-wid]");
+      if(el) openPointSheet(el.dataset.wid);
+    });
+  }
 
   const elevSvg = document.getElementById("elevSvg" + "d" + activeDay);
   if(elevSvg){
@@ -2597,47 +2327,6 @@ function bindMap(){
       if(el) openPointSheet(el.dataset.wid);
     });
   }
-}
-// Punkt-Sheets (openPointSheet) nutzen das gemeinsame #sheet, das ueber diesem Overlay
-// liegt (hoeherer z-index) - so kann man mehrere Punkte antippen, ohne die Karte zu verlassen.
-function openMapOverlay(){
-  const d = DAYS[activeDay-1];
-  $("#mapOverlayTitle").textContent = `${tf(d.from)} → ${tf(d.to)}`;
-  $("#mapOverlayBody").innerHTML = mapHtml(activeDay);
-  $("#mapOverlay").classList.add("show");
-  $("#mapOverlay").setAttribute("aria-hidden","false");
-  bindFullMap();
-}
-function closeMapOverlay(){
-  $("#mapOverlay").classList.remove("show");
-  $("#mapOverlay").setAttribute("aria-hidden","true");
-}
-function bindFullMap(){
-  const svg = document.getElementById("routeMapSvg");
-  if(!svg) return;
-  let moved = false, downXY = null;
-  svg.addEventListener("pointerdown", (e)=>{ moved=false; downXY={x:e.clientX, y:e.clientY}; });
-  svg.addEventListener("pointermove", (e)=>{
-    if(downXY && Math.hypot(e.clientX-downXY.x, e.clientY-downXY.y) > 8) moved = true;
-  });
-  svg.addEventListener("click", (e)=>{
-    if(moved) return; // war ein Ziehen/Pinch, kein Tap auf einen Punkt
-    const el = e.target.closest("[data-wid]");
-    if(el) openPointSheet(el.dataset.wid);
-  });
-  bindMapGestures(svg);
-
-  const zi = document.getElementById("zoomIn");
-  const zo = document.getElementById("zoomOut");
-  const zr = document.getElementById("mapReset");
-  const gb = document.getElementById("gpsBtn");
-  if(zi) zi.onclick = ()=> zoomBy(1.6, lastGeom.VBW/2, lastGeom.VBH/2);
-  if(zo) zo.onclick = ()=> zoomBy(1/1.6, lastGeom.VBW/2, lastGeom.VBH/2);
-  if(zr) zr.onclick = resetZoom;
-  if(gb) gb.onclick = toggleGPS;
-
-  updateGpsButtonState(gpsWatchId!==null);
-  updateGpsUI(gpsWatchId!==null);
 }
 // Aktualisiert die Punkt-Indikatoren unter Karussells (Highlights, Karte/Hoehenprofil)
 // anhand der Scroll-Position - kein Slider-Plugin noetig, nativer Scroll-Snap reicht.
@@ -3172,7 +2861,6 @@ $$(".tabbtn").forEach(b=> b.onclick = ()=> switchTab(b.dataset.tab) );
 
 $("#closeSheetBtn").onclick = closeSheet;
 $("#backdrop").onclick = closeSheet;
-$("#mapOverlayClose").onclick = closeMapOverlay;
 
 /* Quickbar */
 $("#qbEmergency").onclick = openEmergencySheet;
