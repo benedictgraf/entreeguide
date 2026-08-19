@@ -74,15 +74,15 @@ main{flex:1; overflow-y:auto; padding:16px var(--pad) 110px; -webkit-overflow-sc
 .carousel .eyebrow{margin-top:0;}
 
 /* ROUTE OVERVIEW STRIP (Tagesauswahl) */
-.progress{position:relative; height:8px; border-radius:999px; background:var(--line); overflow:visible; margin-bottom:10px;}
+.progress{position:relative; height:8px; border-radius:999px; background:var(--line); overflow:visible; margin-bottom:12px;}
 .progress-fill{position:absolute; left:0; top:0; bottom:0; background:var(--acid); border-radius:999px; transition:width .25s ease;}
 .tick{position:absolute; top:-3px; width:3px; height:14px; border-radius:2px; background:var(--ink); box-shadow:0 0 0 2px var(--ink);}
 .tick.ok{background:var(--acid);}
 .tick.warn{background:var(--warn);}
 .tick.no{background:var(--bad);}
-.progress-caption{display:flex; justify-content:space-between; font-size:12px; color:var(--mist); margin-bottom:28px;}
-.daypills{display:flex; gap:6px; margin-bottom:10px;}
-.daypill{flex:1 1 0; min-width:0; padding:9px 4px 8px; text-align:center; background:var(--slate); border:1px solid var(--line); border-radius:var(--r-sm); transition:background .15s,border-color .15s,color .15s;}
+.progress-caption{display:flex; justify-content:space-between; font-size:12px; color:var(--mist); margin-bottom:32px;}
+.daypills{display:flex; gap:7px; margin-bottom:18px;}
+.daypill{flex:1 1 0; min-width:0; padding:11px 4px 10px; text-align:center; background:var(--slate); border:1px solid var(--line); border-radius:var(--r-sm); transition:background .15s,border-color .15s,color .15s;}
 .daypill b{display:block; font-size:14px; font-weight:800;}
 .daypill span{display:block; font-size:10.5px; color:var(--mist); margin-top:1px;}
 .daypill.active{background:var(--acid); border-color:var(--acid); color:var(--acid-ink);}
@@ -111,7 +111,16 @@ main{flex:1; overflow-y:auto; padding:16px var(--pad) 110px; -webkit-overflow-sc
 /* KARTE (Tages-Kachel im Karussell: Kontext ausgegraut, heutiger Abschnitt hervorgehoben,
    Punkte direkt antippbar - kein Zoom/Pan/GPS mehr noetig, da keine separate Vollbild-Ansicht
    mehr existiert und ein Drag-Gestus mit dem Karussell-Swipe kollidieren wuerde) */
-.routetile{position:relative; width:100%; aspect-ratio:400/200; border-radius:var(--r-lg); overflow:hidden; border:1px solid var(--line); background:var(--slate);}
+.routetile{position:relative; width:100%; aspect-ratio:400/200; border-radius:var(--r-lg); overflow:hidden; border:1px solid var(--line); background:var(--slate); touch-action:pan-y;}
+.routetile.interactive{touch-action:none;}
+.tile-zoomtoggle{position:absolute; right:8px; bottom:8px; width:30px; height:30px; border-radius:50%; background:rgba(22,25,35,.88); border:1px solid var(--line); color:var(--fog); font-size:14px; display:flex; align-items:center; justify-content:center;}
+.tile-zoomtoggle:active{background:var(--slate2);}
+.routetile.interactive .tile-zoomtoggle{display:none;}
+.tile-zoomctl{position:absolute; right:8px; bottom:8px; display:none; flex-direction:column; gap:6px;}
+.routetile.interactive .tile-zoomctl{display:flex;}
+.tile-zoomctl button{width:30px; height:30px; border-radius:50%; background:rgba(22,25,35,.88); border:1px solid var(--line); color:var(--fog); font-size:15px; font-weight:800; display:flex; align-items:center; justify-content:center; line-height:1;}
+.tile-zoomctl button:active{background:var(--slate2);}
+#rtCollapse{font-size:13px;}
 .routemap{width:100%; height:100%; display:block;}
 .map-fullpath{fill:none; stroke:var(--mist); stroke-width:2.4; stroke-linecap:round; stroke-linejoin:round; opacity:.38;}
 .map-activepath-halo{fill:none; stroke:var(--flare); stroke-width:11; stroke-linecap:round; stroke-linejoin:round; opacity:.22;}
@@ -166,22 +175,23 @@ main{flex:1; overflow-y:auto; padding:16px var(--pad) 110px; -webkit-overflow-sc
 .card{background:var(--slate); border:1px solid var(--line); border-radius:var(--r-lg); padding:16px; margin-bottom:12px;}
 
 /* WETTER */
-.weather-card{background:var(--slate); border:1px solid var(--line); border-radius:var(--r-lg); padding:16px; margin-bottom:12px;}
-.wx-head{display:flex; align-items:flex-start; justify-content:space-between; margin-bottom:12px;}
-.wx-now{display:flex; align-items:center; gap:8px;}
-.wx-icon{font-size:28px; line-height:1;}
-.wx-now b{font-size:25px; font-weight:800;}
-.wx-desc{font-size:12.5px; color:var(--mist); margin-top:3px;}
-.wx-refresh{width:34px; height:34px; border-radius:50%; background:var(--slate2); border:1px solid var(--line); font-size:15px; flex-shrink:0;}
+.weather-card{background:var(--slate); border:1px solid var(--line); border-radius:var(--r-lg); padding:12px; margin-bottom:12px;}
+.wx-head{display:flex; align-items:center; justify-content:space-between; margin-bottom:9px;}
+.wx-now{display:flex; align-items:baseline; gap:6px; min-width:0;}
+.wx-icon{font-size:19px; line-height:1;}
+.wx-now b{font-size:17px; font-weight:800;}
+.wx-desc{font-size:12px; color:var(--mist); overflow:hidden; text-overflow:ellipsis; white-space:nowrap;}
+.wx-refresh{width:28px; height:28px; border-radius:50%; background:var(--slate2); border:1px solid var(--line); font-size:12.5px; flex-shrink:0;}
 .wx-refresh:active{opacity:.6;}
-.wx-hours{display:flex; gap:6px; overflow-x:auto; -webkit-overflow-scrolling:touch; scrollbar-width:none;}
+.wx-hours{display:flex; gap:5px; overflow-x:auto; -webkit-overflow-scrolling:touch; scrollbar-width:none;}
 .wx-hours::-webkit-scrollbar{display:none;}
-.wx-hour{flex:0 0 50px; background:var(--slate2); border-radius:var(--r-sm); padding:8px 4px; text-align:center; display:flex; flex-direction:column; gap:3px;}
-.wx-hour .lb{font-size:10px; color:var(--mist);}
-.wx-hour .ic{font-size:15px;}
-.wx-hour .tp{font-size:11px; color:var(--fog);}
-.wx-hour .pr{font-size:9.5px; color:var(--info);}
-.wx-loading, .wx-error{font-size:13px; color:var(--mist); text-align:center; padding:18px 4px; line-height:1.5;}
+.wx-hour{flex:0 0 44px; background:var(--slate2); border-radius:var(--r-sm); padding:6px 3px; text-align:center; display:flex; flex-direction:column; gap:2px;}
+.wx-hour .lb{font-size:9px; color:var(--mist);}
+.wx-hour .ic{font-size:13px;}
+.wx-hour .tp{font-size:10px; color:var(--fog);}
+.wx-hour .pr{font-size:8.5px; color:var(--info);}
+.wx-loc{font-size:10px; color:var(--mist); margin-top:8px;}
+.wx-loading, .wx-error{font-size:13px; color:var(--mist); text-align:center; padding:14px 4px; line-height:1.5;}
 
 /* LIST ROWS (Checkpoints/Resupply Tabs) */
 .rowlist{background:var(--slate); border:1px solid var(--line); border-radius:var(--r-lg); overflow:hidden; margin-bottom:12px;}
@@ -194,9 +204,9 @@ main{flex:1; overflow-y:auto; padding:16px var(--pad) 110px; -webkit-overflow-sc
 .tap.open .chev{transform:rotate(90deg); color:var(--acid);}
 .row-detail{display:none; padding:0 14px 16px; font-size:13.5px; line-height:1.6; color:var(--fog);}
 .row-detail.open{display:block;}
-.row-detail dl{margin:10px 0 0; display:grid; grid-template-columns:auto 1fr; gap:6px 10px; font-size:13px;}
-.row-detail dt{color:var(--mist);}
-.row-detail dd{margin:0;}
+dl{margin:10px 0 0; display:grid; grid-template-columns:auto 1fr; gap:6px 10px; font-size:13px;}
+dt{color:var(--mist);}
+dd{margin:0;}
 .tap{background:none; border:none; width:100%; text-align:left; display:flex; align-items:flex-start; gap:12px; padding:13px 14px; cursor:pointer;}
 .tap .km{margin-top:2px;}
 .tapmain{flex:1; min-width:0;}
@@ -270,6 +280,8 @@ nav#tabbar{position:fixed; left:0; right:0; bottom:0; z-index:20; display:flex; 
 .story-btnrow{display:flex; gap:8px; margin:28px 0 4px;}
 .story-trigger{display:flex; align-items:center; justify-content:center; gap:6px; flex:1; padding:9px 8px; background:var(--slate2); border:1px solid var(--line); border-radius:var(--r-md); font-size:12.5px; font-weight:700; color:var(--mist);}
 .story-trigger:active{opacity:.7;}
+.story-exporticon{width:38px; height:38px; flex-shrink:0; border-radius:50%; background:var(--slate2); border:1px solid var(--line); font-size:15px; display:flex; align-items:center; justify-content:center;}
+.story-exporticon:active{opacity:.7;}
 
 /* VIDEO-EXPORT OVERLAY */
 #videoExport{position:fixed; inset:0; z-index:60; background:rgba(11,13,20,.96); display:none; flex-direction:column; align-items:center; justify-content:center; padding:24px; gap:16px;}
@@ -572,7 +584,7 @@ const I18N = {
   "eyebrow.sleep": {de:"⛺ Schlafen heute", en:"⛺ Sleep tonight"},
   "eyebrow.specials": {de:"✨ Specials heute", en:"✨ Highlights today"},
   "elev.note": {de:"Schematisch anhand bekannter Pass-/Checkpoint-Höhen angenähert — kein exaktes GPS-Profil. Punkte antippbar.", en:"Schematic, approximated from known pass/checkpoint elevations — not an exact GPS profile. Points are tappable."},
-  "story.watch": {de:"▶︎ Story ansehen", en:"▶︎ Watch story"},
+  "story.watch": {de:"▶︎ Storyview des Tages", en:"▶︎ Today's story"},
   "story.export": {de:"🎥 Als Video exportieren", en:"🎥 Export as video"},
   "specials.empty": {de:"Keine besonderen Hinweise für diesen Tag.", en:"No special notes for this day."},
   "sheet.close": {de:"Schließen", en:"Close"},
@@ -675,6 +687,8 @@ const I18N = {
   "wx.loading": {de:"Lade Wettervorhersage…", en:"Loading weather forecast…"},
   "wx.stale": {de:"Offline — zeige letzten bekannten Stand.", en:"Offline — showing last known state."},
   "wx.updated": {de:"Wetter aktualisiert", en:"Weather updated"},
+  "wx.yourpos": {de:"Deine Position", en:"Your position"},
+  "wx.refresh": {de:"Aktualisieren (per GPS)", en:"Refresh (via GPS)"},
   "video.notsupported": {de:"Video-Export wird von diesem Browser nicht unterstützt", en:"Video export isn't supported by this browser"},
   "video.noformat": {de:"Kein unterstütztes Videoformat gefunden", en:"No supported video format found"},
   "video.failed": {de:"Export fehlgeschlagen", en:"Export failed"},
@@ -685,6 +699,10 @@ const I18N = {
   "video.save": {de:"Video speichern", en:"Save video"},
   "map.route": {de:"Route", en:"Route"},
   "map.tapnote": {de:"Schematisch — restliche Route ausgegraut. Punkte antippbar.", en:"Schematic — rest of the route greyed out. Points are tappable."},
+  "map.explore": {de:"Karte erkunden (zoomen & verschieben)", en:"Explore map (zoom & pan)"},
+  "map.zoomin": {de:"Vergrößern", en:"Zoom in"},
+  "map.zoomout": {de:"Verkleinern", en:"Zoom out"},
+  "map.collapse": {de:"Fertig", en:"Done"},
   "gear.confirmed": {de:"bestätigt", en:"confirmed"},
   "gear.of": {de:"von", en:"of"},
   "unit.hm": {de:"Hm", en:"m elev."},
@@ -1427,11 +1445,13 @@ function activeSeqForDay(dayNum){
   return [prevLast, ...d.way];
 }
 // Karten-Kachel: heutiger Abschnitt hervorgehoben, Rest der Gesamtroute ausgegraut als
-// Kontext (nicht nur der heutige Ausschnitt fuer sich - das wirkte kontextlos). Fixe
-// VBW/VBH (nicht von der Tagesgeometrie abhaengig) statt echter Geo-Ratio, damit die Kachel
-// im Karussell IMMER dieselbe Hoehe wie die Hoehenprofil-Kachel hat. Keine Zoom/Pan/GPS-
-// Steuerung mehr - ein Drag-Gestus wuerde mit dem Karussell-Swipe kollidieren, und ohne
-// separate Vollbild-Ansicht braucht es sie auch nicht: Punkte sind direkt antippbar.
+// Kontext. Fixe VBW/VBH (nicht von der Tagesgeometrie abhaengig) statt echter Geo-Ratio,
+// damit die Kachel im Karussell immer dieselbe Hoehe wie die Hoehenprofil-Kachel hat.
+// Zoom/Pan ueber einen EXPLIZITEN "erkunden"-Toggle statt permanent aktiv: im Ruhezustand
+// gehoert ein horizontaler Drag dem Karussell-Swipe (Route<->Hoehenprofil); erst nach Tap auf
+// den Lupen-Button wird touch-action:none gesetzt und der Drag gehoert dem Pan/Zoom. So gibt
+// es nie eine Konkurrenz zwischen beiden Gesten, ganz unabhaengig von Touch-Action-Spec-
+// Feinheiten, die zwischen Browsern variieren.
 function routeTileHtml(dayNum){
   const activeSeq = activeSeqForDay(dayNum);
   const activeIds = new Set(activeSeq.map(String));
@@ -1462,17 +1482,25 @@ function routeTileHtml(dayNum){
   }).join("");
 
   return `<p class="tile-label">${t("map.route")}</p>
-  <div class="routetile">
+  <div class="routetile" id="routeTile">
     <svg viewBox="0 0 ${VBW} ${VBH}" class="routemap" id="routeTileSvg" preserveAspectRatio="xMidYMid meet">
       <defs><linearGradient id="rtbg" x1="0" y1="0" x2="1" y2="1">
         <stop offset="0%" stop-color="#141824"/><stop offset="100%" stop-color="#1B2130"/>
       </linearGradient></defs>
       <rect x="0" y="0" width="${VBW}" height="${VBH}" rx="16" fill="url(#rtbg)"/>
-      <path d="${full}" class="map-fullpath"/>
-      <path d="${active}" class="map-activepath-halo"/>
-      <path d="${active}" class="map-activepath"/>
-      ${dots}
+      <g id="routeTileZoomGroup">
+        <path d="${full}" class="map-fullpath"/>
+        <path d="${active}" class="map-activepath-halo"/>
+        <path d="${active}" class="map-activepath"/>
+        ${dots}
+      </g>
     </svg>
+    <button type="button" class="tile-zoomtoggle" id="routeTileExpand" aria-label="${t("map.explore")}">⤢</button>
+    <div class="tile-zoomctl" id="routeTileCtl">
+      <button type="button" id="rtZoomIn" aria-label="${t("map.zoomin")}">+</button>
+      <button type="button" id="rtZoomOut" aria-label="${t("map.zoomout")}">−</button>
+      <button type="button" id="rtCollapse" aria-label="${t("map.collapse")}">✕</button>
+    </div>
   </div>
   <div class="elev-note">${t("map.tapnote")}</div>`;
 }
@@ -1694,19 +1722,24 @@ function specialsHtml(day){
 }
 
 /* ======================= WETTER ======================= */
+// Datenquelle: Open-Meteo (open-meteo.com), kostenlos, ohne API-Key. Nutzt je nach Region ein
+// Blend aus ECMWF/DWD-ICON-Modellen - ein solider ALLGEMEINER Wetterdienst, aber KEIN
+// spezialisierter Alpen-/Bergwetter-Dienst (kein Foehn-/Gewitter-Nowcasting, keine
+// Mikroklima-Modellierung fuer einzelne Taeler/Grate wie z.B. Bergwetter Suedtirol oder
+// Meteotrentino). Fuer kritische Passagen bewusst zusaetzlich lokale Quellen empfehlen.
 let weatherCache = {};
 // Stuendliche statt tageweiser Vorhersage - genauer fuer eine mehrstuendige Etappe als ein
-// einzelner Tageswert. Bezieht sich auf EINEN Punkt der Tagesroute (WEATHER_LOC), nicht auf
-// den vollen Streckenverlauf - waere echte Positions-Korrelation gewuenscht, braeuchte es
-// mehrere Abfragen je Streckenabschnitt plus eine Pace-Schaetzung, das ist hier (noch) nicht
-// eingebaut.
-async function fetchWeather(dayNum){
-  const loc = WEATHER_LOC[dayNum];
+// einzelner Tageswert. coords optional: wenn gesetzt (z.B. beim Aktualisieren per GPS), wird
+// FUER DIESE Position abgefragt statt fuer den festen Tages-Punkt (WEATHER_LOC) - eine echte
+// Korrelation mit dem ganzen Streckenverlauf (mehrere Punkte + Pace-Schaetzung) waere ein
+// groesserer separater Schritt.
+async function fetchWeather(dayNum, coords){
+  const loc = coords || WEATHER_LOC[dayNum];
   const url = `https://api.open-meteo.com/v1/forecast?latitude=${loc.lat}&longitude=${loc.lon}&current=temperature_2m,weather_code&hourly=temperature_2m,precipitation_probability,weather_code&timezone=auto&forecast_days=2`;
   const res = await fetch(url);
   if(!res.ok) throw new Error("HTTP "+res.status);
   const data = await res.json();
-  weatherCache[dayNum] = {data, ts: Date.now()};
+  weatherCache[dayNum] = {data, ts: Date.now(), gps: !!coords};
   return weatherCache[dayNum];
 }
 function weatherCardHtml(dayNum, state){
@@ -1720,7 +1753,7 @@ function weatherCardHtml(dayNum, state){
   const cur = c.data.current;
   const hourly = c.data.hourly;
   const [curIcon, curLabel] = wmo(cur.weather_code);
-  const stale = state==="error" ? `<div class="wx-error" style="margin-top:6px; padding:6px 4px;">${t("wx.stale")}</div>` : "";
+  const stale = state==="error" ? `<div class="wx-error" style="margin-top:4px; padding:4px;">${t("wx.stale")}</div>` : "";
   let startIdx = hourly.time.findIndex(tm => tm >= cur.time);
   if(startIdx<0) startIdx = 0;
   const hours = hourly.time.slice(startIdx, startIdx+6).map((tm,i)=>{
@@ -1729,15 +1762,14 @@ function weatherCardHtml(dayNum, state){
     const hLabel = String(new Date(tm).getHours()).padStart(2,"0")+":00";
     return `<div class="wx-hour"><span class="lb">${hLabel}</span><span class="ic">${ic}</span><span class="tp mono">${Math.round(hourly.temperature_2m[idx])}°</span><span class="pr mono">💧${hourly.precipitation_probability[idx]}%</span></div>`;
   }).join("");
+  const locLabel = c.gps ? t("wx.yourpos") : WEATHER_LOC[dayNum].label;
   return `<div class="weather-card">
     <div class="wx-head">
-      <div>
-        <div class="wx-now"><span class="wx-icon">${curIcon}</span><b class="mono">${Math.round(cur.temperature_2m)}°C</b></div>
-        <div class="wx-desc">${tf(curLabel)}</div>
-      </div>
-      <button class="wx-refresh" id="wxRefresh">🔄</button>
+      <div class="wx-now"><span class="wx-icon">${curIcon}</span><b class="mono">${Math.round(cur.temperature_2m)}°C</b><span class="wx-desc">${tf(curLabel)}</span></div>
+      <button class="wx-refresh" id="wxRefresh" aria-label="${t("wx.refresh")}">🔄</button>
     </div>
     <div class="wx-hours">${hours}</div>
+    <div class="wx-loc">📍 ${locLabel} · Open-Meteo</div>
     ${stale}
   </div>`;
 }
@@ -1746,15 +1778,30 @@ function renderWeatherInPlace(dayNum, state){
   if(!el || activeDay!==dayNum) return;
   el.innerHTML = weatherCardHtml(dayNum, state);
   const btn = document.getElementById("wxRefresh");
-  if(btn) btn.onclick = ()=>loadWeatherFor(dayNum, true);
+  if(btn) btn.onclick = ()=>loadWeatherFor(dayNum, true, true);
 }
-async function loadWeatherFor(dayNum, force){
+// useGps: beim Aktualisieren (Refresh-Button) wird bewusst die AKTUELLE Position abgefragt,
+// nicht wieder der feste Tages-Punkt - sonst wirkt "aktualisieren" so, als wuerde es den
+// Stand von heute frueh einfach nochmal laden.
+async function loadWeatherFor(dayNum, force, useGps){
   const cached = weatherCache[dayNum];
-  const fresh = cached && (Date.now()-cached.ts < 20*60*1000);
+  const fresh = cached && !useGps && (Date.now()-cached.ts < 20*60*1000);
   if(fresh && !force){ renderWeatherInPlace(dayNum); return; }
   if(typeof navigator!=="undefined" && "onLine" in navigator && !navigator.onLine){
     renderWeatherInPlace(dayNum, cached?undefined:"error");
     return;
+  }
+  if(useGps && "geolocation" in navigator){
+    try{
+      const pos = await new Promise((res,rej)=>navigator.geolocation.getCurrentPosition(res,rej,{enableHighAccuracy:true,timeout:15000,maximumAge:0}));
+      await fetchWeather(dayNum, {lat:pos.coords.latitude, lon:pos.coords.longitude});
+      renderWeatherInPlace(dayNum);
+      toast(t("wx.updated"));
+      return;
+    }catch(e){
+      // GPS nicht verfuegbar/abgelehnt - fällt unten auf den normalen Tages-Punkt zurueck,
+      // damit "Aktualisieren" trotzdem einen frischen Stand liefert statt nur zu scheitern.
+    }
   }
   if(!cached) renderWeatherInPlace(dayNum, undefined);
   try{
@@ -2295,7 +2342,7 @@ function renderHeute(){
 
   h += `<div class="story-btnrow">
     <button class="story-trigger" id="storyTrigger">${t("story.watch")}</button>
-    <button class="story-trigger" id="videoExportBtn">${t("story.export")}</button>
+    <button class="story-exporticon" id="videoExportBtn" aria-label="${t("story.export")}">🎥</button>
   </div>`;
 
   $("#heuteBody").innerHTML = h;
@@ -2303,6 +2350,93 @@ function renderHeute(){
   bindMap();
   bindCarouselDots();
   loadWeatherFor(activeDay);
+}
+/* ---- Route-Kachel: Zoom/Pan nur im "erkunden"-Modus (siehe routeTileHtml) ---- */
+let rtZoomState = {scale:1, tx:0, ty:0};
+const RT_GEOM = {VBW:400, VBH:200};
+function rtClampPan(){
+  const {VBW,VBH} = RT_GEOM;
+  const minTx = VBW*(1-rtZoomState.scale), maxTx = 0;
+  const minTy = VBH*(1-rtZoomState.scale), maxTy = 0;
+  rtZoomState.tx = Math.max(minTx, Math.min(maxTx, rtZoomState.tx));
+  rtZoomState.ty = Math.max(minTy, Math.min(maxTy, rtZoomState.ty));
+}
+function rtApplyTransform(){
+  const g = document.getElementById("routeTileZoomGroup");
+  if(g) g.setAttribute("transform", `translate(${rtZoomState.tx},${rtZoomState.ty}) scale(${rtZoomState.scale})`);
+}
+function rtSetZoomAt(newScale, px, py){
+  newScale = Math.max(1, Math.min(5, newScale));
+  const ratio = newScale/rtZoomState.scale;
+  rtZoomState.tx = px*(1-ratio) + rtZoomState.tx*ratio;
+  rtZoomState.ty = py*(1-ratio) + rtZoomState.ty*ratio;
+  rtZoomState.scale = newScale;
+  rtClampPan(); rtApplyTransform();
+}
+function rtZoomBy(factor){ rtSetZoomAt(rtZoomState.scale*factor, RT_GEOM.VBW/2, RT_GEOM.VBH/2); }
+function rtResetZoom(){ rtZoomState = {scale:1, tx:0, ty:0}; rtApplyTransform(); }
+function rtToSvgPoint(svg, clientX, clientY){
+  try{
+    const ctm = svg.getScreenCTM();
+    if(!ctm) return {x:clientX, y:clientY};
+    const pt = svg.createSVGPoint();
+    pt.x = clientX; pt.y = clientY;
+    const loc = pt.matrixTransform(ctm.inverse());
+    return {x:loc.x, y:loc.y};
+  }catch(e){ return {x:clientX, y:clientY}; }
+}
+function rtBindGestures(svg){
+  const pointers = new Map();
+  let dragLast = null, pinchStartDist = 0, pinchStartScale = 1;
+  svg.addEventListener("pointerdown", e=>{
+    pointers.set(e.pointerId, {x:e.clientX, y:e.clientY});
+    if(pointers.size===1){
+      dragLast = rtToSvgPoint(svg, e.clientX, e.clientY);
+    } else if(pointers.size===2){
+      const pts=[...pointers.values()];
+      pinchStartDist = Math.hypot(pts[0].x-pts[1].x, pts[0].y-pts[1].y) || 1;
+      pinchStartScale = rtZoomState.scale;
+      dragLast = null;
+    }
+    try{ svg.setPointerCapture(e.pointerId); }catch(e2){}
+  });
+  svg.addEventListener("pointermove", e=>{
+    if(!pointers.has(e.pointerId)) return;
+    pointers.set(e.pointerId, {x:e.clientX, y:e.clientY});
+    if(pointers.size===2){
+      const pts=[...pointers.values()];
+      const d = Math.hypot(pts[0].x-pts[1].x, pts[0].y-pts[1].y) || 1;
+      const midX=(pts[0].x+pts[1].x)/2, midY=(pts[0].y+pts[1].y)/2;
+      const mid = rtToSvgPoint(svg, midX, midY);
+      rtSetZoomAt(pinchStartScale*(d/pinchStartDist), mid.x, mid.y);
+    } else if(pointers.size===1 && dragLast){
+      const cur = rtToSvgPoint(svg, e.clientX, e.clientY);
+      rtZoomState.tx += (cur.x - dragLast.x);
+      rtZoomState.ty += (cur.y - dragLast.y);
+      dragLast = cur;
+      rtClampPan(); rtApplyTransform();
+    }
+  });
+  function endPointer(e){
+    pointers.delete(e.pointerId);
+    if(pointers.size<2) pinchStartDist=0;
+    if(pointers.size===0) dragLast=null;
+    else if(pointers.size===1){
+      const [p] = [...pointers.values()];
+      dragLast = rtToSvgPoint(svg, p.x, p.y);
+    }
+  }
+  svg.addEventListener("pointerup", endPointer);
+  svg.addEventListener("pointercancel", endPointer);
+  svg.addEventListener("pointerleave", endPointer);
+}
+function setRouteTileInteractive(on){
+  const tile = document.getElementById("routeTile");
+  const car = document.getElementById("mapElevCarousel");
+  if(!tile) return;
+  tile.classList.toggle("interactive", on);
+  if(car) car.style.overflowX = on ? "hidden" : "";
+  if(!on) rtResetZoom();
 }
 function bindMap(){
   const st = document.getElementById("storyTrigger");
@@ -2314,11 +2448,27 @@ function bindMap(){
 
   const rt = document.getElementById("routeTileSvg");
   if(rt){
+    rtZoomState = {scale:1, tx:0, ty:0};
+    let moved = false, downXY = null;
+    rt.addEventListener("pointerdown", (e)=>{ moved=false; downXY={x:e.clientX,y:e.clientY}; });
+    rt.addEventListener("pointermove", (e)=>{
+      if(downXY && Math.hypot(e.clientX-downXY.x, e.clientY-downXY.y) > 8) moved = true;
+    });
     rt.addEventListener("click", (e)=>{
+      if(moved) return; // war ein Ziehen/Pinch, kein Tap auf einen Punkt
       const el = e.target.closest("[data-wid]");
       if(el) openPointSheet(el.dataset.wid);
     });
+    rtBindGestures(rt);
   }
+  const rtExpand = document.getElementById("routeTileExpand");
+  if(rtExpand) rtExpand.onclick = ()=> setRouteTileInteractive(true);
+  const rtCollapse = document.getElementById("rtCollapse");
+  if(rtCollapse) rtCollapse.onclick = ()=> setRouteTileInteractive(false);
+  const rtZi = document.getElementById("rtZoomIn");
+  const rtZo = document.getElementById("rtZoomOut");
+  if(rtZi) rtZi.onclick = ()=> rtZoomBy(1.6);
+  if(rtZo) rtZo.onclick = ()=> rtZoomBy(1/1.6);
 
   const elevSvg = document.getElementById("elevSvg" + "d" + activeDay);
   if(elevSvg){
