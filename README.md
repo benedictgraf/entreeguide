@@ -12,17 +12,39 @@ No sign-up, no server, no ads — everything runs directly on your phone and wor
 
 ---
 
+## 🔒 Your data stays on your phone
+
+This app collects **no personal data at all**. There's no account, no login, no analytics, no tracking, and no backend server that stores anything about you — everything (your name, chosen route, diary entries, adjusted stages) lives only in your browser's local storage, on your own device. Nobody, including whoever built this app, can see any of it.
+
+The app only reaches out to the internet or your device's GPS for these specific, limited purposes — never silently, never in the background beyond what's listed:
+
+**Needs an internet connection for:**
+- Loading the app the very first time (after that, it's cached on your device and works offline)
+- Refreshing the weather forecast (queries [Open-Meteo](https://open-meteo.com), a free public weather API — only the coordinates needed for that one forecast are sent, nothing else)
+- Opening external links you tap yourself (Komoot routes, the rider handbook PDF, the Bergwetter Südtirol alpine forecast, the community chat) — these open in your browser like any other link
+
+**Needs GPS/location access for:**
+- Showing your live position on the route map (only if you tap the location button — off by default)
+- "Adjust end of today's stage" — logging where you actually stopped
+- The Emergency tab's large coordinate readout
+- Tagging a diary entry with where you wrote it (optional, best-effort)
+- Getting the weather forecast for your current position instead of the day's planned location
+
+If you never tap a location button, the app never touches your GPS. If you're offline, everything keeps working except the weather refresh and the external links above.
+
+---
+
 ## What can the app do?
 
 **As a rider, this is your digital field book** — instead of jumping between PDFs, Komoot and notes, you have everything important in one place, even deep in the Dolomites with zero signal.
 
 ### 📍 Today — your daily overview
 
-Route, distance, elevation, tonight's sleep spot and any warnings for the day, all at a glance — followed by the map, elevation profile and weather. The map zooms and shows your own live position on the route (with location access).
+Route, distance, elevation, tonight's sleep spot and any warnings for the day, all at a glance, followed by an hourly weather forecast and a full interactive map (zoom, pan, tap any point for details, optionally show your live GPS position) with the elevation profile right underneath.
 
 <p align="center"><img src="screenshots/03-heute-dashboard.png" width="280" alt="Today tab"></p>
 
-Riding more or less than planned? Tap "Change end of stage" to log your actual GPS position and a name for where you stopped — the app reshuffles the remaining days automatically, and adds an extra day at the end if you haven't reached the finish yet.
+Riding more or less than planned? Tap "Adjust end of today's stage" to log your actual GPS position and a name for where you stopped — the app reshuffles the remaining days automatically, and adds an extra day at the end if you haven't reached the finish yet.
 
 ### 🗺️ Checkpoints & overnight stops
 
@@ -68,11 +90,26 @@ The first time you open it, the app briefly asks for your name and your route:
 
 After that, the app remembers everything **only on your device** (no account, no server) — you never have to go through setup again.
 
-## Installing on iPhone (recommended)
+## Installing the app
 
-1. Open the app URL in **Safari** (not Chrome — on iPhone, Safari's engine always applies here).
-2. Tap the share icon → "Add to Home Screen".
-3. Done — from now on it starts like a real app, with no browser bar, and works offline.
+Installing means it starts like a real app from your home screen, with no browser address bar, and works fully offline afterward. It's the same website either way — installing just makes it feel native and removes the need to reconnect.
+
+### iPhone / iPad (Safari)
+
+1. Open the app URL in **Safari** (not Chrome — on iOS, Safari's engine always applies here, even inside other browsers).
+2. Tap the **Share** icon (square with an arrow) in the toolbar.
+3. Scroll down and tap **"Add to Home Screen"**.
+4. Tap **"Add"** in the top right.
+5. Done — launch it from your home screen like any other app.
+
+### Android (Chrome)
+
+1. Open the app URL in **Chrome**.
+2. Chrome usually shows an **"Install app"** banner or an install icon (⊕) directly in the address bar — tap it. If you don't see it, tap the **⋮** menu in the top right and choose **"Add to Home screen"** or **"Install app"**.
+3. Confirm by tapping **"Install"**.
+4. Done — launch it from your home screen or app drawer.
+
+(Other Chromium-based Android browsers — Edge, Samsung Internet, Brave — support the same "Add to Home Screen" install flow.)
 
 ## Language
 
@@ -80,8 +117,8 @@ The `DE`/`EN` button in the top right switches between **German and English** at
 
 ## Good to know
 
-- Only the weather forecast needs a brief connection to refresh — everything else works offline.
 - The map and elevation profile are **schematic** (straight-line distances resp. approximated from known pass/checkpoint elevations), not exact GPS tracks. For actual navigation, the Komoot route is authoritative.
+- The weather forecast comes from Open-Meteo, a general-purpose forecast service — not a specialized alpine/mountain weather service. For critical passages, also check a dedicated alpine forecast (there's a direct link to the Bergwetter Südtirol Dolomites forecast right in the weather card).
 - This app is not a substitute for legal advice, emergency equipment, or your own route knowledge — when in doubt, the official rider handbook always takes precedence.
 
 ---
