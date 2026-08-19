@@ -1,4 +1,4 @@
-const CACHE = "entree-feldbuch-v18";
+const CACHE = "entree-feldbuch-v19";
 const ASSETS = ["./", "./index.html", "./manifest.json", "./icon.svg", "./apple-touch-icon.png", "./icon-192.png", "./icon-512.png"];
 
 self.addEventListener("install", (e) => {

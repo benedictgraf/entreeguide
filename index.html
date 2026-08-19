@@ -106,21 +106,9 @@ main{flex:1; overflow-y:auto; padding:16px var(--pad) 110px; -webkit-overflow-sc
 .carousel-dots{display:flex; justify-content:center; gap:6px; margin-top:12px;}
 .carousel-dots .dot{width:6px; height:6px; border-radius:50%; background:var(--line);}
 .carousel-dots .dot.active{background:var(--acid); width:8px; height:8px;}
-.tile-label{font-size:13px; font-weight:700; color:var(--fog); margin-bottom:8px;}
-
-/* KARTE (Tages-Kachel im Karussell: Kontext ausgegraut, heutiger Abschnitt hervorgehoben,
-   Punkte direkt antippbar - kein Zoom/Pan/GPS mehr noetig, da keine separate Vollbild-Ansicht
-   mehr existiert und ein Drag-Gestus mit dem Karussell-Swipe kollidieren wuerde) */
-.routetile{position:relative; width:100%; aspect-ratio:400/200; border-radius:var(--r-lg); overflow:hidden; border:1px solid var(--line); background:var(--slate); touch-action:pan-y;}
-.routetile.interactive{touch-action:none;}
-.tile-zoomtoggle{position:absolute; right:8px; bottom:8px; width:30px; height:30px; border-radius:50%; background:rgba(22,25,35,.88); border:1px solid var(--line); color:var(--fog); font-size:14px; display:flex; align-items:center; justify-content:center;}
-.tile-zoomtoggle:active{background:var(--slate2);}
-.routetile.interactive .tile-zoomtoggle{display:none;}
-.tile-zoomctl{position:absolute; right:8px; bottom:8px; display:none; flex-direction:column; gap:6px;}
-.routetile.interactive .tile-zoomctl{display:flex;}
-.tile-zoomctl button{width:30px; height:30px; border-radius:50%; background:rgba(22,25,35,.88); border:1px solid var(--line); color:var(--fog); font-size:15px; font-weight:800; display:flex; align-items:center; justify-content:center; line-height:1;}
-.tile-zoomctl button:active{background:var(--slate2);}
-#rtCollapse{font-size:13px;}
+/* KARTE (grosse, permanent zoom-/pan-/tapbare Karte: ganze Route ausgegraut als Kontext,
+   heutiger Abschnitt hervorgehoben, eigene Position per GPS) */
+.mapwrap{position:relative; width:100%; border-radius:var(--r-lg); overflow:hidden; margin-bottom:10px; border:1px solid var(--line); background:var(--slate); touch-action:none;}
 .routemap{width:100%; height:100%; display:block;}
 .map-fullpath{fill:none; stroke:var(--mist); stroke-width:2.4; stroke-linecap:round; stroke-linejoin:round; opacity:.38;}
 .map-activepath-halo{fill:none; stroke:var(--flare); stroke-width:11; stroke-linecap:round; stroke-linejoin:round; opacity:.22;}
@@ -131,6 +119,26 @@ main{flex:1; overflow-y:auto; padding:16px var(--pad) 110px; -webkit-overflow-sc
 .map-dot-visual.no{fill:var(--bad);}
 .map-dot-visual.info{fill:var(--info);}
 .map-hit{fill:transparent; cursor:pointer;}
+.map-compass{position:absolute; top:10px; right:12px; font-size:10.5px; font-weight:800; color:var(--mist); background:rgba(11,13,20,.55); padding:3px 8px; border-radius:999px; letter-spacing:.04em;}
+.map-note{position:absolute; left:12px; bottom:10px; font-size:10px; font-weight:700; color:var(--mist); background:rgba(11,13,20,.55); padding:3px 8px; border-radius:999px;}
+.map-controls{position:absolute; right:10px; bottom:10px; display:flex; flex-direction:column; gap:7px; z-index:2;}
+.mapctl{width:36px; height:36px; border-radius:50%; background:rgba(22,25,35,.88); border:1px solid var(--line); color:var(--fog); font-size:17px; font-weight:800; display:flex; align-items:center; justify-content:center; backdrop-filter:blur(4px); line-height:1;}
+.mapctl:active{background:var(--slate2);}
+.mapctl#rtGpsBtn{font-size:15px;}
+.mapctl#rtGpsBtn.active{background:var(--flare); color:#2B0A1C; border-color:var(--flare);}
+.mapctl#rtReset{display:none; font-size:14px;}
+.gps-pulse{fill:var(--flare); opacity:.45; transform-box:fill-box; transform-origin:center; animation:gpsPulse 1.8s ease-out infinite;}
+.gps-dot{fill:#fff; stroke:var(--flare); stroke-width:2.2;}
+@keyframes gpsPulse{0%{transform:scale(.4); opacity:.55;} 100%{transform:scale(2.4); opacity:0;}}
+#gpsReadout{display:none; background:var(--slate2); border-radius:var(--r-md); padding:11px 13px; margin-bottom:14px;}
+#gpsReadout.show{display:block;}
+.gps-row{display:flex; justify-content:space-between; align-items:center; gap:10px; font-size:12.5px; padding:4px 0;}
+.gps-row span{color:var(--mist);}
+.gps-row b{font-size:13px; text-align:right;}
+.gps-note{font-size:10px; color:var(--mist); margin-top:7px; line-height:1.5; border-top:1px solid var(--line); padding-top:7px;}
+.legend{display:flex; flex-wrap:wrap; gap:9px; font-size:10.5px; color:var(--mist); margin:0 0 18px;}
+.legend span{display:inline-flex; align-items:center; gap:4px;}
+.legend i{width:8px; height:8px; border-radius:50%; display:inline-block; flex-shrink:0;}
 
 .elevcard{background:var(--slate); border:1px solid var(--line); border-radius:var(--r-lg); padding:10px 6px; margin-bottom:6px; overflow:hidden; height:170px;}
 .elev-note{font-size:10.5px; color:var(--mist); margin:0 0 18px; line-height:1.5;}
@@ -183,13 +191,14 @@ main{flex:1; overflow-y:auto; padding:16px var(--pad) 110px; -webkit-overflow-sc
 .wx-desc{font-size:12px; color:var(--mist); overflow:hidden; text-overflow:ellipsis; white-space:nowrap;}
 .wx-refresh{width:28px; height:28px; border-radius:50%; background:var(--slate2); border:1px solid var(--line); font-size:12.5px; flex-shrink:0;}
 .wx-refresh:active{opacity:.6;}
-.wx-hours{display:flex; gap:5px; overflow-x:auto; -webkit-overflow-scrolling:touch; scrollbar-width:none;}
-.wx-hours::-webkit-scrollbar{display:none;}
-.wx-hour{flex:0 0 44px; background:var(--slate2); border-radius:var(--r-sm); padding:6px 3px; text-align:center; display:flex; flex-direction:column; gap:2px;}
-.wx-hour .lb{font-size:9px; color:var(--mist);}
-.wx-hour .ic{font-size:13px;}
-.wx-hour .tp{font-size:10px; color:var(--fog);}
-.wx-hour .pr{font-size:8.5px; color:var(--info);}
+.wx-strip{display:flex; overflow-x:auto; -webkit-overflow-scrolling:touch; scrollbar-width:none; border-top:1px solid var(--line); padding-top:9px;}
+.wx-strip::-webkit-scrollbar{display:none;}
+.wx-col{flex:0 0 auto; min-width:40px; text-align:center; display:flex; flex-direction:column; align-items:center; gap:3px; padding:0 8px 0 0; margin-right:8px; border-right:1px solid var(--line);}
+.wx-col:last-child{border-right:none; margin-right:0; padding-right:0;}
+.wx-col .t{font-size:9.5px; color:var(--mist);}
+.wx-col .i{font-size:14px;}
+.wx-col .v{font-size:11px; color:var(--fog);}
+.wx-col .p{font-size:8.5px; color:var(--info);}
 .wx-loc{font-size:10px; color:var(--mist); margin-top:8px;}
 .wx-loading, .wx-error{font-size:13px; color:var(--mist); text-align:center; padding:14px 4px; line-height:1.5;}
 
@@ -594,6 +603,9 @@ const I18N = {
   "gps.unavailable": {de:"Position nicht verfügbar", en:"Position unavailable"},
   "gps.timeout": {de:"Zeitüberschreitung beim GPS-Fix", en:"GPS fix timed out"},
   "gps.notsupported": {de:"GPS auf diesem Gerät nicht verfügbar", en:"GPS not available on this device"},
+  "gps.nearest": {de:"📍 Nächster Punkt in der Nähe", en:"📍 Nearest point nearby"},
+  "gps.until": {de:"🏁 Bis", en:"🏁 To"},
+  "gps.note": {de:"Luftlinie, nicht Streckenkilometer — auf Serpentinen kann die tatsächliche Restdistanz deutlich länger sein. GPS-Genauigkeit: ±", en:"Straight-line distance, not route km — on switchbacks the real remaining distance can be much longer. GPS accuracy: ±"},
   "export.rendering": {de:"Rendere Video …", en:"Rendering video …"},
   "export.sub": {de:"Das Intro wird direkt auf deinem Gerät gerendert — kein Upload, kein Internet nötig.", en:"The intro is rendered directly on your device — no upload, no internet needed."},
   "export.cancel": {de:"Abbrechen", en:"Cancel"},
@@ -697,12 +709,18 @@ const I18N = {
   "video.webmhint": {de:"Hinweis: Dieser Browser exportiert WebM. Auf dem iPhone (Safari) bekommst du direkt MP4.", en:"Note: this browser exports WebM. On iPhone (Safari) you get MP4 directly."},
   "video.ready": {de:"Bereit für CapCut, Schnitt-App oder direkt in die Story.", en:"Ready for CapCut, an editing app, or straight into your story."},
   "video.save": {de:"Video speichern", en:"Save video"},
-  "map.route": {de:"Route", en:"Route"},
-  "map.tapnote": {de:"Schematisch — restliche Route ausgegraut. Punkte antippbar.", en:"Schematic — rest of the route greyed out. Points are tappable."},
-  "map.explore": {de:"Karte erkunden (zoomen & verschieben)", en:"Explore map (zoom & pan)"},
+  "map.route": {de:"🗺️ Route", en:"🗺️ Route"},
   "map.zoomin": {de:"Vergrößern", en:"Zoom in"},
   "map.zoomout": {de:"Verkleinern", en:"Zoom out"},
-  "map.collapse": {de:"Fertig", en:"Done"},
+  "map.reset": {de:"Ganze Route zeigen", en:"Show whole route"},
+  "map.ownpos": {de:"Eigene Position", en:"My position"},
+  "map.schematic": {de:"schematisch", en:"schematic"},
+  "legend.startfinish": {de:"Start/Ziel", en:"Start/finish"},
+  "legend.campok": {de:"Camping ok", en:"Camping ok"},
+  "legend.restricted": {de:"eingeschränkt", en:"restricted"},
+  "legend.notallowed": {de:"nicht erlaubt", en:"not allowed"},
+  "legend.resupply": {de:"Resupply", en:"Resupply"},
+  "legend.tapdetails": {de:"· antippen für Details", en:"· tap for details"},
   "gear.confirmed": {de:"bestätigt", en:"confirmed"},
   "gear.of": {de:"von", en:"of"},
   "unit.hm": {de:"Hm", en:"m elev."},
@@ -1444,29 +1462,16 @@ function activeSeqForDay(dayNum){
   const prevLast = dayNum===1 ? "start" : DAYS[dayNum-2].way[DAYS[dayNum-2].way.length-1];
   return [prevLast, ...d.way];
 }
-// Karten-Kachel: heutiger Abschnitt hervorgehoben, Rest der Gesamtroute ausgegraut als
-// Kontext. Fixe VBW/VBH (nicht von der Tagesgeometrie abhaengig) statt echter Geo-Ratio,
-// damit die Kachel im Karussell immer dieselbe Hoehe wie die Hoehenprofil-Kachel hat.
-// Zoom/Pan ueber einen EXPLIZITEN "erkunden"-Toggle statt permanent aktiv: im Ruhezustand
-// gehoert ein horizontaler Drag dem Karussell-Swipe (Route<->Hoehenprofil); erst nach Tap auf
-// den Lupen-Button wird touch-action:none gesetzt und der Drag gehoert dem Pan/Zoom. So gibt
-// es nie eine Konkurrenz zwischen beiden Gesten, ganz unabhaengig von Touch-Action-Spec-
-// Feinheiten, die zwischen Browsern variieren.
-function routeTileHtml(dayNum){
+// Grosse Karte: ganze Route ausgegraut als Kontext, heutiger Abschnitt hervorgehoben,
+// permanent zoom-/pan-/tapbar, plus eigene Positionsanzeige per GPS. Kein Karussell mehr -
+// die Karte steht fuer sich, das Hoehenprofil folgt kompakt direkt darunter.
+function mapHtml(dayNum){
+  const geom = buildMapGeometry();
+  lastGeom = geom;
+  rtZoomState = {scale:1, tx:0, ty:0};
+  const {VBW, VBH, proj} = geom;
   const activeSeq = activeSeqForDay(dayNum);
   const activeIds = new Set(activeSeq.map(String));
-  const lats = activeSeq.map(id=>COORDS[id].lat);
-  const lons = activeSeq.map(id=>COORDS[id].lon);
-  const latMin=Math.min(...lats), latMax=Math.max(...lats);
-  const lonMin=Math.min(...lons), lonMax=Math.max(...lons);
-  const midLat=(latMin+latMax)/2;
-  const cosF=Math.cos(midLat*Math.PI/180);
-  const VBW=400, VBH=200, PAD=30;
-  const latSpan=(latMax-latMin)||0.01;
-  const lonSpanC=((lonMax-lonMin)*cosF)||0.01;
-  const scale = Math.min((VBW-2*PAD)/lonSpanC, (VBH-2*PAD)/latSpan);
-  const cx=(lonMin+lonMax)/2, cy=(latMin+latMax)/2;
-  const proj = (lat,lon) => ({ x: VBW/2 + (lon-cx)*cosF*scale, y: VBH/2 - (lat-cy)*scale });
 
   const full = pathD(ROUTE_SEQ, proj);
   const active = pathD(activeSeq, proj);
@@ -1475,14 +1480,13 @@ function routeTileHtml(dayNum){
     const p = proj(c.lat, c.lon);
     const isActive = activeIds.has(String(id));
     const cls = id==="start" ? "ok" : stopColorClass(WAY[id]);
-    const r = isActive ? (id==="start"?8:6) : (id==="start"?5:3.5);
+    const r = isActive ? (id==="start"?9:8) : (id==="start"?6:4.5);
     const op = isActive ? 1 : .4;
-    return `<circle class="map-hit" cx="${p.x.toFixed(1)}" cy="${p.y.toFixed(1)}" r="13" data-wid="${id}"></circle>
+    return `<circle class="map-hit" cx="${p.x.toFixed(1)}" cy="${p.y.toFixed(1)}" r="15" data-wid="${id}"></circle>
       <circle class="map-dot-visual ${cls}" cx="${p.x.toFixed(1)}" cy="${p.y.toFixed(1)}" r="${r}" style="opacity:${op}" data-wid="${id}"></circle>`;
   }).join("");
 
-  return `<p class="tile-label">${t("map.route")}</p>
-  <div class="routetile" id="routeTile">
+  return `<div class="mapwrap" style="aspect-ratio:${VBW}/${VBH}">
     <svg viewBox="0 0 ${VBW} ${VBH}" class="routemap" id="routeTileSvg" preserveAspectRatio="xMidYMid meet">
       <defs><linearGradient id="rtbg" x1="0" y1="0" x2="1" y2="1">
         <stop offset="0%" stop-color="#141824"/><stop offset="100%" stop-color="#1B2130"/>
@@ -1495,27 +1499,24 @@ function routeTileHtml(dayNum){
         ${dots}
       </g>
     </svg>
-    <button type="button" class="tile-zoomtoggle" id="routeTileExpand" aria-label="${t("map.explore")}">⤢</button>
-    <div class="tile-zoomctl" id="routeTileCtl">
-      <button type="button" id="rtZoomIn" aria-label="${t("map.zoomin")}">+</button>
-      <button type="button" id="rtZoomOut" aria-label="${t("map.zoomout")}">−</button>
-      <button type="button" id="rtCollapse" aria-label="${t("map.collapse")}">✕</button>
+    <div class="map-compass">N ↑</div>
+    <div class="map-note">${t("map.schematic")}</div>
+    <div class="map-controls">
+      <button class="mapctl" id="rtZoomIn" aria-label="${t("map.zoomin")}">+</button>
+      <button class="mapctl" id="rtZoomOut" aria-label="${t("map.zoomout")}">−</button>
+      <button class="mapctl" id="rtReset" aria-label="${t("map.reset")}">⤢</button>
+      <button class="mapctl" id="rtGpsBtn" aria-label="${t("map.ownpos")}">📍</button>
     </div>
   </div>
-  <div class="elev-note">${t("map.tapnote")}</div>`;
-}
-// Karte + Hoehenprofil als ein Swipe-Paar - beide sind Tages-Kontext, brauchen aber
-// unterschiedlich viel Platz, daher zwei Karussell-Slides statt gestapelt.
-function mapElevHtml(dayNum){
-  return `<div class="carousel" id="mapElevCarousel">
-    <div>${routeTileHtml(dayNum)}</div>
-    <div>
-      <p class="eyebrow">${t("eyebrow.elev")}</p>
-      <div class="elevcard">${elevationSvg(dayNum, {markers:true, h:150})}</div>
-      <div class="elev-note">${t("elev.note")}</div>
-    </div>
-  </div>
-  <div class="carousel-dots" data-for="mapElevCarousel"><span class="dot active"></span><span class="dot"></span></div>`;
+  <div id="gpsReadout"></div>
+  <div class="legend">
+    <span><i style="background:var(--fog)"></i>${t("legend.startfinish")}</span>
+    <span><i style="background:var(--acid)"></i>${t("legend.campok")}</span>
+    <span><i style="background:var(--warn)"></i>${t("legend.restricted")}</span>
+    <span><i style="background:var(--bad)"></i>${t("legend.notallowed")}</span>
+    <span><i style="background:var(--info)"></i>${t("legend.resupply")}</span>
+    <span>${t("legend.tapdetails")}</span>
+  </div>`;
 }
 
 function haversineKm(lat1,lon1,lat2,lon2){
@@ -1760,7 +1761,8 @@ function weatherCardHtml(dayNum, state){
     const idx = startIdx+i;
     const [ic] = wmo(hourly.weather_code[idx]);
     const hLabel = String(new Date(tm).getHours()).padStart(2,"0")+":00";
-    return `<div class="wx-hour"><span class="lb">${hLabel}</span><span class="ic">${ic}</span><span class="tp mono">${Math.round(hourly.temperature_2m[idx])}°</span><span class="pr mono">💧${hourly.precipitation_probability[idx]}%</span></div>`;
+    const pr = hourly.precipitation_probability[idx];
+    return `<div class="wx-col"><span class="t">${hLabel}</span><span class="i">${ic}</span><span class="v mono">${Math.round(hourly.temperature_2m[idx])}°</span>${pr>15?`<span class="p mono">💧${pr}%</span>`:""}</div>`;
   }).join("");
   const locLabel = c.gps ? t("wx.yourpos") : WEATHER_LOC[dayNum].label;
   return `<div class="weather-card">
@@ -1768,7 +1770,7 @@ function weatherCardHtml(dayNum, state){
       <div class="wx-now"><span class="wx-icon">${curIcon}</span><b class="mono">${Math.round(cur.temperature_2m)}°C</b><span class="wx-desc">${tf(curLabel)}</span></div>
       <button class="wx-refresh" id="wxRefresh" aria-label="${t("wx.refresh")}">🔄</button>
     </div>
-    <div class="wx-hours">${hours}</div>
+    <div class="wx-strip">${hours}</div>
     <div class="wx-loc">📍 ${locLabel} · Open-Meteo</div>
     ${stale}
   </div>`;
@@ -1791,16 +1793,22 @@ async function loadWeatherFor(dayNum, force, useGps){
     renderWeatherInPlace(dayNum, cached?undefined:"error");
     return;
   }
-  if(useGps && "geolocation" in navigator){
-    try{
-      const pos = await new Promise((res,rej)=>navigator.geolocation.getCurrentPosition(res,rej,{enableHighAccuracy:true,timeout:15000,maximumAge:0}));
-      await fetchWeather(dayNum, {lat:pos.coords.latitude, lon:pos.coords.longitude});
-      renderWeatherInPlace(dayNum);
-      toast(t("wx.updated"));
-      return;
-    }catch(e){
-      // GPS nicht verfuegbar/abgelehnt - fällt unten auf den normalen Tages-Punkt zurueck,
-      // damit "Aktualisieren" trotzdem einen frischen Stand liefert statt nur zu scheitern.
+  if(useGps){
+    if(!("geolocation" in navigator)){
+      toast(t("gps.notsupported"));
+    } else {
+      try{
+        const pos = await new Promise((res,rej)=>navigator.geolocation.getCurrentPosition(res,rej,{enableHighAccuracy:true,timeout:15000,maximumAge:0}));
+        await fetchWeather(dayNum, {lat:pos.coords.latitude, lon:pos.coords.longitude});
+        renderWeatherInPlace(dayNum);
+        toast(t("wx.updated"));
+        return;
+      }catch(e){
+        // GPS nicht verfuegbar/abgelehnt - faellt unten auf den Tages-Punkt zurueck, aber der
+        // Nutzer muss sehen WARUM, sonst wirkt die falsche Position wie ein stiller Bug.
+        const msg = e && e.code===1 ? t("gps.denied") : e && e.code===2 ? t("gps.unavailable") : t("gps.timeout");
+        toast(msg);
+      }
     }
   }
   if(!cached) renderWeatherInPlace(dayNum, undefined);
@@ -2338,7 +2346,11 @@ function renderHeute(){
 
   h += `<p class="eyebrow">${t("eyebrow.weather")}</p><div id="weatherSlot">${weatherCardHtml(activeDay, undefined)}</div>`;
 
-  h += mapElevHtml(activeDay);
+  h += `<p class="eyebrow">${t("map.route")}</p>` + mapHtml(activeDay);
+
+  h += `<p class="eyebrow">${t("eyebrow.elev")}</p>
+  <div class="elevcard">${elevationSvg(activeDay, {markers:true, h:150})}</div>
+  <div class="elev-note">${t("elev.note")}</div>`;
 
   h += `<div class="story-btnrow">
     <button class="story-trigger" id="storyTrigger">${t("story.watch")}</button>
@@ -2351,11 +2363,13 @@ function renderHeute(){
   bindCarouselDots();
   loadWeatherFor(activeDay);
 }
-/* ---- Route-Kachel: Zoom/Pan nur im "erkunden"-Modus (siehe routeTileHtml) ---- */
+/* ---- Karte: permanentes Zoom/Pan + GPS-Position ---- */
 let rtZoomState = {scale:1, tx:0, ty:0};
-const RT_GEOM = {VBW:400, VBH:200};
+let lastGeom = null;
+let gpsWatchId = null, lastPos = null;
 function rtClampPan(){
-  const {VBW,VBH} = RT_GEOM;
+  if(!lastGeom) return;
+  const {VBW,VBH} = lastGeom;
   const minTx = VBW*(1-rtZoomState.scale), maxTx = 0;
   const minTy = VBH*(1-rtZoomState.scale), maxTy = 0;
   rtZoomState.tx = Math.max(minTx, Math.min(maxTx, rtZoomState.tx));
@@ -2364,6 +2378,8 @@ function rtClampPan(){
 function rtApplyTransform(){
   const g = document.getElementById("routeTileZoomGroup");
   if(g) g.setAttribute("transform", `translate(${rtZoomState.tx},${rtZoomState.ty}) scale(${rtZoomState.scale})`);
+  const resetBtn = document.getElementById("rtReset");
+  if(resetBtn) resetBtn.style.display = rtZoomState.scale>1.02 ? "flex" : "none";
 }
 function rtSetZoomAt(newScale, px, py){
   newScale = Math.max(1, Math.min(5, newScale));
@@ -2373,7 +2389,7 @@ function rtSetZoomAt(newScale, px, py){
   rtZoomState.scale = newScale;
   rtClampPan(); rtApplyTransform();
 }
-function rtZoomBy(factor){ rtSetZoomAt(rtZoomState.scale*factor, RT_GEOM.VBW/2, RT_GEOM.VBH/2); }
+function rtZoomBy(factor){ if(!lastGeom) return; rtSetZoomAt(rtZoomState.scale*factor, lastGeom.VBW/2, lastGeom.VBH/2); }
 function rtResetZoom(){ rtZoomState = {scale:1, tx:0, ty:0}; rtApplyTransform(); }
 function rtToSvgPoint(svg, clientX, clientY){
   try{
@@ -2430,13 +2446,74 @@ function rtBindGestures(svg){
   svg.addEventListener("pointercancel", endPointer);
   svg.addEventListener("pointerleave", endPointer);
 }
-function setRouteTileInteractive(on){
-  const tile = document.getElementById("routeTile");
-  const car = document.getElementById("mapElevCarousel");
-  if(!tile) return;
-  tile.classList.toggle("interactive", on);
-  if(car) car.style.overflowX = on ? "hidden" : "";
-  if(!on) rtResetZoom();
+function startGPS(){
+  if(!("geolocation" in navigator)){ toast(t("gps.notsupported")); return; }
+  gpsWatchId = navigator.geolocation.watchPosition(
+    pos=>{
+      lastPos = {lat:pos.coords.latitude, lon:pos.coords.longitude, acc:pos.coords.accuracy};
+      updateGpsUI(true);
+    },
+    err=>{
+      const msg = err.code===1 ? t("gps.denied") : err.code===2 ? t("gps.unavailable") : t("gps.timeout");
+      toast(msg);
+      if(err.code===1) stopGPS();
+    },
+    {enableHighAccuracy:true, maximumAge:8000, timeout:20000}
+  );
+  updateGpsButtonState(true);
+}
+function stopGPS(){
+  if(gpsWatchId!==null && "geolocation" in navigator){ navigator.geolocation.clearWatch(gpsWatchId); }
+  gpsWatchId = null;
+  lastPos = null;
+  updateGpsButtonState(false);
+  updateGpsUI(false);
+}
+function toggleGPS(){ gpsWatchId!==null ? stopGPS() : startGPS(); }
+function updateGpsButtonState(active){
+  const btn = document.getElementById("rtGpsBtn");
+  if(btn) btn.classList.toggle("active", active);
+}
+function updateGpsUI(show){
+  const g = document.getElementById("routeTileZoomGroup");
+  let marker = document.getElementById("gpsMarker");
+  if(!show || !lastPos || !g){
+    if(marker) marker.remove();
+    renderGpsReadout();
+    return;
+  }
+  const {proj, VBW, VBH} = lastGeom;
+  const raw = proj(lastPos.lat, lastPos.lon);
+  const p = {x:Math.max(6,Math.min(VBW-6,raw.x)), y:Math.max(6,Math.min(VBH-6,raw.y))};
+  if(!marker){
+    marker = document.createElementNS("http://www.w3.org/2000/svg","g");
+    marker.id = "gpsMarker";
+    marker.innerHTML = `<circle class="gps-pulse" r="9"></circle><circle class="gps-dot" r="5"></circle>`;
+    g.appendChild(marker);
+  }
+  marker.setAttribute("transform", `translate(${p.x},${p.y})`);
+  renderGpsReadout();
+}
+function renderGpsReadout(){
+  const el = document.getElementById("gpsReadout");
+  if(!el) return;
+  if(!lastPos){ el.classList.remove("show"); el.innerHTML=""; return; }
+  el.classList.add("show");
+  const d = DAYS[activeDay-1];
+  const seq = activeSeqForDay(activeDay);
+  let nearest=null, nearestDist=Infinity;
+  seq.forEach(id=>{
+    const c = COORDS[id];
+    const dist = haversineKm(lastPos.lat, lastPos.lon, c.lat, c.lon);
+    if(dist<nearestDist){ nearestDist=dist; nearest=id; }
+  });
+  const endId = seq[seq.length-1];
+  const endDist = haversineKm(lastPos.lat, lastPos.lon, COORDS[endId].lat, COORDS[endId].lon);
+  el.innerHTML = `
+    <div class="gps-row"><span>${t("gps.nearest")}</span><b class="mono">${nameOfId(nearest)} · ${nearestDist.toFixed(1)} km</b></div>
+    <div class="gps-row"><span>${t("gps.until")} ${nameOfId(endId)}</span><b class="mono">${endDist.toFixed(1)} km</b></div>
+    <div class="gps-note">${t("gps.note")}${Math.round(lastPos.acc||0)} m</div>
+  `;
 }
 function bindMap(){
   const st = document.getElementById("storyTrigger");
@@ -2461,14 +2538,16 @@ function bindMap(){
     });
     rtBindGestures(rt);
   }
-  const rtExpand = document.getElementById("routeTileExpand");
-  if(rtExpand) rtExpand.onclick = ()=> setRouteTileInteractive(true);
-  const rtCollapse = document.getElementById("rtCollapse");
-  if(rtCollapse) rtCollapse.onclick = ()=> setRouteTileInteractive(false);
   const rtZi = document.getElementById("rtZoomIn");
   const rtZo = document.getElementById("rtZoomOut");
+  const rtRe = document.getElementById("rtReset");
+  const rtGps = document.getElementById("rtGpsBtn");
   if(rtZi) rtZi.onclick = ()=> rtZoomBy(1.6);
   if(rtZo) rtZo.onclick = ()=> rtZoomBy(1/1.6);
+  if(rtRe) rtRe.onclick = rtResetZoom;
+  if(rtGps) rtGps.onclick = toggleGPS;
+  updateGpsButtonState(gpsWatchId!==null);
+  updateGpsUI(gpsWatchId!==null);
 
   const elevSvg = document.getElementById("elevSvg" + "d" + activeDay);
   if(elevSvg){
