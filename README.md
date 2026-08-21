@@ -82,11 +82,11 @@ Schedule, mandatory and recommended gear (with a checklist), tracker instruction
 
 To set expectations clearly:
 
-- **Only covers the ENTREE route.** There are no route profiles, checkpoints, or day-plans for the CLASSIC or ADVENTURE routes — if you're riding one of those, this app currently has nothing for you.
+- **Not an official channel.** This app is built for personal preparation and filled with carefully curated information — but there's no guarantee that everything in it is accurate or up to date. Don't rely on it alone, and don't base decisions solely on what it tells you. Treat it as a supportive tool alongside the official handbook and your own judgment, not a replacement for either.
+- **Only covers the ENTREE route.** There are no route profiles, checkpoints, or day-plans for the CLASSIC or ADVENTURE routes. Route-independent info (mandatory gear, safety notes, tracker instructions, event schedule) still applies either way — but anything route-specific (map, elevation, checkpoints, "Adjust end of today's stage") is calibrated to the ENTREE course and would give you a wrong, misleading position or distance on a different route, not just an imprecise one. Best used as background reading if you're on Classic/Adventure, not as a working day plan.
 - **Map and elevation profile are schematic**, not exact GPS tracks (straight-line distances resp. approximated from known pass/checkpoint elevations). For actual navigation, the **Komoot route is authoritative**, not this app.
 - **Weather comes from a general-purpose forecast** (Open-Meteo), not a specialized alpine/mountain weather service. For critical passages, also check a dedicated alpine forecast (there's a direct link to the Bergwetter Südtirol Dolomites forecast right in the weather card).
 - **Not a substitute for the official Rider Handbook, mandatory equipment, or your own route knowledge.** When in doubt, the handbook always takes precedence.
-- **Not the mandatory event communication channel.** SNEAK PEAKS requires every rider to separately install the [Outta app](https://outta-app.com/en/outta-app/) and join the event there for route updates, weather warnings, and messages between riders. This field book is a personal companion on top of that, not a replacement for it.
 - **No turn-by-turn navigation.** It's a reference and planning companion you check at a glance, not something you follow live like a GPS bike computer.
 
 ---
