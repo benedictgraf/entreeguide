@@ -8,7 +8,7 @@
 <meta name="theme-color" content="#0B0D14">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-<meta name="apple-mobile-web-app-title" content="ENTREE Feldbuch">
+<meta name="apple-mobile-web-app-title" content="Entree Guide">
 <link rel="icon" href="icon.svg" type="image/svg+xml">
 <link rel="apple-touch-icon" href="apple-touch-icon.png">
 <link rel="manifest" href="manifest.json">
@@ -430,7 +430,7 @@ nav#tabbar{position:fixed; left:0; right:0; bottom:0; z-index:20; display:flex; 
     <header><div class="brand"><b>Sneak Peaks</b><span class="tag">Entree</span></div><button class="langbtn" id="langToggle" type="button" aria-label="Switch language / Sprache wechseln">EN</button></header>
     <div id="quickbar">
       <button class="qbtn" id="qbEmergency">⛑️ <span data-i18n="qb.emergency">Notfall</span></button>
-      <button class="qbtn" id="qbGroup">💬 <span data-i18n="qb.community">Community</span></button>
+      <button class="qbtn" id="qbGroup">💬 <span data-i18n="qb.outta">Outta</span></button>
       <button class="qbtn" id="qbKomoot">🗺️ <span data-i18n="qb.komoot">Komoot-Route</span></button>
     </div>
   </div>
@@ -514,9 +514,10 @@ nav#tabbar{position:fixed; left:0; right:0; bottom:0; z-index:20; display:flex; 
 
 <script>
 /* ======================= KONFIG ======================= */
-// TODO: Invite-/Gruppenlink der OUTTA-App eintragen (in der App: Gruppe "SNEAK PEAKS" -> Teilen -> Link kopieren).
-// Universal Link, öffnet bei installierter OUTTA-App direkt die App statt des Browsers - kein Custom-URL-Scheme nötig.
-const COMM_GROUP_URL = "";
+// SNEAK-PEAKS-Event auf OUTTA. Universal Link (apple-app-site-association von outta-app.com
+// deckt genau /events/* ab) - öffnet bei installierter OUTTA-App direkt die App statt des
+// Browsers, kein Custom-URL-Scheme nötig. Quelle: Rider Handbook 2026, S. 74 ("Join the event here").
+const COMM_GROUP_URL = "https://outta-app.com/events/15";
 // Web-Einstieg für alle ohne App / falls der Invite-Link mal abläuft.
 const OUTTA_WEB_URL = "https://outta-app.com/en/outta-app/";
 const KOMOOT_URL = "https://komoot.com/de-de/collection/4519315/-party-pace-patrol-sneak-peaks_entree_5-days-with-lotti";
@@ -584,7 +585,7 @@ const I18N = {
   "tab.diary": {de:"Tagebuch", en:"Diary"},
   "tab.mehr": {de:"Mehr", en:"More"},
   "qb.emergency": {de:"Notfall", en:"Emergency"},
-  "qb.community": {de:"Community", en:"Community"},
+  "qb.outta": {de:"Outta", en:"Outta"},
   "qb.komoot": {de:"Komoot-Route", en:"Komoot route"},
   "eyebrow.cp": {de:"Checkpoints & Schlafmöglichkeiten · der Reihe nach", en:"Checkpoints & overnight stops · in order"},
   "eyebrow.resupply": {de:"Alle Stationen · der Reihe nach", en:"All stops · in order"},
@@ -658,6 +659,7 @@ const I18N = {
   "mehr.tracker.4": {de:"<b>Vermeiden:</b> nahe Tretlager, Rahmentasche, unter Lenker, Boden einer Tasche, gleiche Tasche wie Handy.", en:"<b>Avoid:</b> near the bottom bracket, frame bag, under the handlebar, bottom of a bag, same bag as your phone."},
   "mehr.tracker.5": {de:"Laden: USB-A → USB-C nutzen (Fast-Charge-Kabel evtl. inkompatibel). Volle Ladung hält ca. 6 Tage.", en:"Charging: use USB-A → USB-C (fast-charge cables may be incompatible). A full charge lasts about 6 days."},
   "mehr.tracker.6": {de:"Langsam blinkendes rotes Licht = Akku niedrig. QR-Code auf der Rückseite für Status/Diagnose.", en:"Slow blinking red light = low battery. QR code on the back for status/diagnostics."},
+  "mehr.tracker.contact": {de:"Tracker-Probleme oder nicht ins Ziel gekommen? Follow My Challenge kontaktieren (Tedde de Boer):", en:"Tracker problems or didn't reach the finish? Contact Follow My Challenge (Tedde de Boer):"},
   "mehr.outta.title": {de:"Kommunikation · OUTTA-App", en:"Communication · OUTTA app"},
   "mehr.outta.text": {de:"Pflicht: App vor Start installieren & dem SNEAK-PEAKS-Event beitreten. Sämtliche Kommunikation während des Events (Streckenupdates, Wetterwarnungen, Nachrichten zwischen Fahrer:innen) läuft über diese App.", en:"Mandatory: install the app before the start and join the SNEAK PEAKS event. All communication during the event (route updates, weather warnings, messages between riders) runs through this app."},
   "mehr.safety.title": {de:"Sicherheit & Abbruch", en:"Safety & bailing out"},
@@ -846,7 +848,7 @@ const CP = {
    hours:{de:"7–21:30 Uhr · Küche zw. den Mahlzeiten geschlossen", en:"7am–9:30pm · kitchen closed between meals"}, food:{de:"Italienisch · Primo 9–15 € · Secondo 14–19 €", en:"Italian · Primo €9–15 · Secondo €14–19"},
    camp:{status:"warn", text:{de:"Nicht direkt am Haus (private Kuhweide) — davor/danach möglich", en:"Not directly at the house (private pasture) — possible before/after"}}, stay:{de:"Halbpension 75 € · Übernachtung 40 € — kann ausgebucht sein!", en:"Half board €75 · Overnight €40 — can be fully booked!"},
    wifi:true, water:{de:"ja, nicht trinkbar", en:"yes, not potable"}, power:true},
- cp4:{id:"cp4", label:"Rifugio Pederü", role:{de:"Durchfahrt Tag 3", en:"Pass-through Day 3"}, km:277, alt:1584,
+ cp4:{id:"cp4", label:"Rifugio Pederü", role:{de:"Durchfahrt Tag 3", en:"Pass-through Day 3"}, km:277, alt:1548,
    web:"pederue.it", mail:"info@pederue.it", tel:"+390474834316", telShow:"+39 0474 834316",
    hours:{de:"8–20 Uhr", en:"8am–8pm"}, food:{de:"Italienisch · Primo 10–12 € · Secondo 14–25 €", en:"Italian · Primo €10–12 · Secondo €14–25"},
    camp:{status:"no", text:{de:"Nicht erlaubt (Fanes-Region/Nationalpark)", en:"Not allowed (Fanes region/national park)"}}, stay:{de:"Schlafsaal 61 €", en:"Dorm room €61"},
@@ -863,7 +865,7 @@ const CP = {
    wifi:true, water:{de:"ja", en:"yes"}, power:true},
  finish:{id:"finish", label:"Ahoi Minigolf", role:{de:"Ziel · Ende Tag 5", en:"Finish · End of Day 5"}, km:495, alt:289,
    web:"ahoi.bz", mail:"info@ahoi.bz", tel:"+390471342597", telShow:"+39 0471 342597",
-   hours:{de:"durchgehend geöffnet", en:"open around the clock"}, food:{de:"Italienisch · Primo 8–12 € · Secondo 9–16 €", en:"Italian · Primo €8–12 · Secondo €9–16"},
+   hours:{de:"Ankunft jederzeit möglich · Essen/Trinken 10–22 Uhr", en:"Arrival possible any time · food/drinks 10am–10pm"}, food:{de:"Italienisch · Primo 8–12 € · Secondo 9–16 €", en:"Italian · Primo €8–12 · Secondo €9–16"},
    camp:{status:"ok", text:{de:"Zelten kostenlos, Duschen & Toiletten vorhanden", en:"Free camping, showers & toilets available"}}, stay:{de:"—", en:"—"},
    wifi:false, water:{de:"ja", en:"yes"}, power:true},
 };
@@ -1072,7 +1074,7 @@ function wayRowHtml(w){
 let ELEV = {
   1:[[0,289],[0.26,289],[0.55,750],[0.60,1097],[0.62,950],[0.85,2047],[0.90,1700],[1,1835]],
   2:[[0,1835],[0.15,1300],[0.35,1616],[0.55,900],[0.75,1100],[0.94,1085],[1,1735]],
-  3:[[0,1735],[0.10,900],[0.20,1601],[0.28,1773],[0.35,1911],[0.55,2277],[0.62,1450],[0.75,1584],[0.90,1900],[1,2150]],
+  3:[[0,1735],[0.10,900],[0.20,1601],[0.28,1773],[0.35,1911],[0.55,2277],[0.62,1450],[0.75,1548],[0.90,1900],[1,2150]],
   4:[[0,2150],[0.30,1500],[0.55,1750],[0.80,1550],[1,1956]],
   5:[[0,1956],[0.04,2551],[0.20,948],[0.35,2094],[0.50,660],[0.70,1945],[0.73,1945],[1,289]],
 };
@@ -2663,6 +2665,8 @@ function renderMehr(){
         <li>${t("mehr.tracker.5")}</li>
         <li>${t("mehr.tracker.6")}</li>
       </ul>
+      <div class="subtitle">${t("mehr.tracker.contact")}</div>
+      <p style="font-size:13.5px;line-height:1.6;"><a href="mailto:info@followmychallenge.com">info@followmychallenge.com</a><br><a href="tel:+33768286333">+33 7 68 28 63 33</a></p>
     </div>
   </div>
 
