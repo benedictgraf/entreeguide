@@ -1,4 +1,4 @@
-# 🏔️ ENTREE Field Book — SNEAK PEAKS 2026
+# 🏔️ Entree Guide — SNEAK PEAKS 2026
 
 Your personal, offline-capable companion for the **ENTREE route** of the SNEAK PEAKS 2026 bikepacking event (start/finish Bolzano, August 30, ~495 km, 5–7 daily stages depending on pace).
 
@@ -21,7 +21,7 @@ The app only reaches out to the internet or your device's GPS for these specific
 **Needs an internet connection for:**
 - Loading the app the very first time (after that, it's cached on your device and works offline)
 - Refreshing the weather forecast (queries [Open-Meteo](https://open-meteo.com), a free public weather API — only the coordinates needed for that one forecast are sent, nothing else)
-- Opening external links you tap yourself (Komoot routes, the rider handbook PDF, the Bergwetter Südtirol alpine forecast, the community chat) — these open in your browser like any other link
+- Opening external links you tap yourself (Komoot routes, the rider handbook PDF, the Bergwetter Südtirol alpine forecast, the Outta app) — these open in your browser like any other link
 
 **Needs GPS/location access for:**
 - Showing your live position on the route map (only if you tap the location button — off by default)
@@ -72,9 +72,22 @@ One tap shows your exact GPS coordinates large on the screen — to read out ove
 
 ### ☰ More
 
-Schedule, mandatory and recommended gear (with a checklist), tracker instructions, safety notes, every bail-out option along the route, and bike tips.
+Schedule, mandatory and recommended gear (with a checklist), tracker instructions (including who to contact if your Follow My Challenge tracker breaks), safety notes, every bail-out option along the route, and bike tips.
 
 <p align="center"><img src="screenshots/09-mehr.png" width="280" alt="More tab"></p>
+
+---
+
+## ⚠️ What this app can't do
+
+To set expectations clearly:
+
+- **Only covers the ENTREE route.** There are no route profiles, checkpoints, or day-plans for the CLASSIC or ADVENTURE routes — if you're riding one of those, this app currently has nothing for you.
+- **Map and elevation profile are schematic**, not exact GPS tracks (straight-line distances resp. approximated from known pass/checkpoint elevations). For actual navigation, the **Komoot route is authoritative**, not this app.
+- **Weather comes from a general-purpose forecast** (Open-Meteo), not a specialized alpine/mountain weather service. For critical passages, also check a dedicated alpine forecast (there's a direct link to the Bergwetter Südtirol Dolomites forecast right in the weather card).
+- **Not a substitute for the official Rider Handbook, mandatory equipment, or your own route knowledge.** When in doubt, the handbook always takes precedence.
+- **Not the mandatory event communication channel.** SNEAK PEAKS requires every rider to separately install the [Outta app](https://outta-app.com/en/outta-app/) and join the event there for route updates, weather warnings, and messages between riders. This field book is a personal companion on top of that, not a replacement for it.
+- **No turn-by-turn navigation.** It's a reference and planning companion you check at a glance, not something you follow live like a GPS bike computer.
 
 ---
 
@@ -100,26 +113,20 @@ Installing means it starts like a real app from your home screen, with no browse
 2. Tap the **Share** icon (square with an arrow) in the toolbar.
 3. Scroll down and tap **"Add to Home Screen"**.
 4. Tap **"Add"** in the top right.
-5. Done — launch it from your home screen like any other app.
+5. Done — launch it from your home screen like any other app, labeled **Entree Guide**.
 
 ### Android (Chrome)
 
 1. Open the app URL in **Chrome**.
 2. Chrome usually shows an **"Install app"** banner or an install icon (⊕) directly in the address bar — tap it. If you don't see it, tap the **⋮** menu in the top right and choose **"Add to Home screen"** or **"Install app"**.
 3. Confirm by tapping **"Install"**.
-4. Done — launch it from your home screen or app drawer.
+4. Done — launch it from your home screen or app drawer, labeled **Entree Guide**.
 
 (Other Chromium-based Android browsers — Edge, Samsung Internet, Brave — support the same "Add to Home Screen" install flow.)
 
 ## Language
 
 The `DE`/`EN` button in the top right switches between **German and English** at any time — including directly during setup, for participants who don't speak German.
-
-## Good to know
-
-- The map and elevation profile are **schematic** (straight-line distances resp. approximated from known pass/checkpoint elevations), not exact GPS tracks. For actual navigation, the Komoot route is authoritative.
-- The weather forecast comes from Open-Meteo, a general-purpose forecast service — not a specialized alpine/mountain weather service. For critical passages, also check a dedicated alpine forecast (there's a direct link to the Bergwetter Südtirol Dolomites forecast right in the weather card).
-- This app is not a substitute for legal advice, emergency equipment, or your own route knowledge — when in doubt, the official rider handbook always takes precedence.
 
 ---
 
