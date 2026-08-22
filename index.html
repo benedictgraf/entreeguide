@@ -529,9 +529,8 @@ nav#tabbar{position:fixed; left:0; right:0; bottom:0; z-index:20; display:flex; 
 const COMM_GROUP_URL = "https://outta-app.com/events/15";
 // Web-Einstieg für alle ohne App / falls der Invite-Link mal abläuft.
 const OUTTA_WEB_URL = "https://outta-app.com/en/outta-app/";
-const KOMOOT_URL = "https://komoot.com/de-de/collection/4519315/-party-pace-patrol-sneak-peaks_entree_5-days-with-lotti";
-// Komoot-Collection-Slug traegt noch "juliana" im URL-Text, die Pacerin fuer diesen 6-Tage-Plan heisst aber Paula.
-const KOMOOT_PAULA_URL = "https://www.komoot.com/de-de/collection/4519631/-party-pace-patrol-sneak-peaks_entree_6-days-with-juliana";
+const KOMOOT_URL = "https://www.komoot.com/de-de/collection/4519315/-party-pace-patrol-sneak-peaks_entree_5-days-with-lotti";
+const KOMOOT_PAULA_URL = "https://www.komoot.com/de-de/collection/4519631/-party-pace-patrol-sneak-peaks_entree_6-days-with-paula";
 const KOMOOT_FULL_URL = "https://www.komoot.com/de-de/collection/4526412/-sneak-peaks-2026-entree";
 const KOMOOT_EXIT_URL = "https://www.komoot.com/de-de/collection/4538266/-exit-options-sneak-peaks-2026";
 const HANDBOOK_URL = "https://drive.google.com/file/d/1prD9qHubYVJjKuWp5jfYEv8b1cFBYq4Y/view";
@@ -659,6 +658,7 @@ const I18N = {
   "mehr.sources.handbook": {de:"📄 Offizielles Rider Handbook 2026 (PDF)", en:"📄 Official Rider Handbook 2026 (PDF)"},
   "mehr.sources.full": {de:"🗺️ Komoot: gesamte ENTREE-Route", en:"🗺️ Komoot: full ENTREE route"},
   "mehr.sources.lotti": {de:"🗺️ Komoot: Party Pace Patrol „Lotti“ (Tagesetappen)", en:"🗺️ Komoot: Party Pace Patrol \"Lotti\" (daily stages)"},
+  "mehr.sources.paula": {de:"🗺️ Komoot: Party Pace Patrol „Paula“ (Tagesetappen)", en:"🗺️ Komoot: Party Pace Patrol \"Paula\" (daily stages)"},
   "mehr.gear.title": {de:"Pflichtausrüstung", en:"Mandatory gear"},
   "mehr.gear.recommended": {de:"Empfohlen", en:"Recommended"},
   "mehr.tracker.title": {de:"Tracker · Follow My Challenge", en:"Tracker · Follow My Challenge"},
@@ -1268,18 +1268,15 @@ function buildCustomDays(boundaryCpIds){
   }
   return days;
 }
-// Paulas 6-Tage-Plan (echte Etappenwerte vom Nutzer, nicht geschaetzt): Tag 1/2/5/6 sind
-// dieselben Streckenabschnitte wie bei Lotti (Distanz/Hm decken sich fast exakt) und werden
-// 1:1 uebernommen. Lottis Tag 3 (Scarpa -> Glittnersee) teilt Paula stattdessen in zwei Tage
-// mit Zwischenstopp am Lago Federa - Aufstiegsmeter sind Paulas echte Werte, die Abfahrtsmeter
-// werden proportional zum bekannten Handbook-Gesamtwert von Lottis Tag 3 aufgeteilt (2.510:2.320
-// vom Auf-Verhaeltnis auf die 4.400 Hm Gesamtabfahrt), nicht frei erfunden.
-const PAULA_DAY3_DOWN = Math.round(4400 * 2510/(2510+2320));
-const PAULA_DAY4_DOWN = 4400 - PAULA_DAY3_DOWN;
+// Paulas 6-Tage-Plan: Tag 1/2/5/6 sind dieselben Streckenabschnitte wie bei Lotti (Distanz/Hm
+// decken sich fast exakt) und werden 1:1 uebernommen. Lottis Tag 3 (Scarpa -> Glittnersee) teilt
+// Paula stattdessen in zwei Tage mit Zwischenstopp am Lago Federa - Distanz/Auf/Ab fuer Tag 3+4
+// sind die echten Werte aus Paulas eigenen Komoot-Tagestouren (komoot.com/tour/3106970391 und
+// /3106981914, direkt geprueft), nicht mehr proportional geschaetzt.
 const PAULA_DAYS = [
   {...LOTTI_DAYS[0], n:1},
   {...LOTTI_DAYS[1], n:2},
-  {n:3, from:"Rifugio Scarpa", to:"Lago Federa", subtitle:{de:"Bergsee, ca. 2.120 m — kein Handbook-Checkpoint", en:"Mountain lake, approx. 2,120 m — not a handbook checkpoint"}, km:58, time:estimateTimeStr(58), up:2510, down:PAULA_DAY3_DOWN, kmFrom:182, kmTo:240,
+  {n:3, from:"Rifugio Scarpa", to:"Lago Federa", subtitle:{de:"Bergsee, ca. 2.120 m — kein Handbook-Checkpoint", en:"Mountain lake, approx. 2,120 m — not a handbook checkpoint"}, km:58.7, time:estimateTimeStr(58.7), up:2510, down:2180, kmFrom:182, kmTo:240,
     character:{de:"Ambrizzola Pass, dann hinunter zum Lago Federa — laut Lotti-Crew „unser persönliches Highlight“.", en:"Ambrizzola Pass, then down to Lago Federa — Lotti's crew calls it \"our personal highlight\"."},
     sleep:{status:"warn", place:"Lago Federa", note:{de:"Bergsee, ca. 2.120 m — nicht im Handbook", en:"Mountain lake, approx. 2,120 m — not in the handbook"}, detail:{de:"Kein Rifugio direkt am See. Rifugio Croda da Lago (Essen/Getränke/Wasser) liegt ca. 1 km weiter. Nur Wildcamping/Notbiwak (offiziell nicht erlaubt, aber toleriert) — Notfalldecke/Biwaksack sind Pflichtausrüstung.", en:"No rifugio directly at the lake. Rifugio Croda da Lago (food/drinks/water) is about 1 km further. Wild camping/emergency bivouac only (officially not allowed, but tolerated) — emergency blanket/bivy bag are mandatory gear."}},
     way:[6,7,8,"federa"],
@@ -1287,7 +1284,7 @@ const PAULA_DAYS = [
       {type:"highlight", title:{de:"Ambrizzola Pass", en:"Ambrizzola Pass"}, text:{de:"„Unser persönliches Highlight“ — jedes Jahr Teil der Strecke. Danach der wunderschöne Lago Federa.", en:"\"Our personal highlight\" — part of the route every year. Followed by the beautiful Lago Federa."}},
       {type:"warn", title:{de:"Forcella Ambrizzola Trail", en:"Forcella Ambrizzola trail"}, km:"237–240", text:{de:"Überquerung auf 2.277 m, ca. 3 km Hike-a-Bike — dafür Panoramablick über die Ampezzo-Dolomiten.", en:"Crossing at 2,277 m, about 3 km of hike-a-bike — rewarded with a panoramic view over the Ampezzo Dolomites."}}
     ]},
-  {n:4, from:"Lago Federa", to:"Glittnersee", subtitle:{de:"Bergsee, ca. 2.150 m — kein Handbook-Checkpoint", en:"Mountain lake, approx. 2,150 m — not a handbook checkpoint"}, km:67, time:estimateTimeStr(67), up:2320, down:PAULA_DAY4_DOWN, kmFrom:240, kmTo:307,
+  {n:4, from:"Lago Federa", to:"Glittnersee", subtitle:{de:"Bergsee, ca. 2.150 m — kein Handbook-Checkpoint", en:"Mountain lake, approx. 2,150 m — not a handbook checkpoint"}, km:67.5, time:estimateTimeStr(67.5), up:2320, down:2210, kmFrom:240, kmTo:307,
     character:{de:"Kürzerer Zwischentag über Cortina-Gegend und Rifugio Pederü zum Glittnersee.", en:"A shorter transition day via the Cortina area and Rifugio Pederü to Glittnersee."},
     sleep:{...LOTTI_DAYS[2].sleep},
     way:[9,10,11,12],
@@ -2650,6 +2647,7 @@ function renderMehr(){
       <p style="font-size:13.5px;line-height:1.6;"><a href="${HANDBOOK_URL}" target="_blank" rel="noopener">${t("mehr.sources.handbook")}</a></p>
       <p style="font-size:13.5px;line-height:1.6;"><a href="${KOMOOT_FULL_URL}" target="_blank" rel="noopener">${t("mehr.sources.full")}</a></p>
       <p style="font-size:13.5px;line-height:1.6;"><a href="${KOMOOT_URL}" target="_blank" rel="noopener">${t("mehr.sources.lotti")}</a></p>
+      <p style="font-size:13.5px;line-height:1.6;"><a href="${KOMOOT_PAULA_URL}" target="_blank" rel="noopener">${t("mehr.sources.paula")}</a></p>
     </div>
   </div>
 
@@ -3120,7 +3118,7 @@ $("#backdrop").onclick = closeSheet;
 /* Quickbar */
 $("#qbEmergency").onclick = openEmergencySheet;
 $("#qbGroup").onclick = ()=> window.open(COMM_GROUP_URL || OUTTA_WEB_URL, "_blank");
-$("#qbKomoot").onclick = ()=> window.open(KOMOOT_URL, "_blank");
+$("#qbKomoot").onclick = ()=> window.open((PROFILE && ROUTE_DEFS[PROFILE.routeId] ? ROUTE_DEFS[PROFILE.routeId].komoot() : KOMOOT_URL), "_blank");
 
 /* Story-Modus Bindings */
 $("#storyClose").onclick = closeStoryMode;
