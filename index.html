@@ -216,6 +216,8 @@ main{flex:1; overflow-y:auto; padding:16px var(--pad) 110px; -webkit-overflow-sc
 .rowlist{background:var(--slate); border:1px solid var(--line); border-radius:var(--r-lg); overflow:hidden; margin-bottom:12px;}
 .row{display:flex; align-items:center; gap:12px; padding:13px 14px; border-bottom:1px solid var(--line);}
 .row:last-child{border-bottom:none;}
+.row-wrap{border-bottom:1px solid var(--line);}
+.row-wrap:last-child{border-bottom:none;}
 .km{font-size:12.5px; color:var(--mist); min-width:40px;}
 .name{flex:1; font-size:14.5px; font-weight:600;}
 .sub{font-size:12px; color:var(--mist); margin-top:1px; font-weight:400;}
@@ -631,6 +633,8 @@ const I18N = {
   "word.daysplanned": {de:"Tage geplant", en:"days planned"},
   "flag.bed": {de:"Bett", en:"Bed"},
   "flag.camp": {de:"Camping", en:"Camping"},
+  "flag.sleepoption": {de:"Schlafoption", en:"Sleep option"},
+  "word.info": {de:"Info", en:"Info"},
   "campgeneral.title": {de:"Allgemeine Camping-Regeln", en:"General camping rules"},
   "campgeneral.p1": {de:"Wildcamping ist in Italien/der Schweiz offiziell nicht erlaubt, <b>Not-Biwak wird aber toleriert</b>. Rifugio-Betten sind nicht exklusiv für Teilnehmer:innen reserviert — bei ausgebuchten Betten kann meist in der Nähe gezeltet werden.", en:"Wild camping is officially not allowed in Italy/Switzerland, but <b>emergency bivouacking is tolerated</b>. Rifugio beds aren't reserved exclusively for participants — if beds are full you can usually camp nearby."},
   "campgeneral.p2": {de:"Richtwerte Rifugio-Kosten allgemein: ca. 10 € Frühstück, ca. 20 € Abendessen, ca. 30 € Übernachtung (je nach Zimmer auch mehr). Bei spätem Ankommen/frühem Aufbruch: kurz mit dem Personal sprechen, Preise/Zeiten sind oft flexibel.", en:"Rough rifugio price guide: approx. €10 breakfast, approx. €20 dinner, approx. €30 overnight (can be more depending on the room). Arriving late/leaving early: just talk to the staff, prices/times are often flexible."},
@@ -889,7 +893,7 @@ const WAY = {
  6:{km:196, name:"Agordo", kind:"town", offer:{de:"Supermarkt · Restaurants · Apotheke · Brunnen", en:"Supermarket · restaurants · pharmacy · water fountain"}},
  7:{km:223, name:"Mareson", kind:"town", offer:{de:"Supermarkt · Restaurants · Apotheke · Brunnen", en:"Supermarket · restaurants · pharmacy · water fountain"}},
  8:{km:233, name:"Rifugio Città di Fiume", kind:"cp", cp:"cp3", offer:{de:"Stempel · Essen · Getränke · Wasser · Übernachtung", en:"Stamp · food · drinks · water · lodging"}},
- federa:{km:240, name:"Lago Federa", kind:"camp", offer:{de:"Kein Rifugio direkt am See — Rifugio Croda da Lago (Essen/Getränke/Wasser) ca. 1 km weiter", en:"No rifugio directly at the lake — Rifugio Croda da Lago (food/drinks/water) about 1 km further"}},
+ federa:{km:240, name:"Lago Federa", kind:"camp", offer:{de:"Kein Rifugio direkt am See — Rifugio Croda da Lago (Essen/Getränke/Wasser, auch Übernachtung) nur ca. 200–250 m entfernt", en:"No rifugio directly at the lake — Rifugio Croda da Lago (food/drinks/water, also overnight stays) only about 200–250m away"}},
  9:{km:241, name:"Rifugio Croda da Lago", kind:"rifugio", offer:{de:"Essen · Getränke · Wasser", en:"Food · drinks · water"}},
  10:{km:252, name:"Cortina d'Ampezzo", kind:"town", offer:{de:"Supermarkt · Restaurants · Apotheke · Brunnen (off-route)", en:"Supermarket · restaurants · pharmacy · water fountain (off-route)"}},
  11:{km:276, name:"Rifugio Pederü", kind:"cp", cp:"cp4", offer:{de:"Stempel · Essen · Getränke · Wasser", en:"Stamp · food · drinks · water"}},
@@ -918,7 +922,7 @@ const COORDS = {
  6:{lat:46.2762, lon:12.0347},
  7:{lat:46.372, lon:12.132},
  8:{lat:46.44, lon:12.13},
- federa:{lat:46.465, lon:12.095},
+ federa:{lat:46.4881, lon:12.1045},
  9:{lat:46.47, lon:12.10},
  10:{lat:46.5405, lon:12.1357},
  11:{lat:46.615, lon:12.03},
@@ -1073,6 +1077,28 @@ function wildStopRowHtml(day){
 }
 function wayRowHtml(w){
   return `<div class="row"><span class="km mono">${w.km}</span><span style="font-size:15px">${stopIcon(w.kind)}</span><div class="name">${w.name}<div class="sub">${tf(w.offer)}</div></div></div>`;
+}
+// Recherchierte Schlafoptionen (SLEEP_ALTS) im Resupply-Tab: eigenes Emoji, kein Checkpoint,
+// aber per Tap aufklappbar - gleicher .row-wrap/.tap/.row-detail-Mechanismus wie im Checkpoints-Tab.
+function sleepAltDetailDl(alt){
+  return `<dl>
+    <dt>${t("cp.stay")}</dt><dd>${tf(alt.price)}</dd>
+    <dt>${t("word.info")}</dt><dd>${tf(alt.detail)}</dd>
+    ${(alt.tel||alt.web)?`<dt>${t("cp.contact")}</dt><dd>${alt.tel?`<a href="tel:${alt.tel}">${alt.telShow}</a>`:""}${alt.tel&&alt.web?" · ":""}${alt.web?`<a href="https://${alt.web}" target="_blank" rel="noopener">${alt.web}</a>`:""}</dd>`:""}
+  </dl>`;
+}
+function sleepAltRowHtml(alt){
+  return `<div class="row-wrap">
+    <button class="tap" data-sleepalt="1">
+      <span style="font-size:15px">🏨</span>
+      <div class="tapmain">
+        <div class="name">${alt.name}</div>
+        <div class="sub">${t("flag.sleepoption")} · ${tf(alt.type)} · ${tf(alt.dist)}</div>
+      </div>
+      <span class="chev">›</span>
+    </button>
+    <div class="row-detail">${sleepAltDetailDl(alt)}</div>
+  </div>`;
 }
 
 // Schematisches Höhenprofil pro Tag: [Streckenanteil 0-1, Höhe in m].
@@ -1278,7 +1304,7 @@ const PAULA_DAYS = [
   {...LOTTI_DAYS[1], n:2},
   {n:3, from:"Rifugio Scarpa", to:"Lago Federa", subtitle:{de:"Bergsee, ca. 2.120 m — kein Handbook-Checkpoint", en:"Mountain lake, approx. 2,120 m — not a handbook checkpoint"}, km:58.7, time:estimateTimeStr(58.7), up:2510, down:2180, kmFrom:182, kmTo:240,
     character:{de:"Ambrizzola Pass, dann hinunter zum Lago Federa — laut Lotti-Crew „unser persönliches Highlight“.", en:"Ambrizzola Pass, then down to Lago Federa — Lotti's crew calls it \"our personal highlight\"."},
-    sleep:{status:"warn", place:"Lago Federa", note:{de:"Bergsee, ca. 2.120 m — nicht im Handbook", en:"Mountain lake, approx. 2,120 m — not in the handbook"}, detail:{de:"Kein Rifugio direkt am See. Rifugio Croda da Lago (Essen/Getränke/Wasser) liegt ca. 1 km weiter. Nur Wildcamping/Notbiwak (offiziell nicht erlaubt, aber toleriert) — Notfalldecke/Biwaksack sind Pflichtausrüstung.", en:"No rifugio directly at the lake. Rifugio Croda da Lago (food/drinks/water) is about 1 km further. Wild camping/emergency bivouac only (officially not allowed, but tolerated) — emergency blanket/bivy bag are mandatory gear."}},
+    sleep:{status:"ok", place:"Lago Federa", note:{de:"Bergsee, ca. 2.120 m — nicht im Handbook", en:"Mountain lake, approx. 2,120 m — not in the handbook"}, detail:{de:"Kein Rifugio direkt am See, aber Rifugio Croda da Lago liegt nur ca. 200–250 m entfernt (50 Betten, Übernachtung ab 32 €) — praktisch gleich nebenan. Alternativ Wildcamping/Notbiwak (offiziell nicht erlaubt, aber toleriert) — Notfalldecke/Biwaksack sind ohnehin Pflichtausrüstung.", en:"No rifugio directly at the lake, but Rifugio Croda da Lago is only about 200–250m away (50 beds, overnight from €32) — practically right next door. Alternatively wild camping/emergency bivouac (officially not allowed, but tolerated) — emergency blanket/bivy bag are mandatory gear either way."}},
     way:[6,7,8,"federa"],
     specials:[
       {type:"highlight", title:{de:"Ambrizzola Pass", en:"Ambrizzola Pass"}, text:{de:"„Unser persönliches Highlight“ — jedes Jahr Teil der Strecke. Danach der wunderschöne Lago Federa.", en:"\"Our personal highlight\" — part of the route every year. Followed by the beautiful Lago Federa."}},
@@ -1299,6 +1325,36 @@ const PAULA_ELEV = {
   3: dayElevFromSlice(PAULA_DAYS[2].kmFrom, PAULA_DAYS[2].kmTo),
   4: dayElevFromSlice(PAULA_DAYS[3].kmFrom, PAULA_DAYS[3].kmTo),
   5: LOTTI_ELEV[4], 6: LOTTI_ELEV[5],
+};
+// Recherchierte Schlafoptionen als Ergänzung zum offiziellen Etappenziel jedes Tages - bei
+// Checkpoint-Zielen mind. eine echte Alternative in der Nähe, bei Nicht-Checkpoint-Zielen
+// (Bergseen) 1-2 nahegelegene Unterkünfte. Alle Angaben unabhängig recherchiert (nicht aus dem
+// Handbook), Quellen/Unsicherheiten stehen wo relevant explizit im "detail"-Text. Key = exakter
+// d.sleep.place-Name des Tages.
+const SLEEP_ALTS = {
+  "Rifugio Conseria": [
+    {name:"Rifugio Caldenave", type:{de:"Rifugio", en:"Rifugio"}, dist:{de:"≈4 km südlich von Checkpoint 1, 1h20–2h zu Fuß (SAT-Weg 326)", en:"≈4 km south of Checkpoint 1, 1h20–2h on foot (SAT trail 326)"}, price:{de:"Halbpension, Preis auf Anfrage", en:"Half board, price on request"}, beds:true, detail:{de:"22–24 Betten in 4–5 Mehrbettzimmern, warme Dusche inklusive. Geöffnet ca. 20. Juni – 20. September.", en:"22–24 beds across 4–5 shared-facility rooms, hot shower included. Open roughly June 20 – Sept 20."}, tel:"+393406351259", telShow:"+39 340 635 1259"},
+    {name:"Rifugio Carlettini", type:{de:"Rifugio", en:"Rifugio"}, dist:{de:"≈5 km, ca. 470 Hm tiefer im Tal bei Ponte Conseria — auch mit Bike erreichbar", en:"≈5 km, about 470m lower in the valley at Ponte Conseria — also reachable by bike"}, price:{de:"35–38 Betten in 15 Zimmern (Preis auf Anfrage), Restaurant ca. 25–35 €", en:"35–38 beds in 15 rooms (price on request), restaurant approx. €25–35"}, beds:true, detail:{de:"Zimmer mit eigenem Bad, Föhn, TV — komfortabelste Option in der Nähe.", en:"Rooms with private bath, hairdryer, TV — the most comfortable nearby option."}, tel:"+393459724899", telShow:"+39 345 972 4899", web:"rifugiocarlettini.it"},
+  ],
+  "Rifugio Scarpa": [
+    {name:"Malga Losch", type:{de:"Notunterkunft", en:"Emergency shelter"}, dist:{de:"Direkt am Rifugio Scarpa, selber Standort", en:"Right at Rifugio Scarpa, same site"}, price:{de:"8 Notbetten, Zugang über die Gemeinde Voltago Agordino", en:"8 emergency beds, access via the Voltago Agordino municipal office"}, beds:true, detail:{de:"Selbstversorger-Notunterkunft direkt neben dem Rifugio — falls das Hauptgebäude voll ist.", en:"Self-catering emergency shelter right next to the rifugio — if the main building is full."}},
+    {name:"Albergo Stella Alpina", type:{de:"Hotel", en:"Hotel"}, dist:{de:"≈6–7 km, ca. 900 Hm tiefer im Tal, größtenteils befahrbare Schotterstrecke", en:"≈6–7 km, about 900m lower in the valley, mostly rideable gravel track"}, price:{de:"Ab 125 €/Nacht inkl. Frühstück", en:"From €125/night incl. breakfast"}, beds:true, detail:{de:"2-Sterne-Dorfhotel mit Restaurant in Voltago Agordino.", en:"2-star village hotel with restaurant in Voltago Agordino."}, tel:"+390437669001", telShow:"+39 0437 669001", web:"hotelstellaalpina.org"},
+  ],
+  "Glittnersee": [
+    {name:"Kreuzwiesenalm", type:{de:"Berggasthaus", en:"Mountain inn"}, dist:{de:"≈6 km / 2–3 Std. vom See — eher ein eigener Zwischenstopp als ein kurzer Abstecher", en:"≈6 km / 2–3 hours from the lake — more its own stop than a quick detour"}, price:{de:"Matratzenlager 37–42 €, Mehrbettzimmer ab 83 € (Halbpension, ab 3 Nächten)", en:"Dorm €37–42, shared rooms from €83 (half board, 3+ nights)"}, beds:true, detail:{de:"Bewirtschaftete Berggaststube mit Zimmern und Matratzenlager — zuverlässig buchbar, aber ein spürbarer Umweg vom See.", en:"Staffed mountain inn with rooms and a dorm — reliably bookable, but a real detour from the lake."}, web:"kreuzwiesenalm.com"},
+    {name:"Planlhütte", type:{de:"Selbstversorgerhütte", en:"Self-catering hut"}, dist:{de:"≈1,5 Std. zu Fuß zum See — die kürzeste bekannte Distanz", en:"≈1.5h on foot to the lake — the shortest known distance"}, price:{de:"150 €/Nacht für 2 Personen (+50 €/weitere Person)", en:"€150/night for 2 people (+€50/extra guest)"}, beds:true, detail:{de:"2 Zirbenzimmer für 2–4 Personen. Achtung: Website nennt normalerweise eine Mindestbuchung von einer Woche — für eine Nacht vorher unbedingt anrufen.", en:"2 stone-pine rooms for 2–4 people. Note: the site normally states a one-week minimum stay — call ahead to ask about a single night."}, tel:"+393356833443", telShow:"+39 335 683 3443", web:"planlhuette.com"},
+  ],
+  "Lago Federa": [
+    {name:"Rifugio Croda da Lago", type:{de:"Rifugio", en:"Rifugio"}, dist:{de:"≈200–250 m vom See — praktisch direkt daneben", en:"≈200–250m from the lake — practically right next to it"}, price:{de:"Übernachtung 32 €, Halbpension 73 €, Frühstück 14 €", en:"Bed only €32, half board €73, breakfast €14"}, beds:true, detail:{de:"50 Betten: Zimmer mit 6 oder 9 Betten plus ein 15-Betten-Schlafsaal. Schlafsack empfohlen. Geöffnet ca. 15. Juni bis Ende Oktober.", en:"50 beds: rooms of 6 or 9 beds plus a 15-bed dormitory. Sleeping bag recommended. Open roughly June 15 to end of October."}, tel:"+390436862085", telShow:"+39 0436 862085", web:"crodadalago.it"},
+    {name:"Malga Federa", type:{de:"Agriturismo", en:"Agriturismo"}, dist:{de:"≈2 km / 30–40 Min. weiter unten am selben Weg, ca. 220 Hm tiefer", en:"≈2 km / 30–40 min further down the same trail, about 220m lower"}, price:{de:"≈75 €/Nacht (Preis nicht offiziell bestätigt)", en:"≈€75/night (price not officially confirmed)"}, beds:true, detail:{de:"5 Zimmer mit 12 Betten, eigenes Bad — falls die Hütte am See voll ist.", en:"5 rooms with 12 beds, private bath — if the hut at the lake is full."}, tel:"+393249249678", telShow:"+39 324 924 9678", web:"malgafedera.it"},
+  ],
+  "Weitenbergalm": [
+    {name:"Gasthof Brugger", type:{de:"Gasthof", en:"Inn"}, dist:{de:"≈8–10 km, ca. 800 Hm hinunter nach Pfunders — ein echter Umweg, kein kurzer Abstecher", en:"≈8–10 km, about 800m down to Pfunders — a real detour, not a quick side-trip"}, price:{de:"49 €/Person/Nacht im Doppelzimmer inkl. Frühstücksbuffet", en:"€49/person/night in a double room incl. breakfast buffet"}, beds:true, detail:{de:"Doppelzimmer mit Dusche/WC im Ort Pfunders — die einzige verifizierte Bett-Option in der Nähe, da Weitenbergalm selbst nur Camping bietet.", en:"Double rooms with shower/WC in Pfunders village — the only verified real-bed option nearby, since Weitenbergalm itself only offers camping."}, tel:"+390472549155", telShow:"+39 0472 549155", web:"gasthof-brugger.com"},
+  ],
+  "Ahoi Minigolf": [
+    {name:"Youth Hostel Bolzano", type:{de:"Jugendherberge", en:"Youth hostel"}, dist:{de:"≈1,5 km zu Fuß vom Ziel, in der Altstadt beim Bahnhof", en:"≈1.5 km on foot from the finish, in the old town near the station"}, price:{de:"Mehrbettzimmer 34 €/Nacht, Einzelzimmer 48 € (inkl. Frühstück)", en:"Shared room €34/night, single room €48 (breakfast included)"}, beds:true, detail:{de:"81 Betten in 28 Zimmern, alle mit eigenem Bad.", en:"81 beds in 28 rooms, all with private bath."}, tel:"+390471300865", telShow:"+39 0471 300865", web:"youth-hostel.bz"},
+    {name:"Camping Moosbauer", type:{de:"Campingplatz", en:"Campsite"}, dist:{de:"≈5 km vom Ziel, südwestlicher Stadtrand von Bozen", en:"≈5 km from the finish, southwestern outskirts of Bolzano"}, price:{de:"≈17–21 €/Stellplatz + ≈12 €/Person, je nach Saison", en:"≈€17–21/pitch + ≈€12/person, depending on season"}, beds:false, detail:{de:"4-Sterne-Campingplatz mit Dusche, Pool, Shop — falls du statt Gratis-Camping am Ahoi Minigolf richtige Campingplatz-Infrastruktur willst. Geöffnet ca. März–November.", en:"4-star campsite with showers, pool, shop — if you'd rather have proper campsite infrastructure than the free camping at Ahoi Minigolf. Open roughly March–November."}, web:"moosbauer.com"},
+  ],
 };
 const PAULA_WEATHER_LOC = {
   1: LOTTI_WEATHER_LOC[1], 2: LOTTI_WEATHER_LOC[2],
@@ -1724,6 +1780,30 @@ function specialCardHtml(s){
 }
 // Bei genau einem Highlight normale Karte (kein Swipe noetig). Bei mehreren: Karussell mit
 // Punkt-Indikatoren, die erst dann auftauchen.
+function sleepAltCardHtml(alt){
+  return `<div class="callout">
+    <div class="ctitle">🏨 ${alt.name}</div>
+    <div class="ckm">${t("flag.sleepoption")} · ${tf(alt.dist)}</div>
+    <p>${tf(alt.price)}</p>
+  </div>`;
+}
+// Offizielles Etappenziel + recherchierte Schlafoptionen (falls vorhanden) als eine swipebare
+// Carousel-Zeile - identischer Mechanismus wie specialsHtml()/specialsCarousel.
+function sleepTonightHtml(d){
+  const sleepIcon = d.sleep.status==="ok" ? "⛺" : "⚠️";
+  const sleepCls = d.sleep.status==="ok" ? "special-hi" : "";
+  const officialCard = `<div class="callout ${sleepCls}">
+    <div class="ctitle">${sleepIcon} ${tf(d.sleep.place)}</div>
+    <div class="ckm">${tf(d.sleep.note)}</div>
+    <p>${tf(d.sleep.detail)}</p>
+  </div>`;
+  const alts = SLEEP_ALTS[d.sleep.place] || [];
+  if(!alts.length) return officialCard;
+  const cards = [officialCard, ...alts.map(sleepAltCardHtml)].join("");
+  const dots = [officialCard, ...alts].map((_,i)=>`<span class="dot${i===0?" active":""}"></span>`).join("");
+  return `<div class="carousel" id="sleepCarousel">${cards}</div>
+  <div class="carousel-dots" data-for="sleepCarousel">${dots}</div>`;
+}
 function specialsHtml(day){
   if(!day.specials.length) return `<div class="empty">${t("specials.empty")}</div>`;
   if(day.specials.length===1) return specialCardHtml(day.specials[0]);
@@ -2345,14 +2425,7 @@ function renderHeute(){
     <button class="daymeta-editend" type="button" id="dayEndEditBtn">${t("override.trigger")}</button>
   </div>`;
 
-  const sleepIcon = d.sleep.status==="ok" ? "⛺" : "⚠️";
-  const sleepCls = d.sleep.status==="ok" ? "special-hi" : "";
-  h += `<p class="eyebrow">${t("eyebrow.sleep")}</p>`;
-  h += `<div class="callout ${sleepCls}">
-    <div class="ctitle">${sleepIcon} ${tf(d.sleep.place)}</div>
-    <div class="ckm">${tf(d.sleep.note)}</div>
-    <p>${tf(d.sleep.detail)}</p>
-  </div>`;
+  h += `<p class="eyebrow">${t("eyebrow.sleep")}</p>` + sleepTonightHtml(d);
 
   h += `<p class="eyebrow">${t("eyebrow.specials")}</p>` + specialsHtml(d);
 
@@ -2622,13 +2695,18 @@ function renderResupply(){
   let h="";
   DAYS.forEach(d=>{
     h += `<p class="eyebrow">${t("word.day")} ${d.n} <span style="color:var(--mist);font-weight:600;text-transform:none;letter-spacing:0;">· ${d.from} → ${d.to}</span></p>`;
-    if(d.way.length){
-      h += `<div class="rowlist">` + d.way.map(wid=>wayRowHtml(WAY[wid])).join("") + `</div>`;
+    const alts = SLEEP_ALTS[d.sleep.place] || [];
+    if(d.way.length || alts.length){
+      h += `<div class="rowlist">`
+         + d.way.map(wid=>wayRowHtml(WAY[wid])).join("")
+         + alts.map(sleepAltRowHtml).join("")
+         + `</div>`;
     } else {
       h += `<div class="empty">Keine Punkte gelistet.</div>`;
     }
   });
   $("#resupplyBody").innerHTML = h;
+  bindRowToggles();
 }
 
 /* ======================= RENDER: MEHR ======================= */
@@ -2763,7 +2841,7 @@ function updateGearCount(){
 
 /* ======================= INTERAKTION ======================= */
 function bindRowToggles(){
-  $$(".tap[data-cp], .tap[data-wild]").forEach(btn=>{
+  $$(".tap[data-cp], .tap[data-wild], .tap[data-sleepalt]").forEach(btn=>{
     btn.onclick=()=>{
       const detail = btn.closest(".row-wrap").querySelector(".row-detail");
       const isOpen = detail.classList.contains("open");
