@@ -1,7 +1,7 @@
 {
   "name": "Entree Guide",
   "short_name": "Entree Guide",
-  "description": "Offline-Feldbuch für die SNEAK PEAKS 2026 ENTREE Route: Etappen, Checkpoints, Resupply, Schlafoptionen.",
+  "description": "Offline-Feldbuch für die SNEAK PEAKS 2026 ENTREE Route: Etappen, Checkpoints, Stopps, Schlafoptionen.",
   "start_url": "./index.html",
   "scope": "./",
   "display": "standalone",
