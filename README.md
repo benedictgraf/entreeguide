@@ -128,6 +128,11 @@ Installing means it starts like a real app from your home screen, with no browse
 
 The `DE`/`EN` button in the top right switches between **German and English** at any time — including directly during setup, for participants who don't speak German.
 
+## Links
+
+- Live: https://benedictgraf.github.io/entreeguide/
+- Repo: https://github.com/benedictgraf/entreeguide
+
 ---
 
 *Not an official SNEAK PEAKS product — a private rider tool, built for our own team.*
